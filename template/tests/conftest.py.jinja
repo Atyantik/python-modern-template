@@ -1,0 +1,18 @@
+"""Pytest configuration and fixtures."""
+
+from __future__ import annotations
+
+import pytest
+
+
+@pytest.fixture
+def sample_data() -> dict[str, str]:
+    """Provide sample data for tests.
+
+    Returns:
+        Dictionary with sample test data
+    """
+    return {
+        "name": "Test",
+        "description": "Sample test data",
+    }

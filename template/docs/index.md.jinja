@@ -1,0 +1,133 @@
+# {{ project_name }}
+
+{{ project_description }}
+
+## Features
+
+{%- if include_quality_scripts %}
+- **Quality Enforcement**: Automated code formatting, linting, and testing
+- **High Code Coverage**: Minimum {{ min_coverage }}% test coverage enforced
+{%- endif %}
+{%- if include_ai_tools %}
+- **AI-Assisted Development**: Session management and context tracking for AI coding assistants
+- **TDD Workflow**: Test-Driven Development process integrated into all AI tools
+{%- endif %}
+- **Modern Python**: Built with Python {{ python_version }}, using latest best practices
+- **Type Safety**: Full type hints with mypy strict mode
+{%- if include_docker %}
+- **Docker Support**: Containerized deployment with Docker and docker-compose
+{%- endif %}
+{%- if include_pre_commit %}
+- **Pre-commit Hooks**: Automatic code quality checks on every commit
+{%- endif %}
+
+## Quick Start
+
+```bash
+# Install dependencies
+uv sync --all-extras --dev
+
+# Run the application
+uv run {{ package_name }}
+
+{%- if include_quality_scripts %}
+# Run quality checks
+make check
+{%- endif %}
+```
+
+## Documentation
+
+- [Installation Guide](getting-started/installation.md)
+- [Quick Start Tutorial](getting-started/quickstart.md)
+{%- if include_cli %}
+- [CLI Usage](getting-started/cli.md)
+{%- endif %}
+{%- if include_quality_scripts %}
+- [Development Guide](user-guide/development.md)
+- [Testing Guide](user-guide/testing.md)
+{%- endif %}
+{%- if include_ai_tools %}
+- [AI Development Tools](ai-development/ai-tools.md)
+- [TDD Workflow](ai-development/tdd-workflow.md)
+{%- endif %}
+
+## Project Structure
+
+```
+{{ project_slug }}/
+├── src/
+│   └── {{ package_name }}/       # Main package
+├── tests/                         # Test suite
+{%- if include_quality_scripts or include_ai_tools %}
+├── scripts/                       # Utility scripts
+{%- if include_quality_scripts %}
+│   └── quality/                   # Quality check scripts
+{%- endif %}
+{%- if include_ai_tools %}
+│   └── ai_tools/                  # AI session management
+{%- endif %}
+{%- endif %}
+{%- if include_ai_tools %}
+├── AI_DOCS/                       # AI development documentation
+{%- endif %}
+{%- if include_docs %}
+├── docs/                          # MkDocs documentation
+{%- endif %}
+{%- if include_docker %}
+├── Dockerfile                     # Docker image
+├── docker-compose.yml             # Docker services
+{%- endif %}
+└── pyproject.toml                 # Project configuration
+```
+
+## Development
+
+{%- if include_quality_scripts %}
+
+### Quality Checks
+
+```bash
+make format     # Format code
+make lint       # Run linters
+make test       # Run tests
+make check      # Run all checks
+```
+{%- endif %}
+
+{%- if include_ai_tools %}
+
+### AI-Assisted Development
+
+```bash
+# Start a coding session
+uv run ai-start-task "Feature description"
+
+# Log progress
+uv run ai-log "Progress message"
+
+# Finish session
+uv run ai-finish-task --summary="What was accomplished"
+```
+{%- endif %}
+
+{%- if include_docker %}
+
+### Docker
+
+```bash
+# Build and run
+docker-compose up --build
+
+# Run in production
+docker-compose up -d
+```
+{%- endif %}
+
+## Contributing
+
+See [CONTRIBUTING.md](contributing.md) for development guidelines.
+
+## License
+
+This project is licensed under the {{ license }} License.

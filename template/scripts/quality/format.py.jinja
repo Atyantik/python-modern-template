@@ -1,0 +1,99 @@
+"""Code formatting script using Black and isort.
+
+This script formats Python code using Black and isort, reading configuration
+from pyproject.toml.
+"""
+
+from __future__ import annotations
+
+import subprocess
+import sys
+from pathlib import Path
+
+from scripts.quality.config import load_config
+
+
+def run_command(cmd: list[str], description: str) -> bool:
+    """Run a shell command and return success status.
+
+    Args:
+        cmd: Command and arguments to run
+        description: Description of what the command does
+
+    Returns:
+        True if command succeeded (exit code 0), False otherwise
+    """
+    print(f"▶ {description}...")
+    print(f"  Running: {' '.join(cmd)}")
+    result = subprocess.run(cmd, cwd=Path.cwd())
+    if result.returncode == 0:
+        print(f"✅ {description} - PASSED")
+        return True
+    print(f"❌ {description} - FAILED")
+    return False
+
+
+def format_code(check_only: bool = False) -> int:
+    """Format code using Black and isort.
+
+    Args:
+        check_only: If True, only check formatting without making changes
+
+    Returns:
+        Exit code (0 for success, 1 for failure)
+    """
+    config = load_config()
+    paths = config.code_paths
+
+    print("\n" + "=" * 70)
+    print("CODE FORMATTING")
+    print("=" * 70)
+    print(f"Paths: {', '.join(paths)}")
+    print(f"Line length: {config.line_length}")
+    print(f"Mode: {'CHECK ONLY' if check_only else 'FORMAT'}")
+    print("=" * 70 + "\n")
+
+    success = True
+
+    # Run isort
+    isort_cmd = ["isort"]
+    if check_only:
+        isort_cmd.append("--check-only")
+    isort_cmd.extend(paths)
+
+    if not run_command(isort_cmd, "isort (import sorting)"):
+        success = False
+
+    # Run Black
+    black_cmd = ["black"]
+    if check_only:
+        black_cmd.append("--check")
+    black_cmd.extend(paths)
+
+    if not run_command(black_cmd, "Black (code formatting)"):
+        success = False
+
+    print("\n" + "=" * 70)
+    if success:
+        print("✅ ALL FORMATTING CHECKS PASSED")
+    else:
+        print("❌ SOME FORMATTING CHECKS FAILED")
+    print("=" * 70 + "\n")
+
+    return 0 if success else 1
+
+
+def main() -> int:
+    """Entry point for the format script.
+
+    Returns:
+        Exit code (0 for success, 1 for failure)
+    """
+    # Check if --check flag is provided
+    check_only = "--check" in sys.argv
+
+    return format_code(check_only=check_only)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

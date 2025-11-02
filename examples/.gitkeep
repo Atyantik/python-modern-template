@@ -1,0 +1,11 @@
+# Examples Directory
+
+This directory contains:
+- README.md - Comprehensive guide to all 7 example configurations
+- generate-all.sh - Script to generate all example projects locally
+
+The generated example projects (01-minimal-package through 07-full-featured)
+are not tracked in git as they are generated from the template.
+
+To generate examples locally, run:
+    ./generate-all.sh

@@ -1,0 +1,111 @@
+name: Test Template
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test-configurations:
+    name: Test ${{ matrix.config-name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - config-name: "minimal"
+            args: "--data include_quality_scripts=false --data include_ai_tools=false --data include_docker=false --data include_docs=false --data include_pre_commit=false"
+
+          - config-name: "quality-only"
+            args: "--data include_quality_scripts=true --data include_ai_tools=false --data include_docker=false --data include_docs=false"
+
+          - config-name: "ai-only"
+            args: "--data include_quality_scripts=false --data include_ai_tools=true --data include_docker=false --data include_docs=false"
+
+          - config-name: "docker-only"
+            args: "--data include_quality_scripts=false --data include_ai_tools=false --data include_docker=true --data include_docs=false"
+
+          - config-name: "full-features"
+            args: "--data include_quality_scripts=true --data include_ai_tools=true --data include_docker=true --data include_docs=true"
+
+    steps:
+      - name: Checkout template
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install copier
+        run: uv tool install copier
+
+      - name: Generate project from template
+        run: |
+          uv tool run copier copy \
+            --trust \
+            --defaults \
+            ${{ matrix.args }} \
+            . test-project
+
+      - name: Install project dependencies
+        working-directory: test-project
+        run: uv sync --all-extras --dev
+
+      - name: Run tests
+        working-directory: test-project
+        run: uv run pytest -v
+
+      - name: Check project structure
+        working-directory: test-project
+        run: |
+          echo "=== Project Structure ==="
+          ls -la
+          echo ""
+          echo "=== Source Structure ==="
+          ls -la src/
+          echo ""
+          echo "=== Tests Structure ==="
+          ls -la tests/
+
+  test-python-versions:
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Checkout template
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install copier
+        run: uv tool install copier
+
+      - name: Generate project
+        run: |
+          uv tool run copier copy \
+            --trust \
+            --defaults \
+            --data python_version="${{ matrix.python-version }}" \
+            . test-project
+
+      - name: Install and test
+        working-directory: test-project
+        run: |
+          uv sync --all-extras --dev
+          uv run pytest -v

@@ -1,0 +1,89 @@
+"""Configuration loader for quality scripts.
+
+This module provides a single source of truth for quality tool configuration
+by loading settings from pyproject.toml.
+"""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+from typing import Any
+
+try:
+    import tomllib  # Python 3.11+
+except ModuleNotFoundError:
+    import tomli as tomllib  # type: ignore[import-not-found]
+
+
+class QualityConfig:
+    """Configuration for quality scripts loaded from pyproject.toml."""
+
+    def __init__(self, project_root: Path | None = None) -> None:
+        """Initialize configuration from pyproject.toml.
+
+        Args:
+            project_root: Root directory of the project. Defaults to script's parent parent parent.
+        """
+        if project_root is None:
+            # Default to project root (3 levels up from this script)
+            project_root = Path(__file__).parent.parent.parent
+
+        self.project_root = project_root
+        self.pyproject_path = project_root / "pyproject.toml"
+
+        if not self.pyproject_path.exists():
+            print(f"Error: pyproject.toml not found at {self.pyproject_path}", file=sys.stderr)
+            sys.exit(1)
+
+        # Load pyproject.toml
+        with open(self.pyproject_path, "rb") as f:
+            self.pyproject = tomllib.load(f)
+
+        # Load quality-specific configuration
+        self.quality_config = self.pyproject.get("tool", {}).get("quality", {})
+
+    @property
+    def code_paths(self) -> list[str]:
+        """Get paths to check with formatters and linters."""
+        return self.quality_config.get("code_paths", ["src", "tests"])
+
+    @property
+    def test_paths(self) -> list[str]:
+        """Get paths to run tests on."""
+        return self.quality_config.get("test_paths", ["tests"])
+
+    @property
+    def min_coverage(self) -> int:
+        """Get minimum coverage percentage."""
+        return self.quality_config.get("min_coverage", {{ min_coverage }})
+
+    @property
+    def line_length(self) -> int:
+        """Get maximum line length."""
+        # Try Black config first, fallback to quality config, default to {{ line_length }}
+        black_config = self.pyproject.get("tool", {}).get("black", {})
+        return black_config.get("line-length", self.quality_config.get("line_length", {{ line_length }}))
+
+    def get_tool_config(self, tool_name: str) -> dict[str, Any]:
+        """Get configuration for a specific tool.
+
+        Args:
+            tool_name: Name of the tool (e.g., 'black', 'ruff', 'pytest')
+
+        Returns:
+            Tool-specific configuration dictionary
+        """
+        return self.pyproject.get("tool", {}).get(tool_name, {})
+
+
+def load_config(project_root: Path | None = None) -> QualityConfig:
+    """Load quality configuration from pyproject.toml.
+
+    Args:
+        project_root: Root directory of the project
+
+    Returns:
+        Loaded configuration object
+    """
+    return QualityConfig(project_root)

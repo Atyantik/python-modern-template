@@ -1,0 +1,265 @@
+# Contributing to {{ project_name }}
+
+Thank you for your interest in contributing! This document provides guidelines for contributing to the project.
+
+## Development Setup
+
+1. **Fork and clone the repository:**
+
+   ```bash
+   git clone {{ github_repo_url if use_github else 'your-fork-url' }}
+   cd {{ project_slug }}
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   uv sync --all-extras --dev
+   ```
+
+{%- if include_pre_commit %}
+
+3. **Install pre-commit hooks:**
+
+   ```bash
+   uv run pre-commit install
+   ```
+{%- endif %}
+
+## Development Workflow
+
+{%- if include_ai_tools %}
+
+### Using AI Tools
+
+We encourage AI-assisted development with proper session management:
+
+```bash
+# Start a new task
+uv run ai-start-task "Implement feature X"
+
+# Log your progress
+uv run ai-log "Step completed"
+
+# Update the plan
+uv run ai-update-plan "Feature X implementation"
+
+# Finish the task
+uv run ai-finish-task --summary="Completed feature X with tests"
+```
+
+See [AI Development Tools](ai-development/ai-tools.md) for more details.
+{%- endif %}
+
+### Test-Driven Development (TDD)
+
+**Always write tests before implementation:**
+
+1. Write failing tests that define the desired behavior
+2. Run tests to confirm they fail: `make test`
+3. Implement the minimum code to make tests pass
+4. Run tests again to verify: `make test`
+5. Refactor while keeping tests green
+6. Run quality checks: `make check`
+
+{%- if include_quality_scripts %}
+
+### Quality Standards
+
+Before submitting a pull request, ensure all quality checks pass:
+
+```bash
+make check
+```
+
+This runs:
+- **Formatting** (Black, isort): `make format`
+- **Linting** (Ruff, mypy, Pylint): `make lint`
+- **Testing** (pytest with coverage): `make test`
+- **Security** (Bandit): Included in `make check`
+
+**Requirements:**
+- Test coverage: ≥ {{ min_coverage }}%
+- All linters must pass
+- All tests must pass
+- Type hints required for all functions
+{%- endif %}
+
+## Code Style
+
+### Python Code
+
+- **Line length:** {{ line_length }} characters
+- **Style:** Black with isort for imports
+- **Type hints:** Required for all functions
+- **Docstrings:** Google style for all public functions
+
+Example:
+
+```python
+from __future__ import annotations
+
+
+def process_data(input_data: str, verbose: bool = False) -> dict[str, int]:
+    """Process input data and return statistics.
+
+    Args:
+        input_data: The data to process
+        verbose: Whether to print verbose output
+
+    Returns:
+        Dictionary with processing statistics
+
+    Raises:
+        ValueError: If input_data is empty
+    """
+    if not input_data:
+        raise ValueError("Input data cannot be empty")
+
+    # Implementation here
+    return {"count": len(input_data)}
+```
+
+### Commit Messages
+
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+Types:
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `refactor`: Code refactoring
+- `test`: Test additions/changes
+- `chore`: Build process or tooling changes
+
+Examples:
+```
+feat(api): add user authentication endpoint
+fix(parser): handle edge case in data validation
+docs: update installation instructions
+test: add tests for data processor
+```
+
+## Pull Request Process
+
+1. **Create a feature branch:**
+   ```bash
+   git checkout -b feat/your-feature-name
+   ```
+
+2. **Make your changes following TDD:**
+   - Write tests first
+   - Implement feature
+   - Ensure all quality checks pass
+
+3. **Commit your changes:**
+   ```bash
+   git add .
+   git commit -m "feat: add your feature"
+   ```
+
+4. **Push to your fork:**
+   ```bash
+   git push origin feat/your-feature-name
+   ```
+
+5. **Open a Pull Request:**
+   - Describe what you changed and why
+   - Link related issues
+   - Ensure CI passes
+
+### PR Checklist
+
+- [ ] Tests written before implementation (TDD)
+- [ ] All tests pass (`make test`)
+- [ ] Coverage ≥ {{ min_coverage }}% (`make coverage`)
+- [ ] Code formatted (`make format`)
+- [ ] Linters pass (`make lint`)
+- [ ] Complete quality check passes (`make check`)
+- [ ] Documentation updated (if needed)
+- [ ] Changelog updated (for user-facing changes)
+{%- if include_pre_commit %}
+- [ ] Pre-commit hooks pass
+{%- endif %}
+
+## Testing Guidelines
+
+### Test Structure
+
+```python
+"""Tests for the data processor module."""
+
+from __future__ import annotations
+
+import pytest
+
+from {{ package_name }}.processor import process_data
+
+
+class TestDataProcessor:
+    """Test the DataProcessor class."""
+
+    def test_process_valid_data(self) -> None:
+        """Test processing with valid data."""
+        result = process_data("test data")
+        assert result["count"] == 9
+
+    def test_process_empty_data_raises_error(self) -> None:
+        """Test that empty data raises ValueError."""
+        with pytest.raises(ValueError, match="cannot be empty"):
+            process_data("")
+```
+
+### Mocking Guidelines
+
+Prefer real code over mocks when possible. Only mock:
+- External APIs (HTTP requests)
+- Database operations
+- File system operations
+- Time-dependent operations
+- Random number generation
+
+## Documentation
+
+{%- if include_docs %}
+
+### Building Documentation
+
+```bash
+# Serve locally
+uv run mkdocs serve
+
+# Build static site
+uv run mkdocs build
+```
+
+### Documentation Standards
+
+- Keep it concise and clear
+- Include code examples
+- Update API reference when adding public APIs
+- Add tutorials for complex features
+{%- endif %}
+
+## Getting Help
+
+- Check existing [issues]({{ github_repo_url if use_github else 'repository-url' }}/issues)
+- Read the [documentation](index.md)
+- Ask questions in discussions
+
+## Code of Conduct
+
+- Be respectful and inclusive
+- Focus on constructive feedback
+- Help others learn and grow
+- Follow the project's coding standards
+
+Thank you for contributing! 🎉

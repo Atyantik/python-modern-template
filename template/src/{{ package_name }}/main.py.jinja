@@ -1,0 +1,106 @@
+"""Main application module for {{ project_name }}."""
+
+from __future__ import annotations
+
+{%- if include_cli %}
+{%-   if cli_framework == "typer" %}
+import typer
+
+app = typer.Typer(
+    name="{{ package_name }}",
+    help="{{ project_description }}",
+    add_completion=False,
+)
+
+
+@app.command()
+def run(
+    name: str = typer.Option("World", "--name", "-n", help="Name to greet"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Verbose output"),
+) -> None:
+    """Run the main application."""
+    if verbose:
+        typer.echo(f"Running {{ project_name }}...")
+    typer.echo(f"Hello, {name}!")
+    typer.echo("{{ project_description }}")
+
+
+def main() -> int:
+    """Entry point for the CLI application.
+
+    Returns:
+        Exit code (0 for success)
+    """
+    app()
+    return 0
+{%-   elif cli_framework == "click" %}
+import click
+
+
+@click.command()
+@click.option("--name", "-n", default="World", help="Name to greet")
+@click.option("--verbose", "-v", is_flag=True, help="Verbose output")
+def run(name: str, verbose: bool) -> None:
+    """Run the main application."""
+    if verbose:
+        click.echo(f"Running {{ project_name }}...")
+    click.echo(f"Hello, {name}!")
+    click.echo("{{ project_description }}")
+
+
+def main() -> int:
+    """Entry point for the CLI application.
+
+    Returns:
+        Exit code (0 for success)
+    """
+    run()
+    return 0
+{%-   else %}
+import argparse
+
+
+def main() -> int:
+    """Entry point for the CLI application.
+
+    Returns:
+        Exit code (0 for success)
+    """
+    parser = argparse.ArgumentParser(
+        prog="{{ package_name }}",
+        description="{{ project_description }}",
+    )
+    parser.add_argument(
+        "--name", "-n", default="World", help="Name to greet"
+    )
+    parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Verbose output"
+    )
+
+    args = parser.parse_args()
+
+    if args.verbose:
+        print(f"Running {{ project_name }}...")
+    print(f"Hello, {args.name}!")
+    print("{{ project_description }}")
+
+    return 0
+{%-   endif %}
+{%- else %}
+
+
+def main() -> int:
+    """Main application entry point.
+
+    Returns:
+        Exit code (0 for success)
+    """
+    print("{{ project_name }}")
+    print("{{ project_description }}")
+    print("\nEdit src/{{ package_name }}/main.py to add your application logic.")
+    return 0
+{%- endif %}
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,254 @@
+# Copier Template Configuration
+# Modern Python Project Template with Quality Scripts & AI Support
+
+_subdirectory: template
+_templates_suffix: .jinja
+_min_copier_version: "9.0.0"
+
+# Conditional file exclusions
+_exclude:
+  # Exclude AI tools if not requested
+  - "{% if not include_ai_tools %}scripts/ai_tools{% endif %}"
+  - "{% if not include_ai_tools %}tests/ai_tools{% endif %}"
+  - "{% if not include_ai_tools %}AI_DOCS{% endif %}"
+  - "{% if not include_ai_tools %}.ai-context{% endif %}"
+
+  # Exclude quality scripts if not requested
+  - "{% if not include_quality_scripts %}scripts/quality{% endif %}"
+  - "{% if not include_quality_scripts %}tests/quality{% endif %}"
+
+  # Conditional AI config files based on preset
+  - "{% if not include_ai_tools or (ai_tools_preset != 'all' and ai_tools_preset != 'claude' and not include_claude) %}CLAUDE.md{% endif %}"
+  - "{% if not include_ai_tools or (ai_tools_preset != 'all' and ai_tools_preset != 'cursor' and not include_cursor) %}.cursorrules{% endif %}"
+  - "{% if not include_ai_tools or (ai_tools_preset != 'all' and ai_tools_preset != 'custom' and not include_copilot) %}.github/copilot-instructions.md{% endif %}"
+  - "{% if not include_ai_tools or (ai_tools_preset != 'all' and not include_gemini) %}.gemini{% endif %}"
+  - "{% if not include_ai_tools or (ai_tools_preset != 'all' and not include_aider) %}.aider.conf.yml{% endif %}"
+
+  # Exclude Docker files if not requested
+  - "{% if not include_docker %}Dockerfile.jinja{% endif %}"
+  - "{% if not include_docker %}docker-compose.yml.jinja{% endif %}"
+  - "{% if not include_docker %}.dockerignore{% endif %}"
+
+  # Exclude docs if not requested
+  - "{% if not include_docs %}docs{% endif %}"
+  - "{% if not include_docs %}mkdocs.yml.jinja{% endif %}"
+
+  # Exclude pre-commit if not requested
+  - "{% if not include_pre_commit %}.pre-commit-config.yaml.jinja{% endif %}"
+
+# Metadata
+_metadata:
+  template_version: "1.0.0"
+  description: "Modern Python project with quality scripts, AI support, and TDD enforcement"
+
+# Project Information
+project_name:
+  type: str
+  help: "Project name (human-readable, e.g., 'My Awesome Project')"
+  default: "My Python Project"
+  validator: "{% if not project_name %}Project name cannot be empty{% endif %}"
+
+project_description:
+  type: str
+  help: "Short project description"
+  default: "A Python project with modern tooling and quality enforcement"
+
+project_slug:
+  type: str
+  help: "Project slug (used for repository name, lowercase with hyphens)"
+  default: "{{ project_name|lower|replace(' ', '-')|replace('_', '-') }}"
+
+package_name:
+  type: str
+  help: "Python package name (lowercase with underscores)"
+  default: "{{ project_slug|replace('-', '_') }}"
+
+# Author Information
+author_name:
+  type: str
+  help: "Your full name"
+  default: "Your Name"
+
+author_email:
+  type: str
+  help: "Your email address"
+  default: "you@example.com"
+
+# Python Configuration
+python_version:
+  type: str
+  help: "Primary Python version for development"
+  default: "3.13"
+  choices:
+    - "3.11"
+    - "3.12"
+    - "3.13"
+
+min_python_version:
+  type: str
+  help: "Minimum Python version required"
+  default: "3.11"
+  choices:
+    - "3.10"
+    - "3.11"
+    - "3.12"
+
+# Quality Configuration
+min_coverage:
+  type: int
+  help: "Minimum test coverage percentage (0-100)"
+  default: 80
+  validator: "{% if min_coverage < 0 or min_coverage > 100 %}Coverage must be between 0 and 100{% endif %}"
+
+line_length:
+  type: int
+  help: "Maximum line length for Black and other formatters"
+  default: 88
+  choices:
+    - 79
+    - 88
+    - 100
+    - 120
+
+# Feature Flags
+include_quality_scripts:
+  type: bool
+  help: "Include quality scripts (format, lint, test, security, check)?"
+  default: true
+
+include_ai_tools:
+  type: bool
+  help: "Include AI context management and session tracking tools?"
+  default: true
+
+include_github_actions:
+  type: bool
+  help: "Include GitHub Actions CI/CD workflow?"
+  default: true
+
+include_pre_commit:
+  type: bool
+  help: "Include pre-commit hooks configuration?"
+  default: true
+
+include_docker:
+  type: bool
+  help: "Include Docker support (Dockerfile, docker-compose)?"
+  default: false
+
+include_docs:
+  type: bool
+  help: "Include documentation setup (MkDocs)?"
+  default: false
+
+# AI Tools Selection
+ai_tools_preset:
+  type: str
+  help: "Which AI tools to configure?"
+  default: "all"
+  choices:
+    - "all"       # All AI tools (Claude, Cursor, Copilot, Gemini, Aider)
+    - "minimal"   # Just AGENTS.md (universal)
+    - "claude"    # Claude Code only
+    - "cursor"    # Cursor IDE only
+    - "custom"    # Select individually
+  when: "{{ include_ai_tools }}"
+
+include_claude:
+  type: bool
+  help: "Include Claude Code configuration (CLAUDE.md)?"
+  default: true
+  when: "{{ include_ai_tools and ai_tools_preset == 'custom' }}"
+
+include_cursor:
+  type: bool
+  help: "Include Cursor IDE configuration (.cursorrules)?"
+  default: true
+  when: "{{ include_ai_tools and ai_tools_preset == 'custom' }}"
+
+include_copilot:
+  type: bool
+  help: "Include GitHub Copilot configuration?"
+  default: true
+  when: "{{ include_ai_tools and ai_tools_preset == 'custom' }}"
+
+include_gemini:
+  type: bool
+  help: "Include Gemini Code Assist configuration?"
+  default: true
+  when: "{{ include_ai_tools and ai_tools_preset == 'custom' }}"
+
+include_aider:
+  type: bool
+  help: "Include Aider configuration (.aider.conf.yml)?"
+  default: true
+  when: "{{ include_ai_tools and ai_tools_preset == 'custom' }}"
+
+# License
+license:
+  type: str
+  help: "Project license"
+  default: "MIT"
+  choices:
+    - "MIT"
+    - "Apache-2.0"
+    - "GPL-3.0"
+    - "BSD-3-Clause"
+    - "Proprietary"
+
+# Repository Information
+github_username:
+  type: str
+  help: "GitHub username or organization"
+  default: "Atyantik"
+
+use_github:
+  type: bool
+  help: "Configure for GitHub (workflows, etc.)?"
+  default: true
+
+# CLI Framework (Optional)
+include_cli:
+  type: bool
+  help: "Include CLI framework boilerplate?"
+  default: false
+
+cli_framework:
+  type: str
+  help: "Which CLI framework to use?"
+  default: "typer"
+  choices:
+    - "typer"
+    - "click"
+    - "argparse"
+  when: "{{ include_cli }}"
+
+# Computed/Derived Values
+github_repo_url:
+  type: str
+  default: "https://github.com/{{ github_username }}/{{ project_slug }}"
+  when: false  # Don't ask user, just compute
+
+year:
+  type: str
+  default: "{{ '%Y' | strftime }}"
+  when: false
+
+# Post-generation tasks
+_tasks:
+  # Install dependencies
+  - "uv sync --all-extras --dev"
+
+  # Initialize git
+  - "git init || echo 'Git already initialized'"
+  - "git add ."
+  - "git commit -m 'Initial commit from python-modern-template' || echo 'Initial commit done'"
+
+  # Success message
+  - 'echo ""'
+  - 'echo "✨ Project ''{{ project_name }}'' created successfully!"'
+  - 'echo ""'
+  - 'echo "📍 Next steps:"'
+  - 'echo "   cd test-project"'
+  - 'echo "   make check     # Run all quality checks"'
+  - 'echo ""'

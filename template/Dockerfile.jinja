@@ -1,0 +1,54 @@
+# Multi-stage Dockerfile for {{ project_name }}
+# Python {{ python_version }} with uv for fast dependency management
+
+# Stage 1: Builder
+FROM python:{{ python_version }}-slim as builder
+
+# Set working directory
+WORKDIR /app
+
+# Install uv for fast package management
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+# Copy dependency files
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies
+RUN uv sync --frozen --no-dev
+
+# Stage 2: Runtime
+FROM python:{{ python_version }}-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy uv from builder
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+# Copy virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
+
+# Copy application code
+COPY src ./src
+{%- if include_quality_scripts or include_ai_tools %}
+COPY scripts ./scripts
+{%- endif %}
+
+# Copy configuration files
+COPY pyproject.toml ./
+
+# Set Python path to use virtual environment
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONPATH="/app/src:$PYTHONPATH"
+
+# Create non-root user for security
+RUN useradd -m -u 1000 appuser && \
+    chown -R appuser:appuser /app
+USER appuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD python -c "import {{ package_name }}; print('OK')" || exit 1
+
+# Default command
+CMD ["{{ package_name }}"]

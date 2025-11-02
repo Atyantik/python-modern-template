@@ -1,0 +1,86 @@
+"""Testing script using pytest with coverage.
+
+This script runs tests with pytest and generates coverage reports,
+reading configuration from pyproject.toml.
+"""
+
+from __future__ import annotations
+
+import subprocess
+import sys
+from pathlib import Path
+
+from scripts.quality.config import load_config
+
+
+def run_tests(verbose: bool = False, coverage: bool = True) -> int:
+    """Run tests using pytest.
+
+    Args:
+        verbose: If True, run pytest in verbose mode
+        coverage: If True, include coverage reporting
+
+    Returns:
+        Exit code (0 for success, non-zero for failure)
+    """
+    config = load_config()
+    test_paths = config.test_paths
+    min_coverage = config.min_coverage
+
+    print("\n" + "=" * 70)
+    print("RUNNING TESTS")
+    print("=" * 70)
+    print(f"Test paths: {', '.join(test_paths)}")
+    if coverage:
+        print(f"Minimum coverage: {min_coverage}%")
+    print("=" * 70 + "\n")
+
+    # Build pytest command
+    pytest_cmd = ["pytest"]
+
+    if verbose:
+        pytest_cmd.append("-v")
+
+    if coverage:
+        # pytest is configured in pyproject.toml with coverage settings
+        # Just run normally and it will use the configured settings
+        pass
+    else:
+        # Disable coverage
+        pytest_cmd.append("--no-cov")
+
+    pytest_cmd.extend(test_paths)
+
+    print(f"▶ Running: {' '.join(pytest_cmd)}\n")
+    result = subprocess.run(pytest_cmd, cwd=Path.cwd())
+
+    print("\n" + "=" * 70)
+    if result.returncode == 0:
+        print("✅ ALL TESTS PASSED")
+    else:
+        print("❌ TESTS FAILED")
+    print("=" * 70 + "\n")
+
+    return result.returncode
+
+
+def main() -> int:
+    """Entry point for the test script.
+
+    Returns:
+        Exit code (0 for success, non-zero for failure)
+    """
+    # Parse command-line arguments
+    verbose = "-v" in sys.argv or "--verbose" in sys.argv
+    no_coverage = "--no-cov" in sys.argv or "--no-coverage" in sys.argv
+    coverage = not no_coverage
+
+    # Also support --coverage flag explicitly
+    if "--coverage" in sys.argv:
+        coverage = True
+
+    return run_tests(verbose=verbose, coverage=coverage)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

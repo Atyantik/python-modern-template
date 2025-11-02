@@ -1,0 +1,121 @@
+"""Complete quality check orchestrator.
+
+This script runs all quality checks (format, lint, test, security) in sequence
+and provides a comprehensive quality report.
+"""
+
+from __future__ import annotations
+
+import sys
+import time
+from typing import Callable
+
+from scripts.quality.format import format_code
+from scripts.quality.lint import lint_code
+from scripts.quality.security import security_check
+from scripts.quality.test import run_tests
+
+
+class QualityCheckResult:
+    """Result of a quality check step."""
+
+    def __init__(self, name: str, passed: bool, duration: float) -> None:
+        """Initialize check result.
+
+        Args:
+            name: Name of the check
+            passed: Whether the check passed
+            duration: Duration in seconds
+        """
+        self.name = name
+        self.passed = passed
+        self.duration = duration
+
+
+def run_check(name: str, check_func: Callable[[], int]) -> QualityCheckResult:
+    """Run a quality check and measure duration.
+
+    Args:
+        name: Name of the check
+        check_func: Function to run the check
+
+    Returns:
+        Check result with timing information
+    """
+    start_time = time.time()
+    exit_code = check_func()
+    duration = time.time() - start_time
+    passed = exit_code == 0
+
+    return QualityCheckResult(name, passed, duration)
+
+
+def quality_check(skip_security: bool = False) -> int:
+    """Run complete quality check suite.
+
+    Args:
+        skip_security: If True, skip security checks
+
+    Returns:
+        Exit code (0 for success, 1 for failure)
+    """
+    print("\n" + "=" * 70)
+    print("COMPLETE QUALITY CHECK")
+    print("=" * 70)
+    print("Running all quality checks: format, lint, test, security")
+    print("=" * 70 + "\n")
+
+    results: list[QualityCheckResult] = []
+
+    # 1. Format check
+    results.append(run_check("Format (Black + isort)", lambda: format_code(check_only=True)))
+
+    # 2. Lint check
+    results.append(run_check("Lint (Ruff + mypy + Pylint)", lint_code))
+
+    # 3. Test check
+    results.append(run_check("Tests (pytest + coverage)", lambda: run_tests(verbose=False)))
+
+    # 4. Security check (optional)
+    if not skip_security:
+        results.append(run_check("Security (Bandit)", security_check))
+
+    # Print summary
+    print("\n" + "=" * 70)
+    print("QUALITY CHECK SUMMARY")
+    print("=" * 70)
+
+    all_passed = True
+    for result in results:
+        status = "✅ PASS" if result.passed else "❌ FAIL"
+        print(f"{status}  {result.name:<40} ({result.duration:.2f}s)")
+        if not result.passed:
+            all_passed = False
+
+    total_duration = sum(r.duration for r in results)
+    print("=" * 70)
+    print(f"Total time: {total_duration:.2f}s")
+
+    if all_passed:
+        print("\n🎉 ALL QUALITY CHECKS PASSED! 🎉")
+        print("=" * 70 + "\n")
+        return 0
+    else:
+        print("\n💥 QUALITY CHECKS FAILED")
+        print("Fix the issues above and run 'make check' again.")
+        print("=" * 70 + "\n")
+        return 1
+
+
+def main() -> int:
+    """Entry point for the quality check script.
+
+    Returns:
+        Exit code (0 for success, 1 for failure)
+    """
+    skip_security = "--skip-security" in sys.argv
+    return quality_check(skip_security=skip_security)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

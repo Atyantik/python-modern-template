@@ -1,0 +1,69 @@
+"""Tests for quality configuration loader."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+from scripts.quality.config import QualityConfig, load_config
+
+
+class TestQualityConfig:
+    """Test quality configuration loading."""
+
+    def test_load_config_success(self) -> None:
+        """Test loading configuration from current project."""
+        config = load_config()
+        assert isinstance(config, QualityConfig)
+        assert config.project_root.exists()
+        assert config.pyproject_path.exists()
+
+    def test_code_paths_default(self) -> None:
+        """Test default code paths."""
+        config = load_config()
+        paths = config.code_paths
+        assert isinstance(paths, list)
+        assert len(paths) > 0
+        # Should at least have src and tests
+        assert "src" in paths or "tests" in paths
+
+    def test_test_paths_default(self) -> None:
+        """Test default test paths."""
+        config = load_config()
+        paths = config.test_paths
+        assert isinstance(paths, list)
+        assert "tests" in paths
+
+    def test_min_coverage(self) -> None:
+        """Test minimum coverage configuration."""
+        config = load_config()
+        coverage = config.min_coverage
+        assert isinstance(coverage, int)
+        assert 0 <= coverage <= 100
+
+    def test_line_length(self) -> None:
+        """Test line length configuration."""
+        config = load_config()
+        length = config.line_length
+        assert isinstance(length, int)
+        assert length > 0
+
+    def test_get_tool_config(self) -> None:
+        """Test getting tool-specific configuration."""
+        config = load_config()
+        black_config = config.get_tool_config("black")
+        assert isinstance(black_config, dict)
+
+    def test_nonexistent_tool_config(self) -> None:
+        """Test getting config for nonexistent tool returns empty dict."""
+        config = load_config()
+        config_dict = config.get_tool_config("nonexistent_tool_xyz")
+        assert isinstance(config_dict, dict)
+        assert len(config_dict) == 0
+
+    def test_pyproject_loaded(self) -> None:
+        """Test that pyproject.toml is properly loaded."""
+        config = load_config()
+        assert "project" in config.pyproject
+        assert "tool" in config.pyproject

@@ -1,0 +1,384 @@
+"""AI Finish Task tool - finalizes session and updates context files."""
+
+from __future__ import annotations
+
+import argparse
+import re
+import shutil
+import sys
+
+from scripts.ai_tools.utils import (
+    format_timestamp,
+    get_archive_dir,
+    get_current_session,
+    get_session_files,
+    get_sessions_dir,
+    print_error,
+    print_header,
+    print_warning,
+    read_context_file,
+    write_context_file,
+)
+
+
+def extract_files_changed(execution_content: str) -> list[str]:
+    """Extract files changed from execution log.
+
+    Args:
+        execution_content: Content of EXECUTION file
+
+    Returns:
+        List of file paths mentioned
+    """
+    files = []
+
+    # Look for common patterns like file paths
+    patterns = [
+        r"(?:Created|Modified|Updated|Added)\s+([a-zA-Z0-9_./\-]+\.(?:py|md|txt|yml|yaml|toml|json))",
+        r"`([a-zA-Z0-9_./\-]+\.(?:py|md|txt|yml|yaml|toml|json))`",
+        r"([a-zA-Z0-9_./\-]+\.py)",
+    ]
+
+    for pattern in patterns:
+        matches = re.findall(pattern, execution_content, re.IGNORECASE)
+        files.extend(matches)
+
+    # Remove duplicates and sort
+    files = sorted(set(files))
+
+    return files
+
+
+def extract_decisions(execution_content: str) -> list[str]:
+    """Extract decisions from execution log.
+
+    Args:
+        execution_content: Content of EXECUTION file
+
+    Returns:
+        List of decisions
+    """
+    decisions = []
+
+    # Look for decision-related log entries
+    pattern = r"\[.*?\]\s+.*?(?:decision|decided|chose):\s*(.+?)(?:\n|$)"
+    matches = re.findall(pattern, execution_content, re.IGNORECASE)
+
+    decisions.extend(matches)
+
+    return decisions
+
+
+def check_plan_completion(plan_content: str) -> tuple[bool, int, int]:
+    """Check if plan is complete.
+
+    Args:
+        plan_content: Content of PLAN file
+
+    Returns:
+        Tuple of (is_complete, checked_count, total_count)
+    """
+    lines = plan_content.split("\n")
+    total = 0
+    checked = 0
+
+    for line in lines:
+        match = re.match(r"^\s*-\s*\[([ x])\]", line)
+        if match:
+            total += 1
+            if match.group(1) == "x":
+                checked += 1
+
+    is_complete = total > 0 and checked == total
+
+    return (is_complete, checked, total)
+
+
+def check_make_check_ran(execution_content: str) -> bool:
+    """Check if make check was run in execution log.
+
+    Args:
+        execution_content: Content of EXECUTION file
+
+    Returns:
+        True if make check was mentioned
+    """
+    return bool(re.search(r"make\s+check", execution_content, re.IGNORECASE))
+
+
+def update_last_session_summary(
+    session_id: str,
+    task_name: str,
+    summary_content: str,
+) -> None:
+    """Update LAST_SESSION_SUMMARY.md with this session.
+
+    Args:
+        session_id: Session ID
+        task_name: Task name
+        summary_content: Content of SUMMARY file
+    """
+    timestamp = format_timestamp()
+
+    # Extract key info from summary
+    status = "✅ Completed"
+
+    new_summary = f"""# Last Session Summary
+
+> **Auto-updated by AI agents**: This file contains a summary of the most recent AI session
+
+## Session Information
+
+**Session ID**: {session_id}
+**Task**: {task_name}
+**Date**: {timestamp}
+**Status**: {status}
+
+{summary_content}
+
+---
+
+**This file is automatically updated by the last AI agent to complete a task.**
+**Next AI agent: Read this file first to understand recent work!**
+
+**Last Updated**: {timestamp}
+"""
+
+    write_context_file("LAST_SESSION_SUMMARY.md", new_summary)
+
+
+def remove_task_from_active(task_name: str, session_id: str) -> None:
+    """Remove task from ACTIVE_TASKS.md In Progress section.
+
+    Args:
+        task_name: Task name
+        session_id: Session ID
+    """
+    active_tasks = read_context_file("ACTIVE_TASKS.md")
+
+    if not active_tasks:
+        return
+
+    lines = active_tasks.split("\n")
+
+    # Find and remove the task line
+    new_lines = []
+    for line in lines:
+        # Skip lines that contain this session ID or task name
+        if session_id in line or task_name in line:
+            continue
+        new_lines.append(line)
+
+    write_context_file("ACTIVE_TASKS.md", "\n".join(new_lines))
+
+
+def archive_old_sessions() -> int:
+    """Archive sessions older than the 5 most recent.
+
+    Returns:
+        Number of sessions archived
+    """
+    sessions_dir = get_sessions_dir()
+    archive_dir = get_archive_dir()
+
+    if not sessions_dir.exists():
+        return 0
+
+    # Get all summary files
+    summary_files = sorted(sessions_dir.glob("*-SUMMARY-*.md"), reverse=True)
+
+    # Keep first 5, archive the rest
+    to_archive = summary_files[5:]
+
+    if not to_archive:
+        return 0
+
+    # Create archive directory
+    archive_dir.mkdir(parents=True, exist_ok=True)
+
+    archived_count = 0
+    for summary_file in to_archive:
+        # Get session ID from filename
+        session_id = summary_file.name[:14]
+
+        # Find all files for this session
+        session_files = list(sessions_dir.glob(f"{session_id}-*"))
+
+        # Move all to archive
+        for file in session_files:
+            dest = archive_dir / file.name
+            shutil.move(str(file), str(dest))
+            archived_count += 1
+
+    return archived_count // 3  # Divide by 3 since each session has 3 files
+
+
+def finish_task(
+    summary: str | None = None,
+    session_id: str | None = None,
+) -> None:
+    """Finalize task and update all context files.
+
+    Args:
+        summary: Brief summary (default: prompt user)
+        session_id: Session ID (default: most recent)
+    """
+    # Get current session if not specified
+    if session_id is None:
+        session_id = get_current_session()
+
+    if session_id is None:
+        print_error("No active session found")
+        print("Run 'ai-start-task' first to create a session")
+        sys.exit(1)
+
+    # Get session files
+    session_files = get_session_files(session_id)
+    plan_file = session_files["plan"]
+    summary_file = session_files["summary"]
+    execution_file = session_files["execution"]
+
+    if not all([plan_file, summary_file, execution_file]):
+        print_error(f"Session files not found for session {session_id}")
+        sys.exit(1)
+
+    # Read files
+    plan_content = plan_file.read_text()
+    summary_file.read_text()
+    execution_content = execution_file.read_text()
+
+    # Extract task name from file
+    task_name_match = re.search(r"# Task (?:Plan|Summary): (.+)", plan_content)
+    task_name = task_name_match.group(1) if task_name_match else "Unknown Task"
+
+    print_header(f"✅ Finishing Task: {task_name}")
+
+    # Check plan completion
+    is_complete, checked, total = check_plan_completion(plan_content)
+    if not is_complete and total > 0:
+        print_warning(f"Plan is not 100% complete ({checked}/{total} items checked)")
+        response = input("Continue anyway? [y/N]: ").strip().lower()
+        if response != "y":
+            print("Task not finished. Complete the plan first.")
+            sys.exit(0)
+
+    # Check if make check was run
+    if not check_make_check_ran(execution_content):
+        print_warning("'make check' was not logged in execution")
+        response = input("Continue anyway? [y/N]: ").strip().lower()
+        if response != "y":
+            print("Task not finished. Run 'make check' first.")
+            sys.exit(0)
+
+    # Get summary if not provided
+    if summary is None:
+        print("\n📝 Enter task summary:")
+        summary = input("> ").strip()
+        if not summary:
+            summary = "Task completed"
+
+    # Extract information from execution log
+    files_changed = extract_files_changed(execution_content)
+    decisions_made = extract_decisions(execution_content)
+
+    # Update SUMMARY file
+    timestamp = format_timestamp()
+    updated_summary = f"""# Task Summary: {task_name}
+
+**Session ID**: {session_id}
+**Created**: {timestamp}
+**Status**: ✅ Completed
+
+---
+
+## What Was Done
+
+{summary}
+
+---
+
+## Decisions Made
+
+"""
+
+    if decisions_made:
+        for decision in decisions_made:
+            updated_summary += f"- {decision}\n"
+    else:
+        updated_summary += "- No major decisions recorded\n"
+
+    updated_summary += "\n---\n\n## Files Changed\n\n"
+
+    if files_changed:
+        for file in files_changed:
+            updated_summary += f"- `{file}`\n"
+    else:
+        updated_summary += "- No files tracked\n"
+
+    updated_summary += "\n---\n\n## Notes\n\n[Session complete]\n"
+
+    summary_file.write_text(updated_summary)
+
+    # Update LAST_SESSION_SUMMARY.md
+    update_last_session_summary(session_id, task_name, updated_summary)
+
+    # Remove from ACTIVE_TASKS.md
+    remove_task_from_active(task_name, session_id)
+
+    # Archive old sessions
+    archived_count = archive_old_sessions()
+
+    # Display completion message
+    print("\n📝 Summary:")
+    print(f"{summary}")
+    print()
+
+    if files_changed:
+        print("📁 Files Changed:")
+        for file in files_changed[:10]:  # Show first 10
+            print(f"  • {file}")
+        if len(files_changed) > 10:
+            print(f"  ... and {len(files_changed) - 10} more")
+        print()
+
+    print("📚 Context Updated:")
+    print("  ✅ LAST_SESSION_SUMMARY.md")
+    print("  ✅ ACTIVE_TASKS.md (task marked complete)")
+    if archived_count > 0:
+        print(f"  ✅ Archived {archived_count} old sessions")
+    print()
+
+    print("✨ Ready for next task! Run ai-start-task to begin.")
+    print()
+
+
+def main() -> None:
+    """Main entry point for ai-finish-task command."""
+    parser = argparse.ArgumentParser(
+        description="Finalize task and update context files",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  ai-finish-task
+  ai-finish-task --summary="Implemented email validation with tests"
+        """,
+    )
+    parser.add_argument(
+        "--summary",
+        help="Brief task summary",
+    )
+    parser.add_argument(
+        "--session-id",
+        help="Specific session ID (default: most recent session)",
+    )
+
+    args = parser.parse_args()
+
+    finish_task(
+        summary=args.summary,
+        session_id=args.session_id,
+    )
+
+
+if __name__ == "__main__":
+    main()

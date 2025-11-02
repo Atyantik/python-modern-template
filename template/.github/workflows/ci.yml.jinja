@@ -1,0 +1,172 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "{{ python_version }}"
+
+jobs:
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install {{ '${{ env.PYTHON_VERSION }}' }}
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+{%- if include_quality_scripts %}
+      - name: Check Code Formatting
+        run: uv run quality-format --check
+
+      - name: Lint Code
+        run: uv run quality-lint
+{%- else %}
+      - name: Run Black
+        run: uv run black --check src tests
+
+      - name: Run isort
+        run: uv run isort --check-only src tests
+
+      - name: Run Ruff
+        run: uv run ruff check src tests
+
+      - name: Run Pylint
+        run: uv run pylint src tests
+
+      - name: Run MyPy
+        run: uv run mypy src tests
+{%- endif %}
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [
+{%- if min_python_version in ["3.10", "3.11"] %}
+          "{{ min_python_version }}",
+{%- endif %}
+{%- if python_version != min_python_version %}
+          "{{ python_version }}"
+{%- else %}
+          "{{ python_version }}"
+{%- endif %}
+        ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python {{ '${{ matrix.python-version }}' }}
+        run: uv python install {{ '${{ matrix.python-version }}' }}
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+{%- if include_quality_scripts %}
+      - name: Run tests with coverage
+        run: uv run quality-test --coverage
+{%- else %}
+      - name: Run tests with coverage
+        run: uv run pytest --cov=src --cov-report=xml --cov-report=term-missing
+{%- endif %}
+
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '{{ python_version }}'
+        uses: codecov/codecov-action@v5
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install {{ '${{ env.PYTHON_VERSION }}' }}
+
+      - name: Build package
+        run: uv build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+{%- if include_ai_tools %}
+  validate-ai-docs:
+    name: Validate AI Instructions
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install {{ '${{ env.PYTHON_VERSION }}' }}
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Validate AI instruction files
+        run: uv run python scripts/validate_ai_instructions.py
+{%- endif %}
+
+{%- if include_quality_scripts %}
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install {{ '${{ env.PYTHON_VERSION }}' }}
+
+      - name: Install dependencies
+        run: |
+          uv sync --all-extras --dev
+          uv add --dev bandit safety
+
+      - name: Run security scans
+        run: uv run quality-security
+{%- endif %}

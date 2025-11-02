@@ -192,3 +192,15 @@ uv.lock
 !.ai-context/ACTIVE_TASKS.md
 !.ai-context/RECENT_DECISIONS.md
 !.ai-context/CONVENTIONS.md
+
+# AI-generated summaries (automated output - never commit)
+.ai-summary/
+
+# Generated examples (not tracked in template repo)
+examples/01-minimal-package/
+examples/02-cli-tool/
+examples/03-library/
+examples/04-data-science/
+examples/05-web-api/
+examples/06-ai-assisted/
+examples/07-full-featured/

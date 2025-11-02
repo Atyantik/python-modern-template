@@ -1,0 +1,397 @@
+# {{ project_name }}
+
+{{ project_description }}
+
+## Features
+
+- Modern Python {{ python_version }} project structure
+{%- if include_quality_scripts %}
+- **Quality Scripts** - Single source of truth for code quality (format, lint, test, security)
+{%- endif %}
+{%- if include_ai_tools %}
+- **AI-Assisted Development** - Session tracking and context management for AI coding assistants
+- **TDD Enforcement** - Test-Driven Development workflow for all AI agents
+{%- endif %}
+- Comprehensive code quality tools integration
+- Automated testing and CI/CD pipeline
+- Type checking with mypy (strict mode)
+- Code formatting with Black and isort
+- Linting with Ruff and Pylint
+{%- if include_pre_commit %}
+- Pre-commit hooks for code quality
+{%- endif %}
+- Test coverage reporting (minimum {{ min_coverage }}%)
+{%- if include_docker %}
+- Docker support for containerized deployment
+{%- endif %}
+{%- if include_docs %}
+- Documentation setup with MkDocs
+{%- endif %}
+
+## Prerequisites
+
+- Python {{ min_python_version }}+ (recommended: {{ python_version }})
+- [uv](https://github.com/astral-sh/uv) package manager
+
+## Installation
+
+### Install uv (if not already installed)
+
+```bash
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# or with Homebrew
+brew install uv
+```
+
+### Clone and Setup
+
+```bash
+# Clone the repository
+git clone {{ github_repo_url if use_github else 'your-repo-url' }}
+cd {{ project_slug }}
+
+# Install dependencies
+uv sync --all-extras --dev
+
+# Install the package in editable mode (for development)
+uv pip install -e .
+```
+
+## Development
+
+{%- if include_quality_scripts %}
+
+### Quality Scripts - Single Source of Truth
+
+All quality checks use centralized scripts defined in `pyproject.toml`. This ensures consistency across local development, CI/CD, and pre-commit hooks.
+
+```bash
+# Complete quality check (format + lint + test with coverage)
+uv run quality-check
+# Or via Make
+make check
+
+# Individual quality checks
+uv run quality-format              # Format code (Black + isort)
+uv run quality-format --check      # Check formatting without changes
+uv run quality-lint                # Lint code (Ruff + mypy + Pylint)
+uv run quality-lint --fix          # Lint with auto-fix (Ruff only)
+uv run quality-test                # Run tests
+uv run quality-test --coverage     # Run tests with coverage report
+uv run quality-test -v             # Run tests with verbose output
+uv run quality-security            # Security scans (Bandit + Safety)
+```
+
+### Configuration
+
+All paths and settings are centralized in `pyproject.toml`:
+
+```toml
+[tool.quality]
+code_paths = {{ '["src", "tests"' + (', "scripts"' if include_quality_scripts or include_ai_tools else '') + ']' }}
+test_paths = ["tests"]
+min_coverage = {{ min_coverage }}
+```
+
+**Benefits:**
+- ✅ Single source of truth - update paths once, applies everywhere
+- ✅ Consistent commands across Makefile, GitHub Actions, and local dev
+- ✅ Easier to maintain and extend
+- ✅ Same behavior in CI/CD and locally
+
+{%- else %}
+
+### Running Code Quality Checks
+
+```bash
+# Format code
+uv run black src tests
+uv run isort src tests
+
+# Lint code
+uv run ruff check src tests --fix
+uv run mypy src tests
+uv run pylint src tests
+
+# Run tests
+uv run pytest
+uv run pytest --cov=src --cov-report=term-missing
+```
+
+{%- endif %}
+
+{%- if include_pre_commit %}
+
+### Pre-commit Hooks
+
+Install pre-commit hooks to automatically run code quality checks:
+
+```bash
+# Install pre-commit hooks
+uv run pre-commit install
+
+# Run pre-commit on all files (manual)
+uv run pre-commit run --all-files
+
+# Update pre-commit hooks
+uv run pre-commit autoupdate
+```
+
+{%- endif %}
+
+## Project Structure
+
+```
+{{ project_slug }}/
+{%- if use_github %}
+   .github/
+      workflows/
+          ci.yml              # GitHub Actions CI/CD
+{%- endif %}
+   src/
+      {{ package_name }}/
+          __init__.py
+          main.py             # Main application code
+   tests/
+      __init__.py
+      conftest.py            # Pytest fixtures
+      test_main.py           # Test files
+{%- if include_quality_scripts %}
+   scripts/
+      quality/
+          __init__.py
+          config.py          # Quality configuration loader
+          format.py          # Code formatting
+          lint.py            # Code linting
+          test.py            # Test runner
+          security.py        # Security scanning
+          check.py           # Complete quality check
+{%- endif %}
+{%- if include_ai_tools %}
+   AI_DOCS/                  # AI development guidelines
+      README.md
+      tdd-workflow.md
+      ai-tools.md
+      code-conventions.md
+      project-context.md
+   .ai-context/              # AI session tracking
+{%- endif %}
+{%- if include_docs %}
+   docs/                     # Documentation
+{%- endif %}
+   .gitignore
+{%- if include_pre_commit %}
+   .pre-commit-config.yaml   # Pre-commit hooks configuration
+{%- endif %}
+   pyproject.toml            # Project configuration and tool settings
+   README.md
+   uv.lock                   # Lock file for dependencies
+```
+
+## Configuration
+
+All tool configurations are centralized in `pyproject.toml`:
+
+- **Black**: Code formatter with {{ line_length }}-character line length
+- **isort**: Import sorter configured to work with Black
+- **Ruff**: Fast Python linter with multiple rule sets
+- **mypy**: Static type checker with strict mode
+- **Pylint**: Additional linting with customized rules
+- **pytest**: Testing framework with {{ min_coverage }}% coverage requirement
+
+{%- if include_github_actions %}
+
+## CI/CD
+
+GitHub Actions workflow includes:
+
+- **Linting**: Runs all code quality tools
+- **Testing**: Tests on Python {{ min_python_version }}{% if python_version != min_python_version %}, {{ python_version }}{% endif %}
+- **Coverage**: Reports test coverage
+{%- if include_quality_scripts %}
+- **Security**: Scans for vulnerabilities
+{%- endif %}
+- **Build**: Creates distribution packages
+
+{%- endif %}
+
+## Usage
+
+{%- if include_cli %}
+
+### Command Line Interface
+
+After installation, you can use the `{{ package_name }}` command:
+
+```bash
+# Show help
+uv run {{ package_name }} --help
+
+# Run the application
+uv run {{ package_name }}
+```
+
+{%- endif %}
+
+### Python API
+
+```python
+from {{ package_name }} import main
+
+# Use your package
+main()
+```
+
+### Development Commands
+
+Use the included Makefile for common development tasks:
+
+```bash
+make help        # Show all available commands
+make check       # Run complete quality check
+make test        # Run tests
+make coverage    # Generate test coverage report
+make format      # Format code
+make lint        # Run all linters
+make build       # Build the package
+```
+
+{%- if include_ai_tools %}
+
+## AI-Assisted Development
+
+This project includes **automated AI context management tools** to ensure seamless collaboration between different AI agents and maintain context across sessions.
+
+### AI Tools Available
+
+Before starting any work, AI agents should use these tools:
+
+```bash
+# Start a new task session (REQUIRED FIRST STEP)
+uv run ai-start-task "Task description"
+
+# During work - log progress
+uv run ai-log "Progress message"
+uv run ai-log "All tests passing" --level=success
+
+# Update plan checkboxes
+uv run ai-update-plan "Write test file(s)"
+uv run ai-update-plan --show  # View progress
+
+# Check current context
+uv run ai-context-summary
+uv run ai-context-summary --detailed
+
+# Check for conflicts
+uv run ai-check-conflicts "New feature name"
+
+# Add architectural decisions
+uv run ai-add-decision
+
+# Add code conventions
+uv run ai-add-convention
+
+# Finish task session (REQUIRED LAST STEP)
+uv run ai-finish-task --summary="Brief description of what was done"
+```
+
+### Supported AI Tools
+
+{%- if ai_tools_preset == "all" %}
+This project supports multiple AI coding assistants:
+
+- **Claude Code**: `CLAUDE.md` - AI-first development instructions
+- **Cursor IDE**: `.cursorrules` - Editor configuration
+- **GitHub Copilot**: `.github/copilot-instructions.md` - Repository instructions
+- **Gemini Code Assist**: `.gemini/styleguide.md` - Code style guide
+- **Aider AI**: `.aider.conf.yml` - CLI configuration
+- **Universal**: `AGENTS.md` - Works with all platforms
+{%- elif ai_tools_preset == "claude" %}
+- **Claude Code**: `CLAUDE.md` - AI-first development instructions
+- **Universal**: `AGENTS.md` - Works with all AI platforms
+{%- elif ai_tools_preset == "cursor" %}
+- **Cursor IDE**: `.cursorrules` - Editor configuration
+- **Universal**: `AGENTS.md` - Works with all AI platforms
+{%- elif ai_tools_preset == "minimal" %}
+- **Universal**: `AGENTS.md` - Works with all AI platforms
+{%- endif %}
+
+### Core AI Workflow (TDD)
+
+All AI assistants follow this mandatory workflow:
+
+1. **Write Tests First** - AI must write tests before implementation
+2. **Use Real Code** - Minimize mocks, use actual codebase functions
+3. **Run `make check`** - AI validates code before completing tasks
+4. **Maintain Coverage** - Minimum {{ min_coverage }}% code coverage required
+5. **Type Everything** - Full type hints (mypy strict mode)
+
+### Context Files
+
+Located in `.ai-context/` (tracked in git):
+- `REQUIRED_READING.md` - Master checklist for all AI agents
+- `LAST_SESSION_SUMMARY.md` - Most recent session summary
+- `ACTIVE_TASKS.md` - Tasks currently in progress
+- `RECENT_DECISIONS.md` - Architectural decisions made
+- `CONVENTIONS.md` - Code patterns and standards
+
+{%- endif %}
+
+{%- if include_docker %}
+
+## Docker Support
+
+Build and run with Docker:
+
+```bash
+# Build image
+docker build -t {{ project_slug }} .
+
+# Run container
+docker run -it {{ project_slug }}
+
+# Or use docker-compose
+docker-compose up
+```
+
+{%- endif %}
+
+{%- if include_docs %}
+
+## Documentation
+
+Generate and view documentation:
+
+```bash
+# Serve documentation locally
+mkdocs serve
+
+# Build documentation
+mkdocs build
+```
+
+{%- endif %}
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes following TDD (tests first!)
+4. Run tests and linting (`make check`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+## License
+
+This project is licensed under the {{ license }} License - see the [LICENSE](LICENSE) file for details.
+
+## Author
+
+{{ author_name }} ({{ author_email }})
+
+---
+
+Generated with [python-modern-template](https://github.com/yourusername/python-modern-template)

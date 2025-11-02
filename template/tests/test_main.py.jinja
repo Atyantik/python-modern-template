@@ -1,0 +1,36 @@
+"""Tests for main module."""
+
+from __future__ import annotations
+
+import pytest
+
+from {{ package_name }} import __author__, __email__, __version__, main
+
+
+class TestPackage:
+    """Test package metadata."""
+
+    def test_version(self) -> None:
+        """Test that version is defined."""
+        assert __version__ == "0.1.0"
+
+    def test_author(self) -> None:
+        """Test that author is defined."""
+        assert __author__ == "{{ author_name }}"
+
+    def test_email(self) -> None:
+        """Test that email is defined."""
+        assert __email__ == "{{ author_email }}"
+
+
+class TestMain:
+    """Test main function."""
+
+    def test_main_returns_zero(self) -> None:
+        """Test that main returns 0 (success)."""
+        result = main()
+        assert result == 0
+
+    def test_main_is_callable(self) -> None:
+        """Test that main is callable."""
+        assert callable(main)

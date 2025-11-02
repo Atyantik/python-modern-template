@@ -1,0 +1,97 @@
+# Installation
+
+## Requirements
+
+- Python {{ min_python_version }}+
+- [uv](https://github.com/astral-sh/uv) (recommended) or pip
+
+## Using uv (Recommended)
+
+```bash
+# Install uv if you haven't already
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Clone the repository
+git clone {{ github_repo_url if use_github else 'your-repo-url' }}
+cd {{ project_slug }}
+
+# Install dependencies
+uv sync --all-extras --dev
+
+# Verify installation
+uv run {{ package_name }} --help
+```
+
+## Using pip
+
+```bash
+# Clone the repository
+git clone {{ github_repo_url if use_github else 'your-repo-url' }}
+cd {{ project_slug }}
+
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -e ".[dev]"
+
+# Verify installation
+{{ package_name }} --help
+```
+
+## Development Setup
+
+{%- if include_pre_commit %}
+
+### Pre-commit Hooks
+
+```bash
+# Install pre-commit hooks
+uv run pre-commit install
+
+# Run on all files
+uv run pre-commit run --all-files
+```
+{%- endif %}
+
+{%- if include_docker %}
+
+### Docker
+
+```bash
+# Build Docker image
+docker-compose build
+
+# Run application
+docker-compose up
+```
+{%- endif %}
+
+## Verify Installation
+
+```bash
+# Run tests
+{%- if include_quality_scripts %}
+make test
+{%- else %}
+uv run pytest
+{%- endif %}
+
+# Check code quality
+{%- if include_quality_scripts %}
+make check
+{%- else %}
+uv run black src tests --check
+uv run ruff check src tests
+uv run mypy src tests
+{%- endif %}
+```
+
+## Next Steps
+
+- [Quick Start Tutorial](quickstart.md)
+{%- if include_cli %}
+- [CLI Usage Guide](cli.md)
+{%- endif %}
+- [Development Guide](../user-guide/development.md)
