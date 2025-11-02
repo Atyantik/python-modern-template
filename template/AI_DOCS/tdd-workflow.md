@@ -54,7 +54,7 @@ make test
 ### Step 3: Implement Minimal Code
 
 ```python
-# File: src/leadership_blog_generator/calculator.py
+# File: src/{{ package_name }}/calculator.py
 
 def add(a: int, b: int) -> int:
     """Add two numbers.
@@ -166,7 +166,7 @@ def test_string_length(input: str, expected: int) -> None:
 
 ```python
 # Use real function from codebase
-from leadership_blog_generator.processor import process_data
+from {{ package_name }}.processor import process_data
 
 def test_process_data() -> None:
     """Test with real data."""
@@ -186,7 +186,7 @@ def test_api_call(mock_get):
     ...
 
 # Don't mock internal functions
-@patch('leadership_blog_generator.utils.helper')  # Bad - use real helper
+@patch('{{ package_name }}.utils.helper')  # Bad - use real helper
 def test_with_mock(mock_helper):
     ...
 ```
@@ -273,7 +273,7 @@ uv run pytest -m "not slow"  # Exclude slow tests
 # File: tests/test_validators.py
 
 import pytest
-from leadership_blog_generator.validators import validate_email
+from {{ package_name }}.validators import validate_email
 
 class TestEmailValidation:
     """Test email validation."""
@@ -303,7 +303,7 @@ make test
 
 #### 3. Implement Function
 ```python
-# File: src/leadership_blog_generator/validators.py
+# File: src/{{ package_name }}/validators.py
 
 import re
 
@@ -325,7 +325,7 @@ def validate_email(email: str) -> bool:
 
 #### 4. Export from __init__.py
 ```python
-# File: src/leadership_blog_generator/__init__.py
+# File: src/{{ package_name }}/__init__.py
 
 from .validators import validate_email
 

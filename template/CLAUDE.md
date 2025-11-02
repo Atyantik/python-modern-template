@@ -59,7 +59,7 @@ Reference these for complete guidelines:
 
 ```bash
 # Read files
-Read: src/leadership_blog_generator/module.py
+Read: src/{{ package_name }}/module.py
 Read: tests/test_module.py
 
 # Write tests FIRST
@@ -69,7 +69,7 @@ Edit: tests/test_module.py
 Bash: make test
 
 # Write implementation
-Edit: src/leadership_blog_generator/module.py
+Edit: src/{{ package_name }}/module.py
 
 # Run tests to see them pass
 Bash: make test
@@ -113,7 +113,7 @@ Bash: make test
 
 3. Implement the function:
 ```python
-# Edit src/leadership_blog_generator/utils.py
+# Edit src/{{ package_name }}/utils.py
 def count_words(text: str) -> int:
     """Count the number of words in text.
 
@@ -166,7 +166,7 @@ def new_feature():
 
 **Prefer real code:**
 ```python
-from leadership_blog_generator.processor import process_data, validate_input
+from {{ package_name }}.processor import process_data, validate_input
 
 def test_process_with_validation() -> None:
     """Test with real validation function."""

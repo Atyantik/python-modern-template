@@ -204,7 +204,7 @@ See `AGENTS.md` for comprehensive universal instructions that apply to all AI ag
 ```python
 # File: tests/test_string_utils.py
 
-from leadership_blog_generator.string_utils import reverse_string
+from {{ package_name }}.string_utils import reverse_string
 
 def test_reverse_string_basic() -> None:
     """Test basic string reversal."""
@@ -231,7 +231,7 @@ make test
 
 #### 3. Implement the Function
 ```python
-# File: src/leadership_blog_generator/string_utils.py
+# File: src/{{ package_name }}/string_utils.py
 
 def reverse_string(text: str) -> str:
     """Reverse the given string.
@@ -247,7 +247,7 @@ def reverse_string(text: str) -> str:
 
 #### 4. Export from __init__.py
 ```python
-# File: src/leadership_blog_generator/__init__.py
+# File: src/{{ package_name }}/__init__.py
 
 from .string_utils import reverse_string
 
@@ -282,7 +282,7 @@ make check
 ```python
 from unittest.mock import patch
 
-@patch('leadership_blog_generator.utils.helper_function')
+@patch('{{ package_name }}.utils.helper_function')
 def test_main_function(mock_helper):
     """Testing with unnecessary mock."""
     mock_helper.return_value = "mocked"
@@ -292,8 +292,8 @@ def test_main_function(mock_helper):
 
 ### ✅ Good Approach (Use Real Code)
 ```python
-from leadership_blog_generator.utils import helper_function
-from leadership_blog_generator.main import main_function
+from {{ package_name }}.utils import helper_function
+from {{ package_name }}.main import main_function
 
 def test_main_function() -> None:
     """Testing with real helper function."""
@@ -374,7 +374,7 @@ def test_edge_case_branch() -> None:
 ## Project Structure
 
 ```
-src/leadership_blog_generator/
+src/{{ package_name }}/
   ├── __init__.py          # Package exports
   ├── main.py              # CLI implementation
   └── [modules].py         # Feature modules
@@ -388,10 +388,10 @@ tests/
 ### Import Pattern
 ```python
 # ✅ Correct
-from leadership_blog_generator import function_name
+from {{ package_name }} import function_name
 
 # ❌ Wrong
-from src.leadership_blog_generator import function_name
+from src.{{ package_name }} import function_name
 ```
 
 ## Keeping Documentation in Sync
@@ -521,7 +521,7 @@ If `make check` fails:
 ```python
 # Step 1: tests/test_validators.py
 import pytest
-from leadership_blog_generator.validators import validate_phone
+from {{ package_name }}.validators import validate_phone
 
 class TestPhoneValidation:
     """Test phone number validation."""
@@ -550,7 +550,7 @@ make test
 
 "Implementing function..."
 ```python
-# src/leadership_blog_generator/validators.py
+# src/{{ package_name }}/validators.py
 import re
 
 def validate_phone(phone: str) -> bool:

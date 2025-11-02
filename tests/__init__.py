@@ -1,1 +1,1 @@
-"""Tests package for Leadership Blog Generator."""
+"""Tests package for the Modern Python Project Template."""

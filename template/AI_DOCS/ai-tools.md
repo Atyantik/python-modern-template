@@ -400,7 +400,7 @@ uv run ai-log "Tests fail as expected - function doesn't exist"
 uv run ai-update-plan "Run tests (should fail initially)"
 
 # Implement function
-# ... create src/leadership_blog_generator/validators.py ...
+# ... create src/{{ package_name }}/validators.py ...
 uv run ai-log "Implemented validate_phone() function"
 uv run ai-update-plan "Implement functionality"
 

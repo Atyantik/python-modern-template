@@ -210,7 +210,7 @@ Copilot will naturally suggest implementation code, but you should:
 
 **❌ Don't Do This:**
 ```python
-# You start typing in src/leadership_blog_generator/math_utils.py
+# You start typing in src/python_modern_template/math_utils.py
 def factorial(n):  # Copilot suggests implementation immediately
     if n == 0:
         return 1
@@ -230,7 +230,7 @@ def test_factorial_positive() -> None:
     result = factorial(5)
     assert result == 120
 
-# NOW go to src/leadership_blog_generator/math_utils.py
+# NOW go to src/python_modern_template/math_utils.py
 def factorial(n: int) -> int:  # Now accept Copilot's implementation
     """Calculate factorial of n."""
     if n == 0:
@@ -261,7 +261,7 @@ def test_reverse_string_empty() -> None:
 
 ### ✅ Preferred (Real Code)
 ```python
-from leadership_blog_generator.processor import process_data
+from python_modern_template.processor import process_data
 
 def test_process_data() -> None:
     """Test with real data."""
@@ -280,7 +280,7 @@ def test_api_call(mock_get):
     ...
 
 # Don't mock internal functions
-@patch('leadership_blog_generator.utils.helper')  # Bad - use real helper
+@patch('python_modern_template.utils.helper')  # Bad - use real helper
 ```
 
 **When to Mock:**
@@ -342,10 +342,10 @@ def process_data(input, count=5):
 
 ```python
 # ✅ Correct - import from package name
-from leadership_blog_generator import function_name
+from python_modern_template import function_name
 
 # ❌ Wrong - don't use src prefix
-from src.leadership_blog_generator import function_name
+from src.python_modern_template import function_name
 ```
 
 ### Docstrings (Google Style)
@@ -372,7 +372,7 @@ See `AI_DOCS/code-conventions.md` for complete code conventions.
 ## Project Structure
 
 ```
-src/leadership_blog_generator/  # Implementation code
+src/python_modern_template/  # Implementation code
 tests/                           # Test files mirror src structure
 AI_DOCS/                         # Shared AI documentation
   ├── tdd-workflow.md            # TDD process
@@ -410,7 +410,7 @@ See `AI_DOCS/project-context.md` for complete project architecture.
 # 4. Run tests (should fail)
 make test
 
-# 5. Open src/leadership_blog_generator/validators.py
+# 5. Open src/python_modern_template/validators.py
 # Let Copilot suggest implementation
 
 # 6. Run tests (should pass)

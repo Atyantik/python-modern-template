@@ -94,7 +94,7 @@ See `@AI_DOCS/tdd-workflow.md` for complete TDD workflow with examples.
 **✅ Preferred Approach:**
 ```python
 # Use real function from codebase
-from leadership_blog_generator.processor import process_data
+from {{ package_name }}.processor import process_data
 
 def test_process_data() -> None:
     """Test with real data."""
@@ -111,7 +111,7 @@ def test_api_call(mock_get):
     ...
 
 # Don't mock internal functions
-@patch('leadership_blog_generator.utils.helper')  # Bad - use real helper
+@patch('{{ package_name }}.utils.helper')  # Bad - use real helper
 ```
 
 **When to Mock:**
@@ -178,7 +178,7 @@ See `@AI_DOCS/project-context.md` for complete project structure and architectur
 leadership-blog-generator/
 ├── AI_DOCS/                   # Shared AI documentation (NEW)
 ├── src/
-│   └── leadership_blog_generator/
+│   └── {{ package_name }}/
 ├── tests/
 ├── scripts/ai_tools/          # AI context management tools
 ├── .ai-context/               # AI session files
@@ -190,11 +190,11 @@ leadership-blog-generator/
 
 ```python
 # ✅ Correct - import from package name
-from leadership_blog_generator import function_name
-from leadership_blog_generator.module import ClassName
+from {{ package_name }} import function_name
+from {{ package_name }}.module import ClassName
 
 # ❌ Wrong - don't use src prefix
-from src.leadership_blog_generator import function_name
+from src.{{ package_name }} import function_name
 ```
 
 ## Development Commands

@@ -159,7 +159,7 @@ suggest-shell-commands: true
 # Example Commands
 ##############################################################################
 
-# /add src/leadership_blog_generator/feature.py tests/test_feature.py
+# /add src/{{ package_name }}/feature.py tests/test_feature.py
 #   - Add files to chat context
 #
 # /test
@@ -218,10 +218,10 @@ suggest-shell-commands: true
 ##############################################################################
 
 # Test file pattern
-# tests/test_*.py for each src/leadership_blog_generator/*.py
+# tests/test_*.py for each src/{{ package_name }}/*.py
 
 # Import pattern (use package name, not src prefix):
-# from leadership_blog_generator import function_name
+# from {{ package_name }} import function_name
 
 # Type hints required (mypy strict mode):
 # def func(param: str) -> int:
@@ -277,7 +277,7 @@ suggest-shell-commands: true
 # User: "Add a function to parse JSON safely"
 #
 # You:
-# > /add tests/test_utils.py src/leadership_blog_generator/utils.py
+# > /add tests/test_utils.py src/{{ package_name }}/utils.py
 # > I'll write tests first following TDD...
 #
 # [Edit tests/test_utils.py - add test_parse_json_safe]
@@ -286,7 +286,7 @@ suggest-shell-commands: true
 # [Tests fail - function doesn't exist]
 #
 # > Now implementing the function...
-# [Edit src/leadership_blog_generator/utils.py - add parse_json_safe]
+# [Edit src/{{ package_name }}/utils.py - add parse_json_safe]
 #
 # > /test
 # [Tests pass]

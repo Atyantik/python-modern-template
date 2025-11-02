@@ -30,7 +30,7 @@ clean: ## Clean up generated files
 	find . -type f -name "*.pyo" -delete
 
 run: ## Run the main application
-	uv run leadership-blog-generator
+	uv run python-modern-template
 
 pre-commit: ## Run pre-commit on all files
 	uv run pre-commit run --all-files

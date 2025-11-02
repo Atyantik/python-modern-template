@@ -1,0 +1,21 @@
+"""Tests that guard critical Makefile targets."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
+def test_run_target_invokes_template_entry_point() -> None:
+    """Ensure the `run` target executes the template CLI entry point."""
+
+    content = (PROJECT_ROOT / "Makefile").read_text(encoding="utf-8")
+
+    missing_entry_point = (
+        "Makefile run target should call python-modern-template script"
+    )
+    assert "uv run python-modern-template" in content, missing_entry_point
+
+    legacy_entry_point = "Legacy run target still references leadership-blog-generator"
+    assert "uv run leadership-blog-generator" not in content, legacy_entry_point

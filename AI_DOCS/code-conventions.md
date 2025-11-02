@@ -174,8 +174,8 @@ from typing import Any
 import pytest  # Third-party packages
 import requests
 
-from leadership_blog_generator import helper  # Local imports
-from leadership_blog_generator.utils import process_data
+from python_modern_template import helper  # Local imports
+from python_modern_template.utils import process_data
 ```
 
 **Rules:**
@@ -311,7 +311,7 @@ This module provides functions for:
 
 Typical usage example:
 
-    from leadership_blog_generator.auth import authenticate_user
+    from python_modern_template.auth import authenticate_user
 
     user = authenticate_user(username, password)
     if user:
@@ -425,7 +425,7 @@ make pre-commit
 ```
 leadership-blog-generator/
 ├── src/
-│   └── leadership_blog_generator/
+│   └── python_modern_template/
 │       ├── __init__.py        # Package exports & version
 │       ├── main.py            # CLI and main functionality
 │       └── [modules].py       # Additional modules
@@ -446,19 +446,19 @@ leadership-blog-generator/
 
 ```python
 # ✅ Correct - import from package name
-from leadership_blog_generator import function_name
-from leadership_blog_generator.module import ClassName
+from python_modern_template import function_name
+from python_modern_template.module import ClassName
 
 # ❌ Wrong - don't use src prefix
-from src.leadership_blog_generator import function_name
+from src.python_modern_template import function_name
 ```
 
 ### Package Exports
 
 ```python
-# File: src/leadership_blog_generator/__init__.py
+# File: src/python_modern_template/__init__.py
 
-"""Leadership blog generator package."""
+"""Modern Python template package."""
 
 from .main import generate_blog
 from .validators import validate_email, validate_phone

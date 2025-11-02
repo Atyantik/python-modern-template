@@ -154,7 +154,7 @@ See `@AI_DOCS/code-conventions.md` for complete type hints and conventions.
 ### Rule 10: Follow src Layout
 ```
 src/
-  └── leadership_blog_generator/
+  └── python_modern_template/
       ├── __init__.py     # Package exports
       └── main.py         # Implementation
 tests/
@@ -167,17 +167,17 @@ AI_DOCS/                  # Shared AI documentation
   └── project-context.md
 ```
 
-- All implementation code in `src/leadership_blog_generator/`
+- All implementation code in `src/python_modern_template/`
 - All tests in `tests/`
 - No root-level scripts (use entry points in pyproject.toml)
 
 ### Rule 11: Imports
 ```python
 # ✅ Correct - import from package
-from leadership_blog_generator import function_name
+from python_modern_template import function_name
 
 # ❌ Wrong - don't use src prefix
-from src.leadership_blog_generator import function_name
+from src.python_modern_template import function_name
 ```
 
 See `@AI_DOCS/project-context.md` for complete project structure and architecture.
@@ -213,7 +213,7 @@ make pre-commit        # Run all pre-commit hooks
 # 2. Run tests (should fail)
 make test
 
-# 3. Implement feature in src/leadership_blog_generator/feature.py
+# 3. Implement feature in src/python_modern_template/feature.py
 # 4. Run tests (should pass)
 make test
 

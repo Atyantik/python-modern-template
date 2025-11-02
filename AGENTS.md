@@ -94,13 +94,11 @@ See `@AI_DOCS/tdd-workflow.md` for complete TDD workflow with examples.
 **✅ Preferred Approach:**
 ```python
 # Use real function from codebase
-from leadership_blog_generator.processor import process_data
+from python_modern_template.main import main
 
-def test_process_data() -> None:
-    """Test with real data."""
-    real_input = "test string"
-    result = process_data(real_input)
-    assert result == expected_value
+def test_main_returns_zero() -> None:
+    """Template CLI returns 0 to signal success."""
+    assert main() == 0
 ```
 
 **❌ Avoid Unless Necessary:**
@@ -111,7 +109,7 @@ def test_api_call(mock_get):
     ...
 
 # Don't mock internal functions
-@patch('leadership_blog_generator.utils.helper')  # Bad - use real helper
+@patch('python_modern_template.utils.helper')  # Bad - use real helper
 ```
 
 **When to Mock:**
@@ -175,10 +173,10 @@ Key points:
 See `@AI_DOCS/project-context.md` for complete project structure and architecture.
 
 ```
-leadership-blog-generator/
+python-modern-template/
 ├── AI_DOCS/                   # Shared AI documentation (NEW)
 ├── src/
-│   └── leadership_blog_generator/
+│   └── python_modern_template/
 ├── tests/
 ├── scripts/ai_tools/          # AI context management tools
 ├── .ai-context/               # AI session files
@@ -190,11 +188,11 @@ leadership-blog-generator/
 
 ```python
 # ✅ Correct - import from package name
-from leadership_blog_generator import function_name
-from leadership_blog_generator.module import ClassName
+from python_modern_template import main
+from python_modern_template.module import ClassName
 
 # ❌ Wrong - don't use src prefix
-from src.leadership_blog_generator import function_name
+from src.python_modern_template import main
 ```
 
 ## Development Commands
