@@ -292,6 +292,8 @@ Before completing any task:
 - [ ] `make check` passes
 - [ ] No duplicate code (DRY)
 - [ ] README updated (if user-facing changes)
+- [ ] Formatter harmony check (Black vs Ruff) — adjust code (e.g., use message variables)
+      if tools disagree
 
 ## Communication Style
 

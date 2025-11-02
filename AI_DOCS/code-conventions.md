@@ -161,6 +161,18 @@ uv run black src tests
 - Trailing commas in multi-line structures
 - No manual line breaks (Black decides)
 
+### Keep Black and Ruff in Agreement
+
+- Treat Black as the source of truth for layout, then let Ruff confirm it.
+- Avoid patterns the tools format differently. Instead of multi-line `assert` calls
+  wrapped in parentheses, assign long messages to a local variable and pass that
+  variable to the assertion. This keeps both formatters from oscillating the
+  same lines.
+- After editing formatted code, run `pre-commit run --files …` (or `make format`)
+  before staging to catch conflicts immediately.
+- If a rule keeps rewriting your changes, refactor the code so the intent is
+  explicit rather than relying on formatter heuristics.
+
 ### isort (Import Sorting)
 
 ```python

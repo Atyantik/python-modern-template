@@ -115,6 +115,8 @@ This runs:
 - Ruff: Fix all linting errors (run with --fix)
 - mypy: Strict type checking, no untyped code
 - Pylint: Must score 10.0/10.0
+- Formatter harmony: write code so Black and Ruff agree (e.g., move long
+  assertion messages into variables instead of relying on multi-line wrapping)
 
 ### Rule 7: Pre-commit Hooks
 - Pre-commit hooks will run automatically on `git commit`

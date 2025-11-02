@@ -194,6 +194,7 @@ See `AI_DOCS/tdd-workflow.md` for complete TDD workflow with examples.
 | **Quality** | Run `make check` before pushing |
 | **Types** | Type hints required (mypy strict) |
 | **Style** | Black (88 chars) + isort + Ruff + Pylint 10/10 |
+| **Formatter Harmony** | Let Black shape layout; refactor patterns so Ruff agrees |
 
 ## TDD Workflow with Copilot
 
@@ -256,6 +257,17 @@ def test_reverse_string_empty() -> None:
     result = reverse_string("")
     assert result == ""
 ```
+
+## Keep Black and Ruff in Sync
+
+- Prefer explicit code constructs that both formatters accept. For long
+  assertion or log messages, assign the string to a local variable instead of
+  relying on multi-line wrapping.
+- After Copilot-generated changes, run `pre-commit run --files …` (or
+  `make format`) before staging to verify formatter agreement.
+- If the same lines keep getting reformatted, adjust the code rather than
+  fighting the tools—clarify the intent so both Black and Ruff produce identical
+  output.
 
 ## Minimize Mocks - Use Real Code
 

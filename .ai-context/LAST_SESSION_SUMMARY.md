@@ -4,22 +4,22 @@
 
 ## Session Information
 
-**Session ID**: 20251102232816
-**Task**: Audit repo for outdated docs, bugs, and upgrade opportunities
-**Date**: 2025-11-02 23:50:06
+**Session ID**: 20251103000400
+**Task**: Document formatter harmony guidance for AI agents
+**Date**: 2025-11-03 00:14:22
 **Status**: ✅ Completed
 
-# Task Summary: Audit repo for outdated docs, bugs, and upgrade opportunities
+# Task Summary: Document formatter harmony guidance for AI agents
 
-**Session ID**: 20251102232816
-**Created**: 2025-11-02 23:50:06
+**Session ID**: 20251103000400
+**Created**: 2025-11-03 00:14:22
 **Status**: ✅ Completed
 
 ---
 
 ## What Was Done
 
-Updated AI docs/instructions to use python-modern-template naming, added regression tests for docs/Makefile/dependency pins, refreshed dev dependency pins, and make check passes.
+Added Black/Ruff harmony guidance to shared AI docs and synced across tool-specific and template instructions.
 
 ---
 
@@ -45,4 +45,4 @@ Updated AI docs/instructions to use python-modern-template naming, added regress
 **This file is automatically updated by the last AI agent to complete a task.**
 **Next AI agent: Read this file first to understand recent work!**
 
-**Last Updated**: 2025-11-02 23:50:06
+**Last Updated**: 2025-11-03 00:14:22

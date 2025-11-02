@@ -54,6 +54,7 @@ For comprehensive guidelines, reference these shared documents:
 | **Quality Check** | `make check` must pass before committing |
 | **Type Hints** | Required on all functions (mypy strict mode) |
 | **Code Style** | Black (88 chars) + isort + Ruff + Pylint (10/10) |
+| **Formatter Harmony** | Let Black decide layout; refactor (e.g., use message variables) so Ruff agrees |
 
 See `@AI_DOCS/ai-tools.md` for complete AI tools workflow and `@AI_DOCS/tdd-workflow.md` for TDD process
 
@@ -143,6 +144,13 @@ This single command runs:
 **Never commit if `make check` fails!**
 
 See `@AI_DOCS/code-conventions.md` for complete quality standards.
+
+### 4. Keep Black and Ruff in Sync
+
+- After edits, run `pre-commit run --files …` (or `make format`) to ensure both formatters agree.
+- Prefer explicit code over formatter magic: store long assertion messages (or other arguments)
+  in variables instead of relying on multi-line wrapping that tools format differently.
+- If a formatter keeps rewriting something, refactor the code so the intent is clear and stable.
 
 ## Detailed Requirements
 

@@ -336,6 +336,8 @@ def process_data(input_str, options=None, max_length=100):
 - **Imports**: Sorted with isort
 - **Quotes**: Double quotes preferred
 - **Docstrings**: Google style
+- **Formatter harmony**: Write code patterns that keep Black and Ruff aligned (move
+  long assertion/log messages into variables instead of relying on multi-line wrapping)
 
 ### Quality Checks
 ```bash
