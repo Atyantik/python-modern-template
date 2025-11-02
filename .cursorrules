@@ -1,0 +1,250 @@
+# Cursor AI Rules for This Project
+
+## Overview
+This project follows strict Test-Driven Development (TDD) and code quality standards. All AI-assisted code must adhere to these rules.
+
+## 🧪 Test-Driven Development (MANDATORY)
+
+### Rule 1: Tests First, Always
+- **ALWAYS** write tests BEFORE implementing functionality
+- Start every feature/bug fix by creating or updating test cases
+- Tests must be in `tests/` directory following existing patterns
+
+### Rule 2: Real Code Over Mocks
+- Use **real code and data** from the codebase whenever possible
+- Minimize use of mocks and fixtures
+- Only use mocks/fixtures when:
+  - External API calls (network requests)
+  - Database connections
+  - File system operations that would be destructive
+  - Time-dependent operations
+- **Never** mock internal functions that can be tested directly
+
+### Rule 3: Coverage Requirements
+- Maintain **minimum 80% code coverage** (enforced by pytest)
+- Check coverage with: `make coverage`
+- New code should aim for 100% coverage
+- Update tests when modifying existing code
+
+### Rule 4: Test Patterns
+Follow existing test patterns in `tests/`:
+```python
+# Class-based organization
+class TestFeatureName:
+    """Test cases for feature."""
+
+    def test_specific_behavior(self) -> None:
+        """Test description."""
+        # Arrange
+        input_data = "real data"
+
+        # Act
+        result = function_to_test(input_data)
+
+        # Assert
+        assert result == expected_value
+```
+
+Use pytest features:
+- `@pytest.mark.parametrize` for multiple test cases
+- Fixtures in `conftest.py` for shared setup (sparingly)
+- `capsys` for testing output
+- Type hints in all test functions
+
+## 🔍 Code Quality (MANDATORY)
+
+### Rule 5: Run make check After Every Change
+After writing ANY code, you MUST run:
+```bash
+make check
+```
+
+This runs:
+1. `make format` - Black + isort formatting
+2. `make lint` - Ruff + mypy + Pylint
+3. `make test` - Full test suite with coverage
+
+**Never proceed if `make check` fails!**
+
+### Rule 6: Fix All Quality Issues
+- Black formatting: 88-character line length
+- isort: Black-compatible import sorting
+- Ruff: Fix all linting errors (run with --fix)
+- mypy: Strict type checking, no untyped code
+- Pylint: Must score 10.0/10.0
+
+### Rule 7: Pre-commit Hooks
+- Pre-commit hooks will run automatically on `git commit`
+- If hooks fail, fix issues before committing
+- Run manually: `make pre-commit`
+
+### Rule 8: No Duplicate Code
+- Follow DRY (Don't Repeat Yourself) principle
+- Refactor duplicated logic into reusable functions
+- Check for similar code before implementing
+
+## 📝 Type Hints (MANDATORY)
+
+### Rule 9: Type Everything
+```python
+# ✅ Correct
+def process_data(input: str, count: int = 5) -> dict[str, int]:
+    """Process the input data."""
+    return {"result": len(input) * count}
+
+# ❌ Wrong - no type hints
+def process_data(input, count=5):
+    return {"result": len(input) * count}
+```
+
+- All function parameters must have type hints
+- All return values must have type hints
+- Use `from __future__ import annotations` for forward references
+- For complex types, use `typing` module
+
+## 🏗️ Project Structure
+
+### Rule 10: Follow src Layout
+```
+src/
+  └── leadership_blog_generator/
+      ├── __init__.py     # Package exports
+      └── main.py         # Implementation
+tests/
+  ├── conftest.py         # Shared fixtures
+  └── test_main.py        # Test files
+```
+
+- All implementation code in `src/leadership_blog_generator/`
+- All tests in `tests/`
+- No root-level scripts (use entry points in pyproject.toml)
+
+### Rule 11: Imports
+```python
+# ✅ Correct - import from package
+from leadership_blog_generator import function_name
+
+# ❌ Wrong - don't use src prefix
+from src.leadership_blog_generator import function_name
+```
+
+## 📚 Documentation Updates
+
+### Rule 12: Sync AI Instructions
+When implementing **critical functionality**, update ALL these files:
+- `.cursorrules` (this file)
+- `AGENTS.md`
+- `.claude/INSTRUCTIONS.md`
+- `GEMINI.md`
+- `.aider.conf.yml`
+- `COPILOT_INSTRUCTIONS.md`
+
+Critical functionality includes:
+- New testing patterns or requirements
+- Build/deploy process changes
+- Security-related changes
+- Major architectural decisions
+
+### Rule 13: Update README
+Update `README.md` when:
+- Adding user-facing features
+- Changing installation process
+- Adding new development commands
+- Modifying project structure
+
+## 🔒 Security
+
+### Rule 14: Security First
+- Never commit secrets, API keys, or credentials
+- Use environment variables for sensitive data
+- CI runs Bandit (security linter) and Safety (vulnerability checker)
+- Fix all security warnings before proceeding
+
+## ⚡ Development Workflow
+
+### Complete TDD Cycle
+1. **Write failing test** for new feature/fix
+2. **Run tests** to confirm they fail: `make test`
+3. **Implement** minimal code to make test pass
+4. **Run tests** again to confirm they pass
+5. **Refactor** if needed
+6. **Run make check** to ensure quality
+7. **Commit** if all checks pass
+
+### Before Every Commit
+```bash
+make check              # Format, lint, and test
+make pre-commit        # Run all pre-commit hooks
+```
+
+### Example TDD Session
+```bash
+# 1. Write test in tests/test_feature.py
+# 2. Run tests (should fail)
+make test
+
+# 3. Implement feature in src/leadership_blog_generator/feature.py
+# 4. Run tests (should pass)
+make test
+
+# 5. Check code quality
+make check
+
+# 6. If all pass, commit
+git add .
+git commit -m "Add feature X with tests"
+```
+
+## 🚫 Never Do This
+
+- ❌ Write implementation before tests
+- ❌ Skip `make check` before committing
+- ❌ Use mocks when real code would work
+- ❌ Commit code without type hints
+- ❌ Ignore linting/formatting errors
+- ❌ Add code that drops coverage below 80%
+- ❌ Update one AI instruction file without updating others
+- ❌ Use root-level scripts instead of package structure
+
+## ✅ Always Do This
+
+- ✅ Write tests first (TDD)
+- ✅ Use real code/data over mocks
+- ✅ Run `make check` after changes
+- ✅ Add type hints to everything
+- ✅ Keep code coverage above 80%
+- ✅ Follow existing patterns
+- ✅ Update all AI instruction files together
+- ✅ Fix all quality issues before committing
+
+## 🎯 Quality Gates
+
+Code must pass ALL of these before being committed:
+1. ✅ Tests written first (TDD)
+2. ✅ All tests pass (`make test`)
+3. ✅ Coverage ≥ 80% (`make coverage`)
+4. ✅ Black formatting (`make format`)
+5. ✅ isort import sorting (`make format`)
+6. ✅ Ruff linting (`make lint`)
+7. ✅ mypy type checking (strict) (`make lint`)
+8. ✅ Pylint score 10/10 (`make lint`)
+9. ✅ Pre-commit hooks pass (`make pre-commit`)
+10. ✅ No security issues (Bandit/Safety in CI)
+
+## 📖 Reference Commands
+
+```bash
+make help          # Show all available commands
+make test          # Run tests
+make coverage      # Run tests with coverage report
+make format        # Format with Black + isort
+make lint          # Run all linters
+make check         # Format + lint + test (use before commits)
+make pre-commit    # Run pre-commit hooks
+make clean         # Clean generated files
+make build         # Build package
+```
+
+---
+
+**Remember:** Quality over speed. Taking time to write tests first and ensure quality will save debugging time later.

@@ -1,0 +1,257 @@
+# Aider AI Pair Programmer Configuration
+# https://aider.chat/docs/config.html
+
+##############################################################################
+# Test-Driven Development (TDD) - MANDATORY
+##############################################################################
+
+# Aider Instructions:
+# - ALWAYS write tests BEFORE implementation code
+# - Use real code from codebase, minimize mocks/fixtures
+# - Run `make check` after every code change
+# - Maintain minimum 80% test coverage
+# - Follow existing test patterns in tests/
+
+##############################################################################
+# Project Configuration
+##############################################################################
+
+# Git integration
+auto-commits: true
+commit-prompt: |
+  Generate a concise commit message following conventional commits format.
+  Include emoji if appropriate.
+
+# Testing
+test-cmd: "make test"
+
+# Linting
+lint-cmd: "make lint"
+
+# Auto-run tests after changes
+auto-test: true
+
+# Auto-run lint after changes
+auto-lint: true
+
+##############################################################################
+# Code Quality Standards
+##############################################################################
+
+# Edit format
+edit-format: diff
+
+# Show diffs
+show-diffs: true
+
+# Message style
+message-file: .aider.instructions.md
+
+##############################################################################
+# File Organization
+##############################################################################
+
+# Watch these files for context
+watch-files:
+  - "src/**/*.py"
+  - "tests/**/*.py"
+  - "pyproject.toml"
+  - "Makefile"
+  - "AGENTS.md"
+
+# Read-only files (for context, don't edit)
+read-files:
+  - "README.md"
+  - "CHANGES.md"
+  - "PROJECT_STRUCTURE.md"
+
+##############################################################################
+# AI Behavior Settings
+##############################################################################
+
+# Show repo map for better context
+map-tokens: 2048
+
+# Use repo map
+show-repo-map: true
+
+# Cache prompts
+cache-prompts: true
+
+# Suggest shell commands for testing
+suggest-shell-commands: true
+
+##############################################################################
+# Quality Gates
+##############################################################################
+
+# These commands will run before committing
+# If any fail, the commit is blocked
+
+# pre-commit-hook runs these checks:
+# 1. make format - Black + isort formatting
+# 2. make lint - Ruff + mypy + Pylint
+# 3. make test - All tests with coverage
+# 4. Coverage check - Must be ≥ 80%
+
+##############################################################################
+# Aider-Specific TDD Workflow
+##############################################################################
+
+# When user requests a feature:
+# 1. Ask Aider to write tests first: "Write tests for X feature"
+# 2. Run tests (they will fail): /test
+# 3. Ask Aider to implement: "Implement X to make tests pass"
+# 4. Run tests again (should pass): /test
+# 5. Run quality check: /run make check
+# 6. If all pass, commit: /commit
+
+##############################################################################
+# Example Commands
+##############################################################################
+
+# /add src/leadership_blog_generator/feature.py tests/test_feature.py
+#   - Add files to chat context
+#
+# /test
+#   - Run make test
+#
+# /lint
+#   - Run make lint
+#
+# /run make check
+#   - Run complete quality check (format + lint + test)
+#
+# /run make coverage
+#   - Check test coverage
+#
+# /commit
+#   - Commit changes if all checks pass
+#
+# /help
+#   - Show all Aider commands
+
+##############################################################################
+# Instructions for Aider
+##############################################################################
+
+# READ THESE UNIVERSAL INSTRUCTIONS:
+# - AGENTS.md - Complete TDD and quality guidelines
+# - .cursorrules - Detailed TDD workflow
+# - .claude/INSTRUCTIONS.md - Example TDD implementations
+
+# CORE RULES:
+# 1. Tests first, ALWAYS (TDD)
+# 2. Minimize mocks - use real code
+# 3. Type hints on all functions (mypy strict)
+# 4. Run `make check` before committing
+# 5. Keep coverage ≥ 80%
+# 6. Update all AI instruction files for critical changes
+
+# QUALITY GATES (all must pass):
+# ✅ Tests written first
+# ✅ All tests pass
+# ✅ Coverage ≥ 80%
+# ✅ Black formatting
+# ✅ isort imports
+# ✅ Ruff linting
+# ✅ mypy type checking (strict)
+# ✅ Pylint score 10/10
+# ✅ make check passes
+
+##############################################################################
+# Project-Specific Patterns
+##############################################################################
+
+# Test file pattern
+# tests/test_*.py for each src/leadership_blog_generator/*.py
+
+# Import pattern (use package name, not src prefix):
+# from leadership_blog_generator import function_name
+
+# Type hints required (mypy strict mode):
+# def func(param: str) -> int:
+
+# Docstring style (Google format):
+# """Brief description.
+#
+# Args:
+#     param: Description
+#
+# Returns:
+#     Description
+# """
+
+##############################################################################
+# When to Mock (ONLY when necessary)
+##############################################################################
+
+# Mock these:
+# - HTTP requests (requests.get, etc.)
+# - Database calls
+# - File I/O (destructive operations)
+# - Current time (datetime.now)
+# - Random values
+
+# DON'T mock these:
+# - Internal project functions
+# - Pure functions
+# - Data transformations
+# - Business logic
+
+##############################################################################
+# Coverage Requirements
+##############################################################################
+
+# Minimum: 80% (enforced)
+# Target: 90%+
+# Ideal: 100% for new code
+
+# Check with: /run make coverage
+# View HTML report: htmlcov/index.html
+
+##############################################################################
+# Synchronizing AI Documentation
+##############################################################################
+
+# When making critical changes (new patterns, architecture, etc.),
+# update ALL of these files:
+# - .cursorrules
+# - AGENTS.md
+# - .claude/INSTRUCTIONS.md
+# - GEMINI.md
+# - .aider.conf.yml (this file)
+# - COPILOT_INSTRUCTIONS.md
+
+# Validate sync with: /run make validate-ai-docs
+
+##############################################################################
+# Example TDD Session with Aider
+##############################################################################
+
+# User: "Add a function to parse JSON safely"
+#
+# You:
+# > /add tests/test_utils.py src/leadership_blog_generator/utils.py
+# > I'll write tests first following TDD...
+#
+# [Edit tests/test_utils.py - add test_parse_json_safe]
+#
+# > /test
+# [Tests fail - function doesn't exist]
+#
+# > Now implementing the function...
+# [Edit src/leadership_blog_generator/utils.py - add parse_json_safe]
+#
+# > /test
+# [Tests pass]
+#
+# > /run make check
+# [All quality checks pass]
+#
+# > /commit
+# [Commit with message: "Add safe JSON parsing with tests"]
+
+##############################################################################
+
+# For complete guidelines, see AGENTS.md
