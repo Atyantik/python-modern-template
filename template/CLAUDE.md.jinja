@@ -16,6 +16,11 @@ This is NOT optional. Every session MUST start with `ai-start-task`.
 ```bash
 Bash: uv run ai-log "Progress message"
 Bash: uv run ai-update-plan "Completed item"
+
+# Customize your plan (add task-specific steps, remove irrelevant items)
+Bash: uv run ai-update-plan --add "Specific task for this feature" --phase "Phase 2"
+Bash: uv run ai-update-plan --remove "Generic irrelevant item"
+Bash: uv run ai-update-plan --rename "Generic item" --to "Specific detailed item"
 ```
 
 **When finishing:**
@@ -23,7 +28,7 @@ Bash: uv run ai-update-plan "Completed item"
 Bash: uv run ai-finish-task --summary="What you accomplished"
 ```
 
-See `@AI_DOCS/ai-tools.md` for complete workflow.
+See `@AI_DOCS/ai-tools.md` for complete workflow and all ai-update-plan features.
 
 ---
 

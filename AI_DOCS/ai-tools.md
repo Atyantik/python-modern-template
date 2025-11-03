@@ -143,42 +143,220 @@ uv run ai-log "Coverage at 78%, need 2 more tests" --level=warning
 
 ### 3. ai-update-plan
 
-**Update checkboxes in task plan to track progress.**
+**Manage task plans with two modes: checkbox toggling and full plan editing.**
 
+#### Two Modes of Operation
+
+**Checkbox Mode** (default) - Toggle items as complete:
 ```bash
-# Mark item as done
+uv run ai-update-plan "Write test file(s)"
+```
+
+**Edit Mode** - Modify plan structure:
+```bash
+uv run ai-update-plan --add "New task item"
+uv run ai-update-plan --remove "Task to delete"
+uv run ai-update-plan --rename "Old text" --to "New text"
+```
+
+---
+
+#### Checkbox Mode: Track Progress
+
+**Mark items complete:**
+```bash
+# Toggle checkbox for matching item
 uv run ai-update-plan "Write test file(s)"
 
 # Show current progress
 uv run ai-update-plan --show
+# Output: ✅ Progress: 3/7 completed
 
 # Specific session
 uv run ai-update-plan "Implement functionality" --session-id=20250102123045
 ```
 
+**Fuzzy matching with helpful suggestions:**
+```bash
+# Typo in item name
+uv run ai-update-plan "Write test fils"
+
+# Output:
+# ❌ Error: Item not found: "Write test fils"
+#
+# 📝 Did you mean one of these?
+#   1. Write test file(s) (90% match)
+#   2. Run tests (should fail initially) (65% match)
+```
+
 **What it does:**
-- Toggles checkbox for matching task item
-- Shows updated progress (X/Y completed)
-- Helps track which steps are done
+- Toggles checkbox between `[ ]` and `[x]`
+- Shows progress percentage
+- Uses fuzzy matching if exact match not found
+- Suggests similar items when item not found
 
-**Standard plan items:**
-- [ ] Write test file(s)
-- [ ] Run tests (should fail initially)
-- [ ] Implement functionality
-- [ ] Run tests again (should pass)
-- [ ] Run make check
-- [ ] Update documentation if needed
-- [ ] Review code changes
+---
 
-**Usage:**
+#### Edit Mode: Modify Plan Structure
+
+**Add new items:**
+```bash
+# Add to last phase
+uv run ai-update-plan --add "Run performance benchmarks"
+
+# Add to specific phase
+uv run ai-update-plan --add "Validate API responses" --phase "Phase 2"
+
+# Add new phase
+uv run ai-update-plan --add-phase "Phase 5: Performance Testing"
+```
+
+**Remove items:**
+```bash
+# Remove by exact match
+uv run ai-update-plan --remove "Update documentation if needed"
+
+# Remove with fuzzy matching
+uv run ai-update-plan --remove "Update docs"
+# Suggests: Did you mean "Update documentation if needed"?
+```
+
+**Rename items:**
+```bash
+# Rename for clarity
+uv run ai-update-plan --rename "Run tests" --to "Run tests with pytest"
+
+# Rename with fuzzy matching
+uv run ai-update-plan --rename "Run test" --to "Run all tests with coverage"
+# Finds "Run tests (should fail initially)" even with typo
+```
+
+**What edit mode does:**
+- Validates items are not empty or whitespace-only
+- Validates target phases exist (suggests available phases if not)
+- Prevents duplicate items (case-insensitive)
+- Uses fuzzy matching for --remove and --rename
+- Maintains plan structure and formatting
+
+---
+
+#### Validation Features
+
+**Empty item validation:**
+```bash
+uv run ai-update-plan --add "   "
+
+# Output:
+# ❌ Error: Item text cannot be empty or whitespace-only.
+# Please provide meaningful item text.
+```
+
+**Phase existence validation:**
+```bash
+uv run ai-update-plan --add "New task" --phase "Phase 10"
+
+# Output:
+# ❌ Error: Phase 'Phase 10' does not exist in plan.
+#
+# Available phases:
+#   • ### Phase 1: Research & Design
+#   • ### Phase 2: Write Tests (TDD)
+#   • ### Phase 3: Implementation
+#   • ### Phase 4: Quality Checks
+#
+# Use --add-phase to create it, or choose an existing phase.
+```
+
+**Duplicate detection:**
+```bash
+uv run ai-update-plan --add "Write test file(s)"
+
+# Output:
+# ❌ Error: Item "Write test file(s)" already exists in plan.
+```
+
+---
+
+#### Complete Usage Examples
+
+**Typical checkbox workflow:**
 ```bash
 # After writing tests
 uv run ai-update-plan "Write test file(s)"
+# ✅ Progress: 1/7 completed
 
-# See progress
+# After running tests
+uv run ai-update-plan "Run tests (should fail initially)"
+# ✅ Progress: 2/7 completed
+
+# Check what's left
 uv run ai-update-plan --show
-# Output: ✅ Progress: 1/7 completed
 ```
+
+**Customizing your plan:**
+```bash
+# Add task-specific steps
+uv run ai-update-plan --add "Set up database migrations" --phase "Phase 1"
+uv run ai-update-plan --add "Test error handling" --phase "Phase 2"
+
+# Remove irrelevant generic items
+uv run ai-update-plan --remove "Review code changes"
+
+# Rename generic items to be specific
+uv run ai-update-plan --rename "Implement functionality" --to "Implement user authentication with JWT"
+
+# Add a new phase if needed
+uv run ai-update-plan --add-phase "Phase 5: Integration Testing"
+uv run ai-update-plan --add "Test with external API" --phase "Phase 5"
+```
+
+**Handling typos with fuzzy matching:**
+```bash
+# Typo in checkbox mode
+uv run ai-update-plan "Implmeent functinality"
+# Suggests: "Implement functionality" (85% match)
+
+# Typo in remove mode
+uv run ai-update-plan --remove "Implment functinality"
+# Asks: Did you mean "Implement functionality"?
+```
+
+---
+
+#### Standard Plan Items
+
+Every task plan includes these checkboxes:
+
+**Phase 1: Research & Design**
+- [ ] Review related code and patterns
+- [ ] Identify affected components
+- [ ] Design approach and architecture
+
+**Phase 2: Write Tests (TDD)**
+- [ ] Identify test scenarios and edge cases
+- [ ] Write test file(s)
+- [ ] Run tests to confirm they fail
+
+**Phase 3: Implementation**
+- [ ] Implement core functionality
+- [ ] Run tests to confirm they pass
+- [ ] Verify 80%+ coverage
+- [ ] Handle edge cases and error conditions
+
+**Phase 4: Quality Checks**
+- [ ] Run `make format`
+- [ ] Run `make lint`
+- [ ] Run `make test`
+- [ ] Fix any issues found
+- [ ] Run `make check` - all pass
+
+**Phase 5: Documentation**
+- [ ] Update docstrings
+- [ ] Add type hints to all functions
+- [ ] Update README if user-facing change
+- [ ] Add inline comments for complex logic
+
+**Customize these** using --add, --remove, and --rename for your specific task!
 
 ### 4. ai-context-summary
 
@@ -385,44 +563,64 @@ uv run ai-start-task "Add phone number validation"
 # - Convention: "Write tests first"
 
 # ═══════════════════════════════════════════════════════
+# STEP 1.5: CUSTOMIZE PLAN (Optional but Recommended)
+# ═══════════════════════════════════════════════════════
+
+# Add task-specific items
+uv run ai-update-plan --add "Research phone number formats (US, international)" --phase "Phase 1"
+uv run ai-update-plan --add "Test invalid formats (too short, too long, letters)" --phase "Phase 2"
+
+# Remove irrelevant generic items
+uv run ai-update-plan --remove "Review code changes"
+
+# Rename generic items to be specific
+uv run ai-update-plan --rename "Implement functionality" --to "Implement validate_phone() with regex"
+
+# Check customized plan
+uv run ai-update-plan --show
+# Output: ✅ Progress: 0/9 completed (added 2, removed 1)
+
+# ═══════════════════════════════════════════════════════
 # STEP 2: WORK (Following TDD)
 # ═══════════════════════════════════════════════════════
+
+# Research phase
+uv run ai-log "Researching phone number validation patterns"
+uv run ai-update-plan "Research phone number formats (US, international)"
 
 # Write tests first
 uv run ai-log "Starting TDD workflow"
 # ... create tests/test_validators.py ...
 uv run ai-log "Created test_validators.py with 6 parametrized tests"
 uv run ai-update-plan "Write test file(s)"
+uv run ai-update-plan "Test invalid formats (too short, too long, letters)"
 
 # Run tests (should fail)
 make test
 uv run ai-log "Tests fail as expected - function doesn't exist"
-uv run ai-update-plan "Run tests (should fail initially)"
+uv run ai-update-plan "Run tests to confirm they fail"
 
 # Implement function
 # ... create src/python_modern_template/validators.py ...
 uv run ai-log "Implemented validate_phone() function"
-uv run ai-update-plan "Implement functionality"
+uv run ai-update-plan "Implement validate_phone() with regex"
 
 # Run tests (should pass)
 make test
 uv run ai-log "All 6 tests now pass" --level=success
-uv run ai-update-plan "Run tests again (should pass)"
+uv run ai-update-plan "Run tests to confirm they pass"
 
 # Run quality checks
 make check
 uv run ai-log "make check passes - 100% coverage" --level=success
-uv run ai-update-plan "Run make check"
+uv run ai-update-plan "Run make check - all pass"
 
 # Check progress
 uv run ai-update-plan --show
-# Output: ✅ Progress: 5/7 completed
+# Output: ✅ Progress: 8/9 completed
 
 # Update docs (if needed)
-uv run ai-update-plan "Update documentation if needed"
-
-# Review changes
-uv run ai-update-plan "Review code changes"
+uv run ai-update-plan "Update README if user-facing change"
 
 # ═══════════════════════════════════════════════════════
 # STEP 3: FINISH SESSION (Required)
@@ -523,6 +721,56 @@ uv run ai-update-plan --show
 
 # Use exact text from plan
 uv run ai-update-plan "Exact item text from plan"
+
+# Or rely on fuzzy matching (handles typos)
+uv run ai-update-plan "approximate text"
+# Tool will suggest: "Did you mean: Exact item text from plan?"
+```
+
+### "Item text cannot be empty"
+```bash
+# Error when trying to add empty or whitespace-only items
+uv run ai-update-plan --add "   "
+
+# Fix: Provide meaningful text
+uv run ai-update-plan --add "Implement error handling"
+```
+
+### "Phase does not exist"
+```bash
+# Error when targeting non-existent phase
+uv run ai-update-plan --add "New task" --phase "Phase 10"
+
+# Fix: Use --show to see available phases
+uv run ai-update-plan --show
+
+# Then use existing phase or create new one
+uv run ai-update-plan --add "New task" --phase "Phase 2"
+# OR
+uv run ai-update-plan --add-phase "Phase 6: New Phase Name"
+uv run ai-update-plan --add "New task" --phase "Phase 6"
+```
+
+### "Item already exists in plan"
+```bash
+# Error when adding duplicate items
+uv run ai-update-plan --add "Write test file(s)"
+# Error: Item "Write test file(s)" already exists in plan.
+
+# Fix: Check plan for existing items
+uv run ai-update-plan --show
+
+# Or add a more specific item
+uv run ai-update-plan --add "Write integration test files"
+```
+
+### "--to parameter required when using --rename"
+```bash
+# Error when using --rename without --to
+uv run ai-update-plan --rename "Old item"
+
+# Fix: Always provide --to with --rename
+uv run ai-update-plan --rename "Old item" --to "New item text"
 ```
 
 ---

@@ -38,7 +38,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
             ["leadership_blog_generator"],
         ),
         (
-            "template/AGENTS.md",
+            "template/AGENTS.md.jinja",
             ["{{ package_name }}"],
             ["leadership_blog_generator"],
         ),

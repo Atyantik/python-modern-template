@@ -42,19 +42,22 @@ These tools automatically read the shared documentation:
 
 ### ⚠️  Manual Sync Required (No File Reference Support)
 
-These tools require manual content duplication:
+These tools require manual content sync, but with MINIMAL duplication:
 
 1. **GitHub Copilot** (`.github/copilot-instructions.md`)
-   - Does NOT support file references
-   - Content must be manually copied
+   - Does NOT support file references (@AI_DOCS syntax)
+   - Contains only Copilot-specific TDD workflow guidance
+   - References AI_DOCS for complete documentation
    - Has sync warning comment at top
 
 2. **Gemini Code Assist** (`.gemini/styleguide.md`)
    - Does NOT support file references for styleguide.md
-   - Content must be manually copied
+   - Contains only Gemini-specific TDD workflow guidance
+   - References AI_DOCS for complete documentation
    - Has sync warning comment at top
+   - Note: Gemini CAN use AGENTS.md which supports @AI_DOCS references
 
-**When updating shared docs**, remember to manually sync content to these 2 files!
+**When updating shared docs**, these files should remain minimal - only update if the tool-specific workflow changes!
 
 ## 📝 How to Update Documentation
 
@@ -72,18 +75,11 @@ These tools require manual content duplication:
    - Gemini (AGENTS.md)
    - Aider AI
 
-3. **Manually sync to non-supporting tools**:
-   ```bash
-   # Copy relevant sections to:
-   vim .github/copilot-instructions.md
-   vim .gemini/styleguide.md
-   ```
-
-4. **Add sync warning comment** at the top of manually synced files:
-   ```markdown
-   <!-- ⚠️  SYNC WARNING: Content duplicated from AI_DOCS/ -->
-   <!-- When AI_DOCS/ changes, manually update this file -->
-   ```
+3. **Manual sync usually NOT needed**:
+   - Copilot and Gemini styleguide files are now minimal
+   - They reference AI_DOCS for complete documentation
+   - Only update if tool-specific workflow guidance changes
+   - Do NOT duplicate CRITICAL sections or full guidelines
 
 ### For Tool-Specific Changes
 
@@ -168,14 +164,14 @@ Then read your tool-specific config:
 ### DO ✅
 - Update shared docs for universal changes
 - Reference shared docs via `@AI_DOCS/` syntax
-- Manually sync to Copilot and Gemini when shared docs change
-- Add sync warning comments to manually synced content
+- Keep Copilot and Gemini files minimal with references only
 - Keep shared docs focused on common patterns
+- Use AGENTS.md for Gemini (supports @AI_DOCS references)
 
 ### DON'T ❌
-- Duplicate content unnecessarily
+- Duplicate CRITICAL sections to tool-specific files
+- Duplicate full guidelines unnecessarily
 - Add tool-specific examples to shared docs
-- Forget to sync manual-copy files
 - Remove the `@AI_DOCS/` references from tool configs
 - Mix universal and tool-specific content
 

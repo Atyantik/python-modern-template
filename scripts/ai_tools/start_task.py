@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 
 from scripts.ai_tools.check_conflicts import check_conflicts
+from scripts.ai_tools.template_loader import load_template
 from scripts.ai_tools.utils import (
     create_session_filename,
     create_session_id,
@@ -19,90 +20,22 @@ from scripts.ai_tools.utils import (
 
 
 def get_plan_template(session_id: str, task_name: str, task_type: str) -> str:
-    """Get PLAN file template.
+    """Get PLAN file template using task-specific template loader.
 
     Args:
         session_id: Session ID
         task_name: Task name
-        task_type: Task type
+        task_type: Task type (feature, bugfix, docs, refactor)
 
     Returns:
-        Template content
+        Template content customized for task type
     """
-    timestamp = format_timestamp()
-
-    template = f"""# Task Plan: {task_name}
-
-**Session ID**: {session_id}
-**Created**: {timestamp}
-**Task Type**: {task_type}
-**Status**: 🚧 In Progress
-
----
-
-## Objective
-
-[Describe what needs to be accomplished]
-
----
-
-## Context
-
-**Recent Decisions**:
-See RECENT_DECISIONS.md for latest decisions to follow.
-
-**Related Conventions**:
-See CONVENTIONS.md for coding standards.
-
-**Dependencies**:
-- [ ] None identified yet
-
----
-
-## Implementation Steps
-
-### Phase 1: Write Tests (TDD)
-- [ ] Identify test cases
-- [ ] Write test file(s)
-- [ ] Run tests to confirm they fail
-
-### Phase 2: Implementation
-- [ ] Implement functionality
-- [ ] Run tests to confirm they pass
-- [ ] Verify 80%+ coverage
-
-### Phase 3: Quality Checks
-- [ ] Run `make format`
-- [ ] Run `make lint`
-- [ ] Run `make test`
-- [ ] Fix any issues
-- [ ] Run `make check` - all pass
-
-### Phase 4: Documentation
-- [ ] Update docstrings
-- [ ] Add type hints
-- [ ] Update README if needed
-
----
-
-## Files to Change
-
-- [ ] `src/`
-- [ ] `tests/`
-
----
-
-## Risks & Considerations
-
-- None identified yet
-
----
-
-## Notes
-
-[Track decisions, blockers, questions as you work]
-"""
-    return template
+    # Use new template loader for task-specific templates
+    return load_template(
+        task_type=task_type,
+        session_id=session_id,
+        task_name=task_name,
+    )
 
 
 def get_summary_template(session_id: str, task_name: str) -> str:
