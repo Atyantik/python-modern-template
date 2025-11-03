@@ -15,6 +15,10 @@ import pytest
 
 from scripts.ai_tools.update_plan import update_plan
 
+# Patch targets - extracted to avoid Black/Ruff formatting conflicts
+PATCH_GET_CURRENT_SESSION = "scripts.ai_tools.update_plan.get_current_session"
+PATCH_GET_SESSION_FILES = "scripts.ai_tools.update_plan.get_session_files"
+
 
 @pytest.fixture
 def mock_session_setup(tmp_path: Path) -> tuple[str, Path]:
@@ -52,8 +56,8 @@ class TestBackwardCompatibilityCheckboxMode:
         """Test that checking an item works exactly as before."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -70,8 +74,8 @@ class TestBackwardCompatibilityCheckboxMode:
         """Test that unchecking an item works exactly as before."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -88,8 +92,8 @@ class TestBackwardCompatibilityCheckboxMode:
         """Test that showing plan works exactly as before."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -107,8 +111,8 @@ class TestBackwardCompatibilityCheckboxMode:
         """Test that default behavior (check) is unchanged."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -125,8 +129,8 @@ class TestBackwardCompatibilityCheckboxMode:
         """Test that partial matching still works as before."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -147,8 +151,8 @@ class TestBackwardCompatibilityModeDetection:
         """Test that absence of edit flags uses checkbox mode."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -167,8 +171,8 @@ class TestBackwardCompatibilityModeDetection:
         """Test that providing only item parameter triggers checkbox mode."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -189,8 +193,8 @@ class TestBackwardCompatibilityErrorHandling:
         """Test that item not found error is unchanged."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -200,7 +204,7 @@ class TestBackwardCompatibilityErrorHandling:
 
     def test_no_session_error_unchanged(self) -> None:
         """Test that no session error is unchanged."""
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:
             mock_session.return_value = None
 
             # Should exit with error when no session
@@ -213,8 +217,8 @@ class TestBackwardCompatibilityErrorHandling:
         """Test that missing item parameter error is unchanged."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -232,8 +236,8 @@ class TestBackwardCompatibilityOutputFormat:
         """Test that success message format is unchanged."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -251,8 +255,8 @@ class TestBackwardCompatibilityOutputFormat:
         """Test that progress percentage is still displayed."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -272,8 +276,8 @@ class TestBackwardCompatibilityIntegration:
         """Test that multiple checkbox operations work sequentially."""
         session_id, plan_file = mock_session_setup
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
@@ -302,8 +306,8 @@ class TestBackwardCompatibilityIntegration:
 
         plan_file.read_text()
 
-        with patch("scripts.ai_tools.update_plan.get_current_session") as mock_session:  # noqa: SIM117
-            with patch("scripts.ai_tools.update_plan.get_session_files") as mock_files:
+        with patch(PATCH_GET_CURRENT_SESSION) as mock_session:  # noqa: SIM117
+            with patch(PATCH_GET_SESSION_FILES) as mock_files:
                 mock_session.return_value = session_id
                 mock_files.return_value = {"plan": plan_file}
 
