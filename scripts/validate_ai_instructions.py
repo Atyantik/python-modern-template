@@ -23,10 +23,10 @@ class ValidationResult(NamedTuple):
 REQUIRED_FILES = [
     ".cursorrules",
     "AGENTS.md",
-    ".claude/INSTRUCTIONS.md",
-    "GEMINI.md",
+    "CLAUDE.md",
+    ".gemini/styleguide.md",
     ".aider.conf.yml",
-    "COPILOT_INSTRUCTIONS.md",
+    ".github/copilot-instructions.md",
 ]
 
 # Critical keywords that MUST appear in instruction files
