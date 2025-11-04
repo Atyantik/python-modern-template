@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from {import_path} import {class_name}
 
 
