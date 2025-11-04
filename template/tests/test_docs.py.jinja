@@ -1,0 +1,124 @@
+"""Regression tests for documentation content to detect outdated references."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
+@pytest.mark.parametrize(
+    ("relative_path", "required_phrases", "forbidden_phrases"),
+    [
+        (
+            "AI_DOCS/project-context.md",
+            ["Modern Python Project Template"],
+            ["Leadership Blog Generator"],
+        ),
+        (
+            "AGENTS.md",
+            ["{{ package_name }}"],
+            ["leadership_blog_generator"],
+        ),
+        (
+            "AI_DOCS/code-conventions.md",
+            ["{{ package_name }}"],
+            ["leadership_blog_generator"],
+        ),
+        (
+            "AI_DOCS/ai-tools.md",
+            ["{{ package_name }}"],
+            ["leadership_blog_generator"],
+        ),
+        (
+            "AI_DOCS/tdd-workflow.md",
+            ["{{ package_name }}"],
+            ["leadership_blog_generator"],
+        ),
+        (
+            "template/AGENTS.md.jinja",
+            ["{{ package_name }}"],
+            ["leadership_blog_generator"],
+        ),
+        (
+            "template/AI_DOCS/project-context.md.jinja",
+            ["{{ package_name }}"],
+            ["leadership_blog_generator"],
+        ),
+    ],
+)
+def test_documentation_is_template_specific(
+    relative_path: str,
+    required_phrases: list[str],
+    forbidden_phrases: list[str],
+) -> None:
+    """Ensure docs mention the template and no longer reference legacy projects."""
+
+    content = (PROJECT_ROOT / relative_path).read_text(encoding="utf-8")
+
+    for phrase in required_phrases:
+        missing_message = f"Expected phrase '{phrase}' not found in {relative_path}"
+        assert phrase in content, missing_message
+
+    for phrase in forbidden_phrases:
+        legacy_message = f"Outdated phrase '{phrase}' still present in {relative_path}"
+        assert phrase not in content, legacy_message
+
+
+def test_no_legacy_identifier_left() -> None:
+    """Ensure the legacy package name no longer appears in tracked files."""
+
+    banned = "leadership_blog_generator"
+    allowed: set[Path] = {PROJECT_ROOT / "tests" / "test_docs.py"}
+    search_roots = [
+        PROJECT_ROOT / "AI_DOCS",
+        PROJECT_ROOT / "template",
+        PROJECT_ROOT / ".ai-context",
+        PROJECT_ROOT / ".github",
+        PROJECT_ROOT / "src",
+        PROJECT_ROOT / "tests",
+        PROJECT_ROOT / "scripts",
+        PROJECT_ROOT,
+    ]
+
+    text_suffixes = {
+        ".md",
+        ".py",
+        ".toml",
+        ".yml",
+        ".yaml",
+        ".cfg",
+        ".txt",
+        "",
+    }
+
+    matches: list[str] = []
+
+    for root in search_roots:
+        if not root.exists():
+            continue
+        for path in root.rglob("*"):
+            if not path.is_file():
+                continue
+            if any(
+                part in {".git", ".venv", "__pycache__", "sessions"}
+                for part in path.parts
+            ):
+                continue
+            if path in allowed:
+                continue
+            if path.suffix not in text_suffixes:
+                continue
+
+            try:
+                content = path.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                continue
+
+            if banned in content:
+                relative = path.relative_to(PROJECT_ROOT)
+                matches.append(str(relative))
+
+    assert not matches, f"Legacy identifier still present in: {matches}"

@@ -163,14 +163,15 @@ uv run black src tests
 
 ### Keep Black and Ruff in Agreement
 
-- Treat Black as the layout authority, then use Ruff to verify.
-- Avoid constructs the tools format differently. For example, instead of relying
-  on multi-line `assert` calls wrapped in parentheses, assign the message to a
-  local variable and pass that variable to `assert`.
-- Run `pre-commit run --files …` (or `make format`) after edits so mismatches are
-  caught before staging.
-- If a formatter keeps rewriting the same lines, refactor the code so the intent
-  is explicit instead of depending on formatter heuristics.
+- Treat Black as the source of truth for layout, then let Ruff confirm it.
+- Avoid patterns the tools format differently. Instead of multi-line `assert` calls
+  wrapped in parentheses, assign long messages to a local variable and pass that
+  variable to the assertion. This keeps both formatters from oscillating the
+  same lines.
+- After editing formatted code, run `pre-commit run --files …` (or `make format`)
+  before staging to catch conflicts immediately.
+- If a rule keeps rewriting your changes, refactor the code so the intent is
+  explicit rather than relying on formatter heuristics.
 
 ### isort (Import Sorting)
 
@@ -469,7 +470,7 @@ from src.{{ package_name }} import function_name
 ```python
 # File: src/{{ package_name }}/__init__.py
 
-"""{{ project_name }} package."""
+"""Modern Python template package."""
 
 from .main import generate_blog
 from .validators import validate_email, validate_phone

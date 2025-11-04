@@ -43,9 +43,11 @@ See `@AI_DOCS/ai-tools.md` for complete workflow and all ai-update-plan features
 For comprehensive guidelines, reference these shared documents:
 
 - **@AI_DOCS/ai-tools.md** - AI session management tools (MANDATORY workflow)
+- **@AI_DOCS/ai-skills.md** - Specialized skills and agents for quality and testing
 - **@AI_DOCS/tdd-workflow.md** - Test-Driven Development process and testing standards
 - **@AI_DOCS/code-conventions.md** - Code style, formatting, and best practices
 - **@AI_DOCS/project-context.md** - Tech stack, architecture, and project structure
+- **@AI_DOCS/documentation-sync-rules.md** - AI doc synchronization (MANDATORY)
 
 ## Quick Reference
 
@@ -248,8 +250,14 @@ Before committing code, ensure:
 6. ✅ **Pre-commit hooks pass**: `make pre-commit`
 7. ✅ **Type hints everywhere**: mypy strict mode
 8. ✅ **No security issues**: CI runs Bandit + Safety
+9. ✅ **AI documentation synchronized** (MANDATORY)
+   - Run: `uv run python src/python_modern_template/validate_ai_docs_sync.py`
+   - Update manual sync files if AI_DOCS changed
+   - Update .claude/skills or .claude/agents if relevant
+   - Update template files if changes apply to new projects
+   - See `@AI_DOCS/documentation-sync-rules.md` for workflow
 
-See `@AI_DOCS/tdd-workflow.md` and `@AI_DOCS/code-conventions.md` for complete quality requirements.
+See `@AI_DOCS/tdd-workflow.md`, `@AI_DOCS/code-conventions.md`, and `@AI_DOCS/documentation-sync-rules.md` for complete requirements.
 
 ## Security Guidelines
 
@@ -347,13 +355,29 @@ All tools reference the shared documentation in `AI_DOCS/` for consistency.
 
 **Remember**: Write tests first, use real code, run `make check`, maintain quality. This discipline prevents bugs and saves time.
 
+## Specialized Skills and Agents
+
+This project provides specialized workflows to maintain code quality:
+
+**See @AI_DOCS/ai-skills.md for complete documentation on:**
+- **test-generator** - Generate comprehensive test boilerplate
+- **coverage-analyzer** - Advanced coverage analysis with actionable insights
+- **quality-fixer** - Automatically apply safe quality fixes
+- **session-template** - Apply task-specific templates to plans
+- **tdd-reviewer** - Review TDD compliance proactively
+- **quality-enforcer** - Comprehensive quality gate enforcement
+
+**Claude Code users:** Access via `Skill:` and `Task:` tools
+**Other AI agents:** Follow manual workflow guides in ai-skills.md
+
 ## Complete Reference Documentation
 
 For detailed guidelines on each aspect of development:
 
 1. **@AI_DOCS/ai-tools.md** - Session management, logging, context tracking (MANDATORY)
-2. **@AI_DOCS/tdd-workflow.md** - TDD process, testing standards, coverage requirements
-3. **@AI_DOCS/code-conventions.md** - Code style, formatting, best practices, documentation
-4. **@AI_DOCS/project-context.md** - Tech stack, architecture, dependencies, CI/CD
+2. **@AI_DOCS/ai-skills.md** - Specialized skills and agents for quality and testing
+3. **@AI_DOCS/tdd-workflow.md** - TDD process, testing standards, coverage requirements
+4. **@AI_DOCS/code-conventions.md** - Code style, formatting, best practices, documentation
+5. **@AI_DOCS/project-context.md** - Tech stack, architecture, dependencies, CI/CD
 
 These shared documents are the single source of truth for all AI coding assistants.

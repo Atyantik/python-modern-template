@@ -216,12 +216,14 @@ def archive_old_sessions() -> int:
 def finish_task(
     summary: str | None = None,
     session_id: str | None = None,
+    yes: bool = False,
 ) -> None:
     """Finalize task and update all context files.
 
     Args:
         summary: Brief summary (default: prompt user)
         session_id: Session ID (default: most recent)
+        yes: Skip interactive prompts (default: False)
     """
     # Get current session if not specified
     if session_id is None:
@@ -242,6 +244,11 @@ def finish_task(
         print_error(f"Session files not found for session {session_id}")
         sys.exit(1)
 
+    # Type narrowing: we know these are Path objects after the check
+    assert plan_file is not None
+    assert summary_file is not None
+    assert execution_file is not None
+
     # Read files
     plan_content = plan_file.read_text()
     summary_file.read_text()
@@ -257,18 +264,20 @@ def finish_task(
     is_complete, checked, total = check_plan_completion(plan_content)
     if not is_complete and total > 0:
         print_warning(f"Plan is not 100% complete ({checked}/{total} items checked)")
-        response = input("Continue anyway? [y/N]: ").strip().lower()
-        if response != "y":
-            print("Task not finished. Complete the plan first.")
-            sys.exit(0)
+        if not yes:
+            response = input("Continue anyway? [y/N]: ").strip().lower()
+            if response != "y":
+                print("Task not finished. Complete the plan first.")
+                sys.exit(0)
 
     # Check if make check was run
     if not check_make_check_ran(execution_content):
         print_warning("'make check' was not logged in execution")
-        response = input("Continue anyway? [y/N]: ").strip().lower()
-        if response != "y":
-            print("Task not finished. Run 'make check' first.")
-            sys.exit(0)
+        if not yes:
+            response = input("Continue anyway? [y/N]: ").strip().lower()
+            if response != "y":
+                print("Task not finished. Run 'make check' first.")
+                sys.exit(0)
 
     # Get summary if not provided
     if summary is None:
@@ -371,12 +380,19 @@ Examples:
         "--session-id",
         help="Specific session ID (default: most recent session)",
     )
+    parser.add_argument(
+        "--yes",
+        "-y",
+        action="store_true",
+        help="Skip interactive prompts (non-interactive mode)",
+    )
 
     args = parser.parse_args()
 
     finish_task(
         summary=args.summary,
         session_id=args.session_id,
+        yes=args.yes,
     )
 
 

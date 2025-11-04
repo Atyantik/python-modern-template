@@ -8,10 +8,12 @@ This directory contains shared documentation referenced by all AI tool configura
 
 | File | Purpose | Who Uses It |
 |------|---------|-------------|
-| **tdd-workflow.md** | Test-Driven Development process, testing standards, coverage requirements | All AI tools |
 | **ai-tools.md** | AI session management workflow (MANDATORY for all agents) | All AI tools |
+| **ai-skills.md** | Specialized skills and agents (test-generator, coverage-analyzer, quality-fixer, tdd-reviewer, quality-enforcer) | All AI tools |
+| **tdd-workflow.md** | Test-Driven Development process, testing standards, coverage requirements | All AI tools |
 | **code-conventions.md** | Code style, formatting, best practices, documentation standards | All AI tools |
 | **project-context.md** | Tech stack, architecture, dependencies, CI/CD pipeline | All AI tools |
+| **documentation-sync-rules.md** | AI documentation synchronization golden rule (MANDATORY quality gate) | All AI tools |
 
 ## 🔗 How Tools Reference These Docs
 
@@ -117,10 +119,12 @@ Content that is **unique to each tool**:
 
 **Always read these first**:
 ```
-@AI_DOCS/ai-tools.md         # Session management (MANDATORY)
-@AI_DOCS/tdd-workflow.md     # TDD process
-@AI_DOCS/code-conventions.md # Code standards
-@AI_DOCS/project-context.md  # Architecture
+@AI_DOCS/ai-tools.md                  # Session management (MANDATORY)
+@AI_DOCS/documentation-sync-rules.md  # Doc sync golden rule (MANDATORY)
+@AI_DOCS/ai-skills.md                 # Specialized skills and agents
+@AI_DOCS/tdd-workflow.md              # TDD process
+@AI_DOCS/code-conventions.md          # Code standards
+@AI_DOCS/project-context.md           # Architecture
 ```
 
 Then read your tool-specific config:
@@ -191,9 +195,12 @@ Then read your tool-specific config:
 This structure was introduced on 2025-11-02 to consolidate AI documentation and reduce duplication.
 
 ### What Changed
-- Created `AI_DOCS/` directory with 4 shared files
-- Updated 4 tool configs to reference shared docs
+- Created `AI_DOCS/` directory with 6 shared files
+- Added `ai-skills.md` for specialized skills and agents (2025-11-03)
+- Added `documentation-sync-rules.md` for sync golden rule (2025-11-03)
+- Updated all tool configs to reference shared docs
 - Identified 2 tools requiring manual sync
+- Made AI doc sync a mandatory quality gate
 - Reduced total documentation size by ~60%
 
 ### Benefits Achieved

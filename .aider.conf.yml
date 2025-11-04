@@ -36,12 +36,14 @@
 # Read these shared documentation files for complete guidelines:
 read:
   - AI_DOCS/ai-tools.md           # Session management (MANDATORY workflow)
+  - AI_DOCS/ai-skills.md          # Specialized skills and agents
   - AI_DOCS/tdd-workflow.md       # TDD process and testing standards
   - AI_DOCS/code-conventions.md   # Code style and best practices
   - AI_DOCS/project-context.md    # Tech stack and architecture
 
 # These files contain the single source of truth for:
 # - AI session management workflow (ai-start-task, ai-log, ai-finish-task)
+# - Specialized workflows (test-generator, coverage-analyzer, quality-fixer)
 # - Test-Driven Development principles and examples
 # - Code quality standards and conventions
 # - Project structure and dependencies
@@ -191,6 +193,7 @@ suggest-shell-commands: true
 
 # READ THE SHARED DOCUMENTATION ABOVE (automatically included via `read:`)
 # - AI_DOCS/ai-tools.md - Session management workflow (MANDATORY)
+# - AI_DOCS/ai-skills.md - Specialized skills and agents
 # - AI_DOCS/tdd-workflow.md - TDD process with examples
 # - AI_DOCS/code-conventions.md - Code standards
 # - AI_DOCS/project-context.md - Project architecture
@@ -308,6 +311,7 @@ suggest-shell-commands: true
 
 # For complete guidelines, see:
 # - AI_DOCS/ai-tools.md (session management - MANDATORY)
+# - AI_DOCS/ai-skills.md (specialized skills and agents)
 # - AI_DOCS/tdd-workflow.md (TDD process and testing)
 # - AI_DOCS/code-conventions.md (code standards)
 # - AI_DOCS/project-context.md (architecture and dependencies)

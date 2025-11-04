@@ -1,0 +1,566 @@
+# AI Skills and Specialized Agents
+
+**Universal reference for all AI coding assistants**
+
+This document describes specialized skills and agents available to assist with code quality, testing, and TDD compliance.
+
+## Overview
+
+This project provides specialized workflows and agents to maintain high code quality:
+
+- **Skills** - Automated helpers for specific tasks (testing, coverage, quality)
+- **Agents** - Specialized reviewers for TDD and quality enforcement
+
+**For Claude Code users:** These skills and agents are available via the `Skill` and `Task` tools.
+
+**For other AI agents:** Use these as manual workflow guides—follow the documented steps to achieve the same outcomes.
+
+---
+
+## Skills
+
+### 1. Test Generator
+
+**Purpose:** Generate comprehensive test boilerplate following project TDD conventions.
+
+**When to Use:**
+- Creating tests for a new module, class, or function
+- Starting TDD workflow (write tests FIRST!)
+- Need test templates with proper structure
+
+**What It Provides:**
+- Test files with proper imports and structure
+- Test classes organized by functionality
+- Parametrized test templates
+- AAA pattern (Arrange-Act-Assert) structure
+- Complete type hints and docstrings
+- Fixture templates
+
+**Claude Code:** `Skill: test-generator`
+
+**Manual Workflow:**
+
+1. **Analyze the source code or function description**
+   - Identify function signature, parameters, return type
+   - List expected behaviors and edge cases
+
+2. **Create test file** in `tests/` matching source structure
+   ```bash
+   # For src/python_modern_template/validators.py
+   # Create tests/test_validators.py
+   ```
+
+3. **Use standard test template:**
+   ```python
+   """Tests for module_name.function_name."""
+
+   from __future__ import annotations
+
+   import pytest
+
+   from python_modern_template.module import function_name
+
+
+   class TestFunctionName:
+       """Test cases for function_name."""
+
+       def test_function_name_basic(self) -> None:
+           """Test basic functionality."""
+           # Arrange
+           input_data = "test data"
+
+           # Act
+           result = function_name(input_data)
+
+           # Assert
+           assert result == expected
+
+       @pytest.mark.parametrize(
+           "input_val,expected",
+           [
+               ("valid1", True),
+               ("valid2", True),
+               ("", False),
+               (None, False),
+           ],
+       )
+       def test_function_name_parametrized(
+           self, input_val: str | None, expected: bool
+       ) -> None:
+           """Test with various inputs."""
+           result = function_name(input_val)
+           assert result == expected
+   ```
+
+4. **Run tests to verify they fail** (TDD red phase)
+   ```bash
+   make test
+   ```
+
+**Key Principles:**
+- Tests BEFORE implementation
+- Type hints on all test functions
+- Descriptive docstrings
+- Parametrized tests for multiple cases
+- Real code over mocks
+
+**Reference:** See `test-generator` skill in `.claude/skills/test-generator/SKILL.md` for full templates.
+
+---
+
+### 2. Coverage Analyzer
+
+**Purpose:** Advanced coverage analysis with actionable insights for reaching 80%+ target.
+
+**When to Use:**
+- After running `make coverage` to understand gaps
+- Before completing a feature (ensure adequate coverage)
+- When coverage is below 80% target
+- To identify critical uncovered code paths
+
+**What It Provides:**
+- Detailed coverage analysis (uncovered lines by file)
+- Actionable test recommendations
+- Coverage gap identification (error handling, edge cases)
+- Concrete test code suggestions
+- Priority-based recommendations (CRITICAL, HIGH, MEDIUM, LOW)
+
+**Claude Code:** `Skill: coverage-analyzer`
+
+**Manual Workflow:**
+
+1. **Generate coverage report:**
+   ```bash
+   make coverage
+   # Creates htmlcov/ directory and terminal output
+   ```
+
+2. **Analyze HTML report:**
+   ```bash
+   open htmlcov/index.html
+   # Review files with < 80% coverage
+   ```
+
+3. **Identify uncovered lines:**
+   - Error handling blocks (try/except)
+   - Edge case branches (if empty/None)
+   - Validation logic
+   - Integration points
+
+4. **Prioritize gaps:**
+   - **CRITICAL**: Error handling, security, validation
+   - **HIGH**: Edge cases, boundary conditions, public APIs
+   - **MEDIUM**: Internal helpers, configuration
+   - **LOW**: Debug code, deprecated functions
+
+5. **Write missing tests:**
+   ```python
+   def test_error_handling() -> None:
+       """Test function handles errors correctly."""
+       with pytest.raises(ValueError):
+           function_with_error(invalid_input)
+   ```
+
+6. **Re-run coverage and verify improvement:**
+   ```bash
+   make coverage
+   # Should show increased coverage
+   ```
+
+**Coverage Requirements:**
+- Minimum: 80% (enforced)
+- Target: 90%+
+- New code: 100%
+
+**Reference:** See `coverage-analyzer` skill in `.claude/skills/coverage-analyzer/SKILL.md` for detailed analysis templates.
+
+---
+
+### 3. Quality Fixer
+
+**Purpose:** Automatically apply safe quality fixes (formatting, linting, conflicts).
+
+**When to Use:**
+- After writing code, before running `make check`
+- When `make lint` or `make format` reports fixable issues
+- To resolve Black vs Ruff formatter conflicts
+- Before committing code
+
+**What It Fixes:**
+- Formatting issues (Black + isort)
+- Safe linting issues (unused imports, f-string conversion)
+- Formatter conflicts (Black vs Ruff disagreements)
+
+**Claude Code:** `Skill: quality-fixer`
+
+**Manual Workflow:**
+
+1. **Apply formatting:**
+   ```bash
+   make format
+   # Runs Black and isort
+   ```
+
+2. **Apply safe auto-fixes:**
+   ```bash
+   uv run ruff check --fix src/ tests/
+   # Removes unused imports, converts to f-strings, simplifies expressions
+   ```
+
+3. **Check for formatter conflicts:**
+   ```bash
+   make check
+   # If Black and Ruff still disagree, apply conflict resolution
+   ```
+
+4. **Resolve conflicts:**
+
+   **Strategy 1: Extract message variables**
+   ```python
+   # Before (conflict)
+   logger.error("Very long message exceeding line length...")
+
+   # After (resolved)
+   msg = "Very long message exceeding line length..."
+   logger.error(msg)
+   ```
+
+   **Strategy 2: Use parentheses**
+   ```python
+   # Before
+   result = function(arg1, arg2, arg3, arg4, arg5)
+
+   # After
+   result = function(
+       arg1, arg2, arg3, arg4, arg5
+   )
+   ```
+
+5. **Verify all quality gates pass:**
+   ```bash
+   make check
+   ```
+
+**What This Does NOT Fix:**
+- Complex logic issues
+- Non-obvious type hints
+- Missing docstrings (formats existing only)
+- Test failures
+- Breaking changes
+
+**Reference:** See `quality-fixer` skill in `.claude/skills/quality-fixer/SKILL.md` for comprehensive conflict resolution strategies.
+
+---
+
+### 4. Session Template
+
+**Purpose:** Apply task-specific templates to AI session plans using `ai-update-plan`.
+
+**When to Use:**
+- Starting a new task (feature, bugfix, refactor, docs, security)
+- Want structured plan appropriate for task type
+- Need reminder of task-specific quality gates
+
+**What It Provides:**
+- Task-specific plan templates (feature, bugfix, refactor, documentation, security)
+- Appropriate quality gates for each task type
+- Customizable plan structure
+
+**Claude Code:** `Skill: session-template`
+
+**Manual Workflow:**
+
+1. **Choose appropriate template based on task type:**
+
+   **Feature Development:**
+   - Phase 1: Design and plan feature
+   - Phase 2: Write comprehensive tests (TDD)
+   - Phase 3: Implement feature to pass tests
+   - Phase 4: Refactor and optimize
+   - Phase 5: Documentation and examples
+   - Phase 6: Quality gates (make check)
+
+   **Bug Fix:**
+   - Phase 1: Reproduce bug with test
+   - Phase 2: Analyze root cause
+   - Phase 3: Fix implementation
+   - Phase 4: Verify test passes, no regressions
+   - Phase 5: Quality gates
+
+   **Refactoring:**
+   - Phase 1: Ensure tests exist and pass
+   - Phase 2: Plan refactoring approach
+   - Phase 3: Refactor while keeping tests green
+   - Phase 4: Verify coverage maintained
+   - Phase 5: Quality gates
+
+2. **Customize for specific task:**
+   - Add task-specific steps
+   - Remove irrelevant generic items
+   - Adjust priorities
+
+3. **Track progress through phases:**
+   ```bash
+   uv run ai-update-plan "Completed Phase 1"
+   uv run ai-log "Phase 1 complete, moving to Phase 2"
+   ```
+
+**Templates Available:**
+- `feature.md` - New feature development
+- `bugfix.md` - Bug fixing workflow
+- `refactor.md` - Code refactoring
+- `documentation.md` - Documentation updates
+- `security.md` - Security improvements
+
+**Reference:** See `session-template` skill in `.claude/skills/session-template/` for all templates.
+
+---
+
+## Specialized Agents
+
+### 1. TDD Reviewer
+
+**Purpose:** Proactively review code changes to ensure strict TDD compliance.
+
+**When to Use:**
+- After any code implementation
+- Before completing a feature or bugfix
+- MANDATORY before saying task is complete
+
+**What It Checks:**
+- ✅ Tests written BEFORE implementation
+- ✅ Tests failed initially (red phase)
+- ✅ Implementation makes tests pass (green phase)
+- ✅ Real code over mocks (only mock external dependencies)
+- ✅ Coverage ≥ 80%
+- ✅ Test quality (AAA pattern, type hints, docstrings)
+
+**Claude Code:** `Task: tdd-reviewer`
+
+**Manual Review Checklist:**
+
+1. **Check git history:**
+   ```bash
+   git log -5 --oneline --name-status
+   # Verify test files modified before implementation
+   ```
+
+2. **Verify TDD workflow:**
+   - [ ] Test file changes committed/staged first
+   - [ ] Tests ran and failed initially
+   - [ ] Implementation committed after tests
+   - [ ] Tests now pass
+
+3. **Review test quality:**
+   - [ ] AAA pattern (Arrange-Act-Assert)
+   - [ ] Type hints on all test functions
+   - [ ] Descriptive docstrings
+   - [ ] Parametrized tests for multiple cases
+   - [ ] Edge cases covered
+
+4. **Check mock usage:**
+   ```bash
+   grep -r "Mock\|patch" tests/
+   # Review: Are mocks necessary? Can real code be used?
+   ```
+
+5. **Verify coverage:**
+   ```bash
+   make coverage
+   # Must be ≥ 80%
+   ```
+
+6. **Run quality gates:**
+   ```bash
+   make check
+   # All gates must pass
+   ```
+
+**Red Flags (Auto-Fail):**
+- Implementation without corresponding tests
+- Coverage < 80%
+- Tests never verified to fail
+- Excessive mocking of internal code
+- `make check` fails
+
+**Reference:** See `tdd-reviewer` agent in `.claude/agents/tdd-reviewer.md` for comprehensive review process.
+
+---
+
+### 2. Quality Enforcer
+
+**Purpose:** Comprehensive quality gate enforcement with actionable feedback.
+
+**When to Use:**
+- Before committing code
+- Before creating pull requests
+- When quality checks fail
+- Want comprehensive validation with fix recommendations
+
+**What It Checks:**
+- ✅ Formatting (Black + isort)
+- ✅ Linting (Ruff + Pylint + mypy)
+- ✅ Testing (pytest with 80%+ coverage)
+- ✅ Security (Bandit)
+
+**Claude Code:** `Task: quality-enforcer`
+
+**Manual Enforcement Process:**
+
+1. **Run complete quality check:**
+   ```bash
+   make check
+   # Runs format, lint, test sequentially
+   ```
+
+2. **Analyze failures by gate:**
+
+   **Formatting Issues:**
+   ```bash
+   black --check --diff src/ tests/
+   isort --check-only --diff src/ tests/
+   # Fix: make format
+   ```
+
+   **Linting Issues:**
+   ```bash
+   uv run ruff check src/ tests/
+   uv run pylint src/
+   uv run mypy src/
+   # Auto-fix: uv run ruff check --fix src/ tests/
+   # Manual fix: Address Pylint and mypy errors
+   ```
+
+   **Test Issues:**
+   ```bash
+   make test
+   make coverage
+   # Fix failing tests
+   # Add tests for uncovered code
+   ```
+
+   **Security Issues:**
+   ```bash
+   uv run bandit -r src/
+   # Fix security vulnerabilities
+   ```
+
+3. **Prioritize fixes:**
+   - **CRITICAL**: Test failures, security vulnerabilities, coverage < 80%
+   - **HIGH**: Type errors, Pylint errors, unused imports
+   - **MEDIUM**: Missing docstrings, complex functions
+   - **LOW**: Style preferences
+
+4. **Apply fixes in priority order:**
+   ```bash
+   # Auto-fixable
+   make format
+   uv run ruff check --fix src/ tests/
+
+   # Manual fixes
+   # Fix test failures
+   # Add type hints
+   # Write missing tests
+   ```
+
+5. **Verify all gates pass:**
+   ```bash
+   make check
+   # Should see: ✅ 4/4 gates passed
+   ```
+
+**Quality Gates:**
+1. Formatting: Black (88 chars) + isort
+2. Linting: Ruff + Pylint (10/10) + mypy (strict)
+3. Testing: pytest (80%+ coverage)
+4. Security: Bandit (no vulnerabilities)
+
+**Reference:** See `quality-enforcer` agent in `.claude/agents/quality-enforcer.md` for detailed enforcement process.
+
+---
+
+## Integration with Project Workflow
+
+All skills and agents integrate with project tooling:
+
+**Make Commands:**
+```bash
+make test          # Run tests
+make coverage      # Coverage report
+make format        # Black + isort
+make lint          # Ruff + Pylint + mypy
+make check         # Complete quality check
+```
+
+**AI Session Tools:**
+```bash
+uv run ai-start-task "description"      # Start session
+uv run ai-log "progress"                # Log progress
+uv run ai-update-plan "completed item"  # Update plan
+uv run ai-finish-task --summary="done"  # Finish session
+```
+
+---
+
+## Usage Matrix
+
+| Skill/Agent | Claude Code | Cursor | Aider | Gemini | Copilot |
+|-------------|-------------|--------|-------|--------|---------|
+| test-generator | Automated | Manual | Manual | Manual | Manual |
+| coverage-analyzer | Automated | Manual | Manual | Manual | Manual |
+| quality-fixer | Automated | Manual | Manual | Manual | Manual |
+| session-template | Automated | Manual | Manual | Manual | Manual |
+| tdd-reviewer | Automated | Manual | Manual | Manual | Manual |
+| quality-enforcer | Automated | Manual | Manual | Manual | Manual |
+
+**Automated (Claude Code):** Use `Skill:` or `Task:` tools for one-command invocation
+
+**Manual (Other Agents):** Follow the step-by-step workflows documented above
+
+---
+
+## Best Practices
+
+1. **Always use TDD workflow:**
+   - Write tests FIRST (test-generator)
+   - Verify tests fail
+   - Implement code
+   - Verify tests pass
+   - Review with tdd-reviewer
+
+2. **Maintain coverage:**
+   - Check coverage after changes (coverage-analyzer)
+   - Keep ≥ 80% coverage
+   - Aim for 90%+ on new code
+
+3. **Ensure quality:**
+   - Run quality-fixer before committing
+   - Run quality-enforcer to verify all gates
+   - All gates must pass before PR
+
+4. **Track progress:**
+   - Use session-template for structured plans
+   - Log progress with ai-log
+   - Update plans with ai-update-plan
+
+---
+
+## For More Information
+
+**Detailed Documentation:**
+- Test Generator: `.claude/skills/test-generator/SKILL.md`
+- Coverage Analyzer: `.claude/skills/coverage-analyzer/SKILL.md`
+- Quality Fixer: `.claude/skills/quality-fixer/SKILL.md`
+- Session Template: `.claude/skills/session-template/SKILL.md`
+- TDD Reviewer: `.claude/agents/tdd-reviewer.md`
+- Quality Enforcer: `.claude/agents/quality-enforcer.md`
+
+**Core Documentation:**
+- TDD Workflow: `AI_DOCS/tdd-workflow.md`
+- Session Management: `AI_DOCS/ai-tools.md`
+- Code Conventions: `AI_DOCS/code-conventions.md`
+- Project Context: `AI_DOCS/project-context.md`
+
+---
+
+**Remember:** These skills and agents exist to support high-quality, test-driven development. Use them regularly to maintain code excellence!

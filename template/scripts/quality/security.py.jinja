@@ -1,97 +1,63 @@
-"""Security checking script using Bandit.
-
-This script runs security analysis tools on the codebase to identify
-potential security vulnerabilities.
-"""
+"""Security scanning with bandit and safety - single source of truth."""
 
 from __future__ import annotations
 
-import shutil
 import subprocess
 import sys
-from pathlib import Path
 
-from scripts.quality.config import load_config
+from scripts.quality.config import get_code_paths
 
 
-def run_command(cmd: list[str], description: str, optional: bool = False) -> bool:
-    """Run a shell command and return success status.
-
-    Args:
-        cmd: Command and arguments to run
-        description: Description of what the command does
-        optional: If True, skip if command not found
+def run_security_checks() -> int:
+    """Run security checks with bandit and safety.
 
     Returns:
-        True if command succeeded (exit code 0), False otherwise
+        Exit code (0 for success, non-zero for failure)
     """
-    # Check if command exists
-    if optional and not shutil.which(cmd[0]):
-        print(f"⚠️  {description} - SKIPPED (tool not installed)")
-        return True
+    paths = get_code_paths()
+    # Only scan src for security issues (not tests)
+    src_paths = [p for p in paths if "src" in p]
+    paths_str = " ".join(src_paths)
 
-    print(f"▶ {description}...")
-    print(f"  Running: {' '.join(cmd)}")
-    result = subprocess.run(cmd, cwd=Path.cwd())
-    if result.returncode == 0:
-        print(f"✅ {description} - PASSED")
-        return True
-    print(f"❌ {description} - FAILED")
-    return False
+    print("Running security checks with bandit and safety...")
+    print(f"Scanning paths: {paths_str}")
+    print()
 
+    # Run bandit for code security issues
+    bandit_args = ["bandit", "-r"]
+    bandit_args.extend(src_paths)
+    bandit_args.extend(["-ll"])  # Low-low severity
 
-def security_check() -> int:
-    """Run security checks using Bandit and optionally Safety.
+    print(f"Running: {' '.join(bandit_args)}")
+    result = subprocess.run(bandit_args, check=False)
 
-    Returns:
-        Exit code (0 for success, 1 for failure)
-    """
-    config = load_config()
-    paths = config.code_paths
+    if result.returncode != 0:
+        print("\n❌ Bandit security scan found issues")
+        return result.returncode
 
-    print("\n" + "=" * 70)
-    print("SECURITY CHECKS")
-    print("=" * 70)
-    print(f"Paths: {', '.join(paths)}")
-    print("=" * 70 + "\n")
+    # Run safety for known vulnerabilities in dependencies
+    print("\nRunning: safety check")
+    result = subprocess.run(["safety", "check"], check=False)
 
-    success = True
+    if result.returncode != 0:
+        print("\n❌ Safety found known vulnerabilities")
+        return result.returncode
 
-    # Run Bandit (security linter for Python code)
-    if shutil.which("bandit"):
-        bandit_cmd = ["bandit", "-r"] + paths
-        if not run_command(bandit_cmd, "Bandit (security linter)"):
-            success = False
-    else:
-        print("⚠️  Bandit not installed - skipping security linting")
-        print("   Install with: uv add --dev bandit")
-
-    # Run Safety (check dependencies for known vulnerabilities)
-    # This is optional as it requires API access
-    if shutil.which("safety"):
-        safety_cmd = ["safety", "check"]
-        run_command(safety_cmd, "Safety (dependency vulnerabilities)", optional=True)
-    else:
-        print("\n⚠️  Safety not installed - skipping dependency security check")
-        print("   Install with: uv add --dev safety")
-
-    print("\n" + "=" * 70)
-    if success:
-        print("✅ SECURITY CHECKS PASSED")
-    else:
-        print("❌ SECURITY CHECKS FAILED")
-    print("=" * 70 + "\n")
-
-    return 0 if success else 1
+    print("\n✅ All security checks passed!")
+    return 0
 
 
 def main() -> int:
-    """Entry point for the security script.
+    """Main entry point for security command.
 
     Returns:
-        Exit code (0 for success, 1 for failure)
+        Exit code
     """
-    return security_check()
+    print("=" * 60)
+    print("Security Scanning")
+    print("=" * 60)
+
+    return run_security_checks()
 
 
 if __name__ == "__main__":

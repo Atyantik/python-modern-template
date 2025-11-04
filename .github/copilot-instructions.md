@@ -62,13 +62,14 @@ See `AI_DOCS/ai-tools.md` for complete workflow and all ai-update-plan features.
 For complete guidelines, see these shared documents in the project:
 
 - `AI_DOCS/ai-tools.md` - Session management (MANDATORY workflow)
+- `AI_DOCS/ai-skills.md` - Specialized skills and agents (manual workflows)
 - `AI_DOCS/tdd-workflow.md` - TDD process and testing standards
 - `AI_DOCS/code-conventions.md` - Code style and best practices
 - `AI_DOCS/project-context.md` - Tech stack and architecture
 
 **Note**: This file contains essential excerpts. For comprehensive details, read the files above.
 
-See `AI_DOCS/tdd-workflow.md` for complete TDD workflow with examples.
+**Skills Available**: See `AI_DOCS/ai-skills.md` for test-generator, coverage-analyzer, quality-fixer, tdd-reviewer, and quality-enforcer workflows.
 
 ## Quick Reference
 
@@ -350,10 +351,11 @@ Follow this workflow for every code change:
 For comprehensive guidelines:
 
 1. **AI_DOCS/ai-tools.md** - Session management (MANDATORY)
-2. **AI_DOCS/tdd-workflow.md** - TDD process with examples
-3. **AI_DOCS/code-conventions.md** - Code standards
-4. **AI_DOCS/project-context.md** - Architecture and tech stack
-5. **AGENTS.md** - Universal AI agent instructions
+2. **AI_DOCS/ai-skills.md** - Specialized skills and agents
+3. **AI_DOCS/tdd-workflow.md** - TDD process with examples
+4. **AI_DOCS/code-conventions.md** - Code standards
+5. **AI_DOCS/project-context.md** - Architecture and tech stack
+6. **AGENTS.md** - Universal AI agent instructions
 
 ## Copilot Chat Commands
 

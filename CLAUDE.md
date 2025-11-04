@@ -42,10 +42,12 @@ You are Claude Code, working on a Python project with strict Test-Driven Develop
 
 Reference these for complete guidelines:
 
-- `@AI_DOCS/ai-tools.md` - Session management workflow
+- `@AI_DOCS/ai-tools.md` - Session management workflow (MANDATORY)
+- `@AI_DOCS/ai-skills.md` - Specialized skills and agents (use via Skill/Task tools)
 - `@AI_DOCS/tdd-workflow.md` - TDD process and testing standards
 - `@AI_DOCS/code-conventions.md` - Code style and best practices
 - `@AI_DOCS/project-context.md` - Tech stack and architecture
+- `@AI_DOCS/documentation-sync-rules.md` - AI doc synchronization (MANDATORY)
 
 ## Claude-Specific Workflow
 
@@ -299,6 +301,13 @@ Before completing any task:
 - [ ] README updated (if user-facing changes)
 - [ ] Formatter harmony check (Black vs Ruff) — adjust code (e.g., use message variables)
       if tools disagree
+- [ ] **AI documentation synchronized** (MANDATORY)
+  - [ ] Run `uv run python src/python_modern_template/validate_ai_docs_sync.py`
+  - [ ] Update `.gemini/styleguide.md` if AI_DOCS changed (add sync date)
+  - [ ] Update `.github/copilot-instructions.md` if AI_DOCS changed (add sync date)
+  - [ ] Update `.claude/skills/` or `.claude/agents/` if relevant
+  - [ ] Update `template/AI_DOCS/` if changes should apply to new projects
+  - [ ] See `@AI_DOCS/documentation-sync-rules.md` for complete workflow
 
 ## Communication Style
 
@@ -328,11 +337,26 @@ Running make check..."
 Fixing issues...
 Re-running make check..."
 
+## Specialized Skills and Agents
+
+**You have access to specialized skills and agents via the Skill and Task tools:**
+
+See `@AI_DOCS/ai-skills.md` for complete documentation on:
+- `Skill: test-generator` - Generate test boilerplate
+- `Skill: coverage-analyzer` - Analyze coverage gaps
+- `Skill: quality-fixer` - Apply automated fixes
+- `Skill: session-template` - Load task templates
+- `Task: tdd-reviewer` - Review TDD compliance
+- `Task: quality-enforcer` - Enforce quality gates
+
+**Use these proactively!** Don't wait for user to request them.
+
 ## Reference
 
 **Shared documentation:**
-- `@AI_DOCS/tdd-workflow.md` - TDD process, testing standards, coverage
 - `@AI_DOCS/ai-tools.md` - Session management workflow
+- `@AI_DOCS/ai-skills.md` - Specialized skills and agents
+- `@AI_DOCS/tdd-workflow.md` - TDD process, testing standards, coverage
 - `@AI_DOCS/code-conventions.md` - Code style, formatting, best practices
 - `@AI_DOCS/project-context.md` - Tech stack, architecture, dependencies
 

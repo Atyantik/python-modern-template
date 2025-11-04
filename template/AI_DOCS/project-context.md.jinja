@@ -6,12 +6,12 @@
 
 ## 📋 Project Overview
 
-**Name**: {{ project_name }}
-**Version**: 0.1.0
-**License**: {{ license }}
-**Description**: {{ project_description }}
+**Name**: Modern Python Project Template
+**Version**: 1.0.0
+**License**: MIT
+**Description**: A Copier-powered template that ships modern Python tooling, automated quality gates, and AI-assisted development workflows in one starter repository.
 
-**Purpose**: Provide a batteries-included baseline for the {{ project_name }} project. Teams start with type checking, testing, documentation, and AI workflows already wired up.
+**Purpose**: Provide a batteries-included baseline for new Python projects. Teams can generate a fresh codebase with type checking, testing, documentation, and AI workflows already wired up.
 
 ## 🛠️ Technology Stack
 
@@ -19,7 +19,7 @@
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **Python** | {{ python_version }} | Primary language |
+| **Python** | 3.11+ (3.13 recommended) | Primary language |
 | **uv** | Latest | Fast dependency & environment management |
 | **setuptools** | ≥61.0 | Build system |
 
@@ -40,7 +40,7 @@
 ## 📁 Project Structure
 
 ```
-{{ project_slug }}/
+{{ project_name }}/
 ├── AI_DOCS/                    # Shared AI documentation (2025 standard)
 │   ├── README.md               # Documentation overview
 │   ├── tdd-workflow.md         # TDD process and testing
@@ -83,15 +83,13 @@
 
 ## 🎯 Package Architecture
 
-### Package Organization
-
 ```python
 # src/{{ package_name }}/__init__.py
-"""{{ project_name }} package."""
+"""Modern Python template package."""
 
-__version__ = "0.1.0"
-__author__ = "{{ author_name }}"
-__email__ = "{{ author_email }}"
+__version__ = "1.0.0"
+__author__ = "Atyantik Technologies Private Limited"
+__email__ = "contact@atyantik.com"
 
 from .main import main
 
@@ -104,7 +102,7 @@ __all__ = ["__version__", "__author__", "__email__", "main"]
 # ✅ Correct - import from the package root
 from {{ package_name }} import main
 
-# ❌ Wrong - never use src prefix or legacy module names
+# ❌ Wrong - never use src prefix or mix in legacy module names
 from src.{{ package_name }} import main
 from legacy_project import generate_blog
 ```
@@ -119,12 +117,12 @@ All tool configuration lives in `pyproject.toml`.
 [tool.quality]
 code_paths = ["src", "tests", "scripts"]
 test_paths = ["tests"]
-min_coverage = {{ min_coverage }}
+min_coverage = 80
 ```
 
 ### Tool Highlights
 
-- **Black**: 88 character lines, Python {{ python_version }} target.
+- **Black**: 88 character lines, Python 3.13 target.
 - **isort**: Black profile for import sorting.
 - **Ruff**: Primary linter with opinionated plugins enabled.
 - **mypy**: Strict type checking with relaxed rules for bundled AI tooling.
@@ -151,7 +149,7 @@ min_coverage = {{ min_coverage }}
 Before merging changes:
 
 1. ✅ All tests pass (`make test`).
-2. ✅ Coverage ≥ {{ min_coverage }}% (`make coverage`).
+2. ✅ Coverage ≥ 80% (`make coverage`).
 3. ✅ Formatting and linting clean (`make check`).
 4. ✅ Pre-commit hooks pass locally (`make pre-commit`).
 5. ✅ Documentation updated when behavior changes.
@@ -159,7 +157,7 @@ Before merging changes:
 
 ## 🎯 Future Enhancements
 
-Potential roadmap items for {{ project_name }}:
+Potential roadmap items for the template itself:
 
 - Add optional integrations for FastAPI, Typer CLI, and data science stacks.
 - Provide opinionated CI presets for GitLab, Azure DevOps, and Bitbucket.
@@ -169,7 +167,7 @@ Potential roadmap items for {{ project_name }}:
 
 ## 📚 Additional Resources
 
-- **Python {{ python_version }} Docs**: https://docs.python.org/{{ python_version }}/
+- **Python 3.13 Docs**: https://docs.python.org/3.13/
 - **uv Documentation**: https://github.com/astral-sh/uv
 - **pytest Documentation**: https://docs.pytest.org/
 - **Black Documentation**: https://black.readthedocs.io/
@@ -178,4 +176,4 @@ Potential roadmap items for {{ project_name }}:
 
 ---
 
-**Remember**: This project emphasizes quality over speed. Follow the TDD workflow, keep coverage high, and leverage the AI tooling to maintain shared context.
+**Remember**: This template emphasizes quality over speed. Follow the TDD workflow, keep coverage high, and leverage the AI tooling to maintain shared context.

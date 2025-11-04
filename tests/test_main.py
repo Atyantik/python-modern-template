@@ -22,3 +22,16 @@ class TestMain:
     def test_main_is_callable(self) -> None:
         """Test that main function is callable."""
         assert callable(main)
+
+    def test_main_prints_output(self, capsys: object) -> None:
+        """Test that main function prints template information."""
+        # Act
+        main()
+
+        # Capture output
+        captured = capsys.readouterr()  # type: ignore[attr-defined]
+
+        # Assert
+        assert "Python Modern Template" in captured.out
+        assert "Copier template" in captured.out
+        assert "copier copy" in captured.out

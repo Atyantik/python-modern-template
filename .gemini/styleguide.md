@@ -63,11 +63,14 @@ See `AI_DOCS/ai-tools.md` for complete workflow and all ai-update-plan features.
 For complete guidelines, see these shared documents in the project:
 
 - `AI_DOCS/ai-tools.md` - Session management (MANDATORY workflow)
+- `AI_DOCS/ai-skills.md` - Specialized skills and agents (manual workflows)
 - `AI_DOCS/tdd-workflow.md` - TDD process and testing standards
 - `AI_DOCS/code-conventions.md` - Code style and best practices
 - `AI_DOCS/project-context.md` - Tech stack and architecture
 
 **Note**: This file contains essential excerpts. For comprehensive details, read the files above.
+
+**Skills Available**: See `AI_DOCS/ai-skills.md` for test-generator, coverage-analyzer, quality-fixer, tdd-reviewer, and quality-enforcer workflows.
 
 ## Core Responsibilities
 

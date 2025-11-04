@@ -1,87 +1,85 @@
-"""Linting script using Ruff, mypy, and Pylint.
-
-This script runs static analysis tools on the codebase, reading configuration
-from pyproject.toml.
-"""
+"""Code linting with ruff, mypy, and pylint - single source of truth."""
 
 from __future__ import annotations
 
 import subprocess
 import sys
-from pathlib import Path
 
-from scripts.quality.config import load_config
+from scripts.quality.config import get_code_paths
 
 
-def run_command(cmd: list[str], description: str) -> bool:
-    """Run a shell command and return success status.
+def lint_code(fix: bool = False) -> int:
+    """Lint code with ruff, mypy, and pylint.
 
     Args:
-        cmd: Command and arguments to run
-        description: Description of what the command does
+        fix: If True, auto-fix issues where possible (ruff only)
 
     Returns:
-        True if command succeeded (exit code 0), False otherwise
+        Exit code (0 for success, non-zero for failure)
     """
-    print(f"▶ {description}...")
-    print(f"  Running: {' '.join(cmd)}")
-    result = subprocess.run(cmd, cwd=Path.cwd())
-    if result.returncode == 0:
-        print(f"✅ {description} - PASSED")
-        return True
-    print(f"❌ {description} - FAILED")
-    return False
+    paths = get_code_paths()
+    paths_str = " ".join(paths)
 
+    print("Linting code with ruff, mypy, and pylint...")
+    print(f"Paths: {paths_str}")
+    if fix:
+        print("Auto-fix mode: enabled (ruff only)")
+    print()
 
-def lint_code() -> int:
-    """Run linting checks using Ruff, mypy, and Pylint.
+    # Run ruff
+    ruff_args = ["ruff", "check"]
+    if fix:
+        ruff_args.append("--fix")
+    ruff_args.extend(paths)
 
-    Returns:
-        Exit code (0 for success, 1 for failure)
-    """
-    config = load_config()
-    paths = config.code_paths
+    print(f"Running: {' '.join(ruff_args)}")
+    result = subprocess.run(ruff_args, check=False)
 
-    print("\n" + "=" * 70)
-    print("CODE LINTING")
-    print("=" * 70)
-    print(f"Paths: {', '.join(paths)}")
-    print("=" * 70 + "\n")
-
-    success = True
-
-    # Run Ruff
-    ruff_cmd = ["ruff", "check"] + paths
-    if not run_command(ruff_cmd, "Ruff (fast Python linter)"):
-        success = False
+    if result.returncode != 0:
+        print("\n❌ Ruff linting failed")
+        return result.returncode
 
     # Run mypy
-    mypy_cmd = ["mypy"] + paths
-    if not run_command(mypy_cmd, "mypy (type checking)"):
-        success = False
+    mypy_args = ["mypy"]
+    mypy_args.extend(paths)
 
-    # Run Pylint
-    pylint_cmd = ["pylint"] + paths
-    if not run_command(pylint_cmd, "Pylint (code analysis)"):
-        success = False
+    print(f"\nRunning: {' '.join(mypy_args)}")
+    result = subprocess.run(mypy_args, check=False)
 
-    print("\n" + "=" * 70)
-    if success:
-        print("✅ ALL LINTING CHECKS PASSED")
-    else:
-        print("❌ SOME LINTING CHECKS FAILED")
-    print("=" * 70 + "\n")
+    if result.returncode != 0:
+        print("\n❌ MyPy type checking failed")
+        return result.returncode
 
-    return 0 if success else 1
+    # Run pylint
+    pylint_args = ["pylint"]
+    pylint_args.extend(paths)
+
+    print(f"\nRunning: {' '.join(pylint_args)}")
+    result = subprocess.run(pylint_args, check=False)
+
+    if result.returncode != 0:
+        print("\n❌ Pylint checking failed")
+        return result.returncode
+
+    print("\n✅ All linting checks passed!")
+    return 0
 
 
 def main() -> int:
-    """Entry point for the lint script.
+    """Main entry point for lint command.
 
     Returns:
-        Exit code (0 for success, 1 for failure)
+        Exit code
     """
-    return lint_code()
+    fix_mode = "--fix" in sys.argv
+
+    print("=" * 60)
+    print("Code Linting")
+    if fix_mode:
+        print("(with auto-fix enabled)")
+    print("=" * 60)
+
+    return lint_code(fix=fix_mode)
 
 
 if __name__ == "__main__":

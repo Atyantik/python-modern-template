@@ -43,11 +43,12 @@ This project follows strict Test-Driven Development (TDD) and code quality stand
 For comprehensive guidelines, reference these shared documents:
 
 - **@AI_DOCS/ai-tools.md** - AI session management tools (MANDATORY workflow)
+- **@AI_DOCS/ai-skills.md** - Specialized skills and agents (manual workflows for Cursor)
 - **@AI_DOCS/tdd-workflow.md** - Test-Driven Development process and testing standards
 - **@AI_DOCS/code-conventions.md** - Code style, formatting, and best practices
 - **@AI_DOCS/project-context.md** - Tech stack, architecture, and project structure
 
-See `@AI_DOCS/ai-tools.md` for complete AI tools workflow with all 8 tools and detailed examples.
+See `@AI_DOCS/ai-skills.md` for test-generator, coverage-analyzer, quality-fixer, and quality review workflows.
 
 ## Test-Driven Development (MANDATORY)
 
@@ -280,9 +281,10 @@ make build         # Build package
 For detailed guidelines on each aspect of development:
 
 1. **@AI_DOCS/ai-tools.md** - Session management, logging, context tracking (MANDATORY)
-2. **@AI_DOCS/tdd-workflow.md** - TDD process, testing standards, coverage requirements
-3. **@AI_DOCS/code-conventions.md** - Code style, formatting, best practices, documentation
-4. **@AI_DOCS/project-context.md** - Tech stack, architecture, dependencies, CI/CD
+2. **@AI_DOCS/ai-skills.md** - Specialized skills and agents for quality and testing
+3. **@AI_DOCS/tdd-workflow.md** - TDD process, testing standards, coverage requirements
+4. **@AI_DOCS/code-conventions.md** - Code style, formatting, best practices, documentation
+5. **@AI_DOCS/project-context.md** - Tech stack, architecture, dependencies, CI/CD
 
 These shared documents are the single source of truth for all AI coding assistants.
 

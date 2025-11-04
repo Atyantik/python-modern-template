@@ -65,5 +65,8 @@ exclude: |
     dist/|
     htmlcov/|
     \.coverage|
-    .*\.egg-info/
+    .*\.egg-info/|
+    .*\.jinja$|
+    \.claude/skills/.*/templates/.*\.py$|
+    template/\.claude/skills/.*/templates/.*\.py$
   )
