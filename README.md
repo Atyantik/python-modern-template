@@ -11,9 +11,9 @@ A comprehensive [Copier](https://copier.readthedocs.io/) template for modern Pyt
 
 ---
 
-****New to Python or templates?** → **[Read the Complete Beginner's Guide](GETTING_STARTED.md)**
+**New to this template?** → **[Quick Start Guide](#quick-start)** | **[Example Configurations](#example-configurations)**
 
-****Using AI coding assistants?** → **[See AI Setup Guide](#using-with-ai-coding-assistants)**
+**Using AI coding assistants?** → **[See AI Setup Guide](#using-with-ai-coding-assistants)**
 
 ---
 
@@ -79,6 +79,13 @@ cd my-project
 copier copy --defaults gh:Atyantik/python-modern-template my-project
 ```
 
+**Default naming with `--defaults`:**
+- **Project Name**: "My Python Project" (human-readable)
+- **Package Name**: `my_python_project` (Python package in `src/`)
+- **Project Slug**: "my-python-project" (for repo/URLs)
+
+**Note**: The directory name (`my-project` above) is separate from these and can be anything you choose.
+
 #### Custom Configuration
 ```bash
 copier copy \
@@ -88,6 +95,10 @@ copier copy \
   --data include_docker=true \
   gh:Atyantik/python-modern-template my-project
 ```
+
+This creates:
+- **Package Name**: `my_awesome_project` (in `src/my_awesome_project/`)
+- **Project Slug**: "my-awesome-project"
 
 ## Example Configurations
 
