@@ -36,8 +36,17 @@ def sync_file(source: Path, dest: Path, add_jinja_ext: bool = True) -> None:
     # Read source content
     content = source.read_text(encoding="utf-8")
 
-    # Convert to Jinja
-    jinja_content = convert_to_jinja(content)
+    # Files that contain literal {{...}} patterns that should NOT be processed by Jinja
+    # These files will be copied as-is without .jinja extension
+    no_jinja_files = {"template_loader.py", "test_template_loader.py"}
+
+    if source.name in no_jinja_files:
+        # Copy as-is without Jinja processing or extension
+        add_jinja_ext = False
+        jinja_content = content  # Don't process
+    else:
+        # Convert to Jinja
+        jinja_content = convert_to_jinja(content)
 
     # Determine destination path
     if add_jinja_ext and not dest.name.endswith(".jinja"):
@@ -176,6 +185,25 @@ def main() -> None:
         TEMPLATE_ROOT / "scripts" / "ai_tools",
         "🤖 Syncing AI tools scripts...",
     )
+
+    # Sync AI tools task templates (used by template_loader.py)
+    print("\n📋 Syncing AI tools task templates...")
+    ai_templates_src = PROJECT_ROOT / "scripts" / "ai_tools" / "templates"
+    ai_templates_dst = TEMPLATE_ROOT / "scripts" / "ai_tools" / "templates"
+
+    template_files = [
+        "__init__.py",
+        "bugfix.md",
+        "docs.md",
+        "feature.md",
+        "refactor.md",
+    ]
+    for template_file in template_files:
+        source = ai_templates_src / template_file
+        if source.exists():
+            # Don't add .jinja extension to these files - they're used as-is
+            sync_file(source, ai_templates_dst / template_file, add_jinja_ext=False)
+            total += 1
 
     # Sync scripts/__init__.py
     print("\n📄 Syncing scripts/__init__.py...")

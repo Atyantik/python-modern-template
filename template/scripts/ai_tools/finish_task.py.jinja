@@ -244,6 +244,11 @@ def finish_task(
         print_error(f"Session files not found for session {session_id}")
         sys.exit(1)
 
+    # Type narrowing: we know these are Path objects after the check
+    assert plan_file is not None
+    assert summary_file is not None
+    assert execution_file is not None
+
     # Read files
     plan_content = plan_file.read_text()
     summary_file.read_text()
