@@ -7,7 +7,11 @@ from unittest.mock import patch
 
 import pytest
 
-from scripts.ai_tools.log_execution import log_execution, main
+from scripts.ai_tools.log_execution import (
+    check_log_specificity,
+    log_execution,
+    main,
+)
 
 
 def test_log_execution_basic(
@@ -227,3 +231,87 @@ def test_multiple_logs_chronological(
     third_pos = content.find("Third log")
 
     assert first_pos < second_pos < third_pos
+
+
+def test_check_log_specificity_vague_write_test() -> None:
+    """Test specificity checker detects vague 'write test' messages."""
+    suggestions = check_log_specificity("write test for feature")
+    assert len(suggestions) > 0
+    assert "test file" in suggestions[0].lower()
+
+
+def test_check_log_specificity_specific_write_test() -> None:
+    """Test specificity checker accepts specific test file mentions."""
+    suggestions = check_log_specificity("Wrote tests in tests/test_feature.py")
+    assert len(suggestions) == 0
+
+
+def test_check_log_specificity_vague_update_file() -> None:
+    """Test specificity checker detects vague 'update file' messages."""
+    suggestions = check_log_specificity("update file with new code")
+    assert len(suggestions) > 0
+    assert "which file" in suggestions[0].lower()
+
+
+def test_check_log_specificity_specific_update_file() -> None:
+    """Test specificity checker accepts specific file mentions."""
+    suggestions = check_log_specificity("Updated src/module.py with validation")
+    assert len(suggestions) == 0
+
+
+def test_check_log_specificity_vague_fix_bug() -> None:
+    """Test specificity checker detects vague 'fix bug' messages."""
+    suggestions = check_log_specificity("fix bug in code")
+    assert len(suggestions) > 0
+
+
+def test_check_log_specificity_specific_fix_bug() -> None:
+    """Test specificity checker accepts specific bug fixes."""
+    suggestions = check_log_specificity(
+        "Fixed validation bug in src/auth.py:validate_email()"
+    )
+    assert len(suggestions) == 0
+
+
+def test_log_execution_shows_specificity_tip_for_vague_message(
+    temp_context_dir: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Test that vague log messages trigger specificity tips."""
+    # Create a sample session first
+    session_id = "20251102150000"
+    sessions_dir = temp_context_dir / "sessions"
+    execution_file = sessions_dir / f"{session_id}-EXECUTION-test.md"
+    execution_file.write_text("# Execution Log\n")
+
+    with patch(
+        "scripts.ai_tools.utils.get_sessions_dir",
+        return_value=sessions_dir,
+    ):
+        log_execution("write test for feature", session_id=session_id)
+
+    captured = capsys.readouterr()
+    assert "💡" in captured.out or "Tip" in captured.out
+
+
+def test_log_execution_no_tip_for_specific_message(
+    temp_context_dir: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Test that specific log messages don't trigger tips."""
+    # Create a sample session first
+    session_id = "20251102150000"
+    sessions_dir = temp_context_dir / "sessions"
+    execution_file = sessions_dir / f"{session_id}-EXECUTION-test.md"
+    execution_file.write_text("# Execution Log\n")
+
+    with patch(
+        "scripts.ai_tools.utils.get_sessions_dir",
+        return_value=sessions_dir,
+    ):
+        log_execution(
+            "Wrote comprehensive tests in tests/ai_tools/test_feature.py",
+            session_id=session_id,
+        )
+
+    captured = capsys.readouterr()
+    # Should not contain specificity tip
+    assert "💡" not in captured.out or "test file" not in captured.out.lower()
