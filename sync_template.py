@@ -171,6 +171,7 @@ def main() -> None:
             "template_loader.py",
             "update_plan.py",
             "utils.py",
+            "validate_ai_docs_sync.py",
         ],
         PROJECT_ROOT / "scripts" / "ai_tools",
         TEMPLATE_ROOT / "scripts" / "ai_tools",
@@ -184,14 +185,6 @@ def main() -> None:
     if scripts_init_src.exists():
         sync_file(scripts_init_src, scripts_init_dst, add_jinja_ext=False)
         total += 1
-
-    # Sync src module files
-    total += sync_file_list(
-        ["validate_ai_docs_sync.py"],
-        PROJECT_ROOT / "src" / "python_modern_template",
-        TEMPLATE_ROOT / "src" / "{{ package_name }}",
-        "📦 Syncing src module files...",
-    )
 
     print("\n" + "=" * 70)
     print(f"✅ SYNC COMPLETE: {total} files synced")
