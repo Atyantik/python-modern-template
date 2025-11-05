@@ -26,6 +26,11 @@ def test_dev_dependency_versions_are_realistic() -> None:
         "pytest-cov>=7.0.0",
         "pytest-mock>=3.15.1",
         "ruff>=0.14.3",
+{%- if include_docs %}
+        "mkdocs>=1.6.0",
+        "mkdocs-material>=9.5.0",
+        "mkdocstrings[python]>=0.26.0",
+{%- endif %}
     ]
 
     assert dev_deps == expected
