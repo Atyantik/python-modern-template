@@ -282,14 +282,14 @@ def archive_old_sessions() -> int:
 def finish_task(
     summary: str | None = None,
     session_id: str | None = None,
-    yes: bool = False,
+    yes: bool = True,
 ) -> None:
     """Finalize task and update all context files.
 
     Args:
         summary: Brief summary (default: prompt user)
         session_id: Session ID (default: most recent)
-        yes: Skip interactive prompts (default: False)
+        yes: Skip interactive prompts (default: True)
     """
     # Get current session if not specified
     if session_id is None:
@@ -471,15 +471,25 @@ Examples:
         "--yes",
         "-y",
         action="store_true",
-        help="Skip interactive prompts (non-interactive mode)",
+        default=True,
+        help="Skip interactive prompts (default: True)",
+    )
+    parser.add_argument(
+        "--interactive",
+        "-i",
+        action="store_true",
+        help="Enable interactive prompts (overrides --yes default)",
     )
 
     args = parser.parse_args()
 
+    # --interactive overrides the default --yes behavior
+    yes_mode = not args.interactive if args.interactive else args.yes
+
     finish_task(
         summary=args.summary,
         session_id=args.session_id,
-        yes=args.yes,
+        yes=yes_mode,
     )
 
 

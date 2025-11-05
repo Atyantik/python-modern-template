@@ -138,31 +138,36 @@ def test_finish_task_without_yes_flag_prompts_on_missing_make_check(
     assert exc_info.value.code == 0
 
 
-def test_finish_task_yes_defaults_to_false(
+def test_finish_task_yes_defaults_to_true(
     temp_context_dir: Path, sample_session_files: dict[str, Path]
 ) -> None:
-    """Test yes parameter defaults to False for backward compatibility."""
+    """Test yes parameter defaults to True (non-interactive by default)."""
     # Arrange
     plan_file = sample_session_files["plan"]
     execution_file = sample_session_files["execution"]
 
+    # Create incomplete plan to test that prompts are skipped by default
     plan_content = """# Task Plan: Test Task
 
 ## Phase 1: Setup
-- [x] Item 1
+- [ ] Item 1
 """
     plan_file.write_text(plan_content)
 
-    # Add make check to execution
+    # Add minimal execution content (no make check)
     execution_content = """[2025-11-03 16:00:00] Started task
-[2025-11-03 16:01:00] Running make check
 """
     execution_file.write_text(execution_content)
 
-    # Act - call without yes parameter (should default to False, but pass checks)
-    with patch(
-        "scripts.ai_tools.utils.get_sessions_dir",
-        return_value=temp_context_dir / "sessions",
+    # Act - call without yes parameter (should default to True and skip prompts)
+    with (
+        patch(
+            "scripts.ai_tools.utils.get_sessions_dir",
+            return_value=temp_context_dir / "sessions",
+        ),
+        patch(
+            "builtins.input", side_effect=AssertionError("input() should not be called with default yes=True")
+        ),
     ):
-        # Should complete successfully without prompts since all checks pass
+        # Should complete successfully without prompting since yes defaults to True
         finish_task(summary="Test summary", session_id=None)

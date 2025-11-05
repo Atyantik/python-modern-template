@@ -70,9 +70,16 @@ uv tool install copier
 
 #### Interactive Mode (Recommended)
 ```bash
-copier copy gh:Atyantik/python-modern-template my-project
-cd my-project
+copier copy gh:Atyantik/python-modern-template my-awesome-project
+cd my-awesome-project
 ```
+
+**Smart Defaults:** The folder name is automatically used as the default for `project_name` and `project_slug`:
+- `my-awesome-project` → Project: "My Awesome Project", Package: `my_awesome_project`
+- `data_processor` → Project: "Data Processor", Package: `data_processor`
+- `backend-api-v2` → Project: "Backend Api V2", Package: `backend_api_v2`
+
+You can still override these defaults during the interactive prompts.
 
 #### Non-Interactive (Use Defaults)
 ```bash
@@ -110,7 +117,9 @@ See [examples/README.md](examples/README.md) for detailed guides and commands.
 ## Configuration Options
 
 ### Project Settings
-- `project_name`: Human-readable project name
+- `project_name`: Human-readable project name (defaults to folder name, title-cased)
+- `project_slug`: Repository/slug name (defaults to folder name)
+- `package_name`: Python package name (derived from slug with underscores)
 - `project_description`: Short description
 - `author_name`: Your name
 - `author_email`: Your email
