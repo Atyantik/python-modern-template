@@ -40,6 +40,7 @@ ai-context-summary = "scripts.ai_tools.context_summary:main"
 ai-check-conflicts = "scripts.ai_tools.check_conflicts:main"
 ai-add-decision = "scripts.ai_tools.add_decision:main"
 ai-add-convention = "scripts.ai_tools.add_convention:main"
+ai-validate-docs = "scripts.ai_tools.validate_ai_docs_sync:main"
 
 # Quality Tools - Single source of truth for quality checks
 quality-format = "scripts.quality.format:main"

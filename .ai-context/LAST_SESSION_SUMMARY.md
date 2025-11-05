@@ -31,10 +31,7 @@ Added mandatory documentation-first approach for all AI agents. Created comprehe
 
 ## Files Changed
 
-- `AGENTS.md`
-- `AI_DOCS/ai-tools.md`
-- `AI_DOCS/documentation-first-approach.md`
-- `CLAUDE.md`
+- `validate_ai_docs_sync.py`
 
 ---
 

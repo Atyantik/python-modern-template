@@ -65,7 +65,7 @@ For agents that **support references** (Claude, Cursor, Aider, Gemini/AGENTS.md)
 - [ ] Ensure references point to correct files
 - [ ] Validate no broken references
 
-**Script:** `uv run python src/{{ package_name }}/validate_ai_docs_sync.py`
+**Script:** `uv run ai-validate-docs`
 
 ### Step 3: Update Non-Supporting Agents
 
@@ -114,7 +114,7 @@ For agents that **don't support references** (Gemini/styleguide, Copilot):
 
 **Run validation script:**
 ```bash
-uv run python src/{{ package_name }}/validate_ai_docs_sync.py
+uv run ai-validate-docs
 ```
 
 **Should report:**
@@ -191,7 +191,7 @@ uv run python src/{{ package_name }}/validate_ai_docs_sync.py
 
 ## Validation Script
 
-**Location:** `src/{{ package_name }}/validate_ai_docs_sync.py`
+**Location:** `scripts/ai_tools/validate_ai_docs_sync.py`
 
 **What it checks:**
 1. All `@AI_DOCS/` references point to existing files
@@ -203,7 +203,7 @@ uv run python src/{{ package_name }}/validate_ai_docs_sync.py
 **Usage:**
 ```bash
 # Run validation
-uv run python src/{{ package_name }}/validate_ai_docs_sync.py
+uv run ai-validate-docs
 
 # Expected output (all passing):
 ✅ All AI_DOCS files found
@@ -232,8 +232,7 @@ uv run python src/{{ package_name }}/validate_ai_docs_sync.py
 - Quality tests (5 files): `tests/quality/*.py` → `template/tests/quality/*.py.jinja`
 - Project tests (4 files): `tests/test_*.py` → `template/tests/test_*.py.jinja`
 - Quality scripts (6 files): `scripts/quality/*.py` → `template/scripts/quality/*.py.jinja`
-- AI tools scripts (11 files): `scripts/ai_tools/*.py` → `template/scripts/ai_tools/*.py.jinja`
-- Source modules (1 file): `src/{{ package_name }}/validate_ai_docs_sync.py.jinja`
+- AI tools scripts (12 files): `scripts/ai_tools/*.py` → `template/scripts/ai_tools/*.py.jinja`
 
 **Note:** AI tools tests are NOT synced to the template. They remain in the template repository only, as they test template infrastructure that users typically won't modify.
 
@@ -253,7 +252,7 @@ python sync_template.py
 **When to run:**
 1. After modifying any test files in `tests/`
 2. After modifying any scripts in `scripts/quality/` or `scripts/ai_tools/`
-3. After modifying `src/{{ package_name }}/validate_ai_docs_sync.py`
+3. After modifying `scripts/ai_tools/validate_ai_docs_sync.py`
 4. Before releasing a new template version
 
 **What it doesn't sync (intentionally):**
@@ -306,7 +305,7 @@ In `AI_DOCS/code-conventions.md` and all agent configs, add:
 - [ ] `make lint` passes
 - [ ] `make check` passes
 - [ ] **AI documentation synchronized** ⭐ NEW
-  - [ ] Validated with `validate_ai_docs_sync.py`
+  - [ ] Validated with `uv run ai-validate-docs`
   - [ ] Updated manual sync files if needed
   - [ ] Updated .claude/skills or .claude/agents if needed
   - [ ] Updated template files if needed
@@ -314,7 +313,7 @@ In `AI_DOCS/code-conventions.md` and all agent configs, add:
 ### Integration with ai-finish-task
 
 Before `ai-finish-task` completes, it should:
-1. Run `validate_ai_docs_sync.py`
+1. Run `uv run ai-validate-docs`
 2. If validation fails, prompt to fix or continue with `--yes`
 3. Log validation results to EXECUTION file
 
@@ -363,8 +362,8 @@ project/
 │       ├── project-context.md.jinja
 │       └── documentation-sync-rules.md.jinja
 │
-└── src/{{ package_name }}/
-    └── validate_ai_docs_sync.py       # Validation script
+└── scripts/ai_tools/
+    └── validate_ai_docs_sync.py       # Validation script (CLI: ai-validate-docs)
 ```
 
 ---
@@ -411,7 +410,7 @@ project/
 1. **Use the validation script**
    ```bash
    # After any doc change
-   uv run python src/{{ package_name }}/validate_ai_docs_sync.py
+   uv run ai-validate-docs
    ```
 
 2. **Reference, don't duplicate**
@@ -437,7 +436,7 @@ project/
    # Correct: Update both
    vim AI_DOCS/code-conventions.md
    vim template/AI_DOCS/code-conventions.md.jinja
-   uv run python src/{{ package_name }}/validate_ai_docs_sync.py
+   uv run ai-validate-docs
    ```
 
 ---
@@ -448,7 +447,7 @@ project/
 
 **Quick Checklist:**
 1. ✅ Update the changed file
-2. ✅ Run `validate_ai_docs_sync.py`
+2. ✅ Run `uv run ai-validate-docs`
 3. ⚠️ Update manual sync files if needed (Gemini/Copilot)
 4. ✅ Update .claude/skills or .claude/agents if relevant
 5. ✅ Update template files

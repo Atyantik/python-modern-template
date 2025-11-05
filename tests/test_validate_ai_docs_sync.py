@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 
-from python_modern_template.validate_ai_docs_sync import (
+from scripts.ai_tools.validate_ai_docs_sync import (
     check_file_exists,
     compare_files,
     find_ai_doc_files,
@@ -227,3 +228,42 @@ class TestGenerateSyncReport:
         assert "AI_DOCS" in result
         assert "CLAUDE.md" in result
         assert "AGENTS.md" in result
+
+
+class TestCLIInterface:
+    """Test cases for CLI interface."""
+
+    def test_cli_command_runs_successfully(self) -> None:
+        """Test that ai-validate-docs CLI command runs."""
+        # Act
+        result = subprocess.run(
+            ["uv", "run", "ai-validate-docs"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        # Assert
+        # Command should complete (exit code 0 if all valid, 1 if issues found)
+        assert result.returncode in [0, 1]
+        # Output should contain report
+        assert "AI_DOCS Sync Validation Report" in result.stdout
+        assert "Status:" in result.stdout
+
+    def test_cli_output_format(self) -> None:
+        """Test that CLI output has expected format."""
+        # Act
+        result = subprocess.run(
+            ["uv", "run", "ai-validate-docs"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        # Assert
+        output = result.stdout
+        # Should have markdown-style report
+        assert "#" in output  # Markdown headers
+        assert "**" in output  # Markdown bold
+        # Should mention file types checked
+        assert "AI_DOCS" in output or "Files Checked" in output

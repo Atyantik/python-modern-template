@@ -297,7 +297,7 @@ Before committing code, ensure:
 7. ✅ **Type hints everywhere**: mypy strict mode
 8. ✅ **No security issues**: CI runs Bandit + Safety
 9. ✅ **AI documentation synchronized** (MANDATORY)
-   - Run: `uv run python src/python_modern_template/validate_ai_docs_sync.py`
+   - Run: `uv run ai-validate-docs`
    - Update manual sync files if AI_DOCS changed
    - Update .claude/skills or .claude/agents if relevant
    - Update template files if changes apply to new projects

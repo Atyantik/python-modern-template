@@ -369,7 +369,7 @@ Before completing any task:
 - [ ] Formatter harmony check (Black vs Ruff) — adjust code (e.g., use message variables)
       if tools disagree
 - [ ] **AI documentation synchronized** (MANDATORY)
-  - [ ] Run `uv run python src/python_modern_template/validate_ai_docs_sync.py`
+  - [ ] Run `uv run ai-validate-docs`
   - [ ] Update `.gemini/styleguide.md` if AI_DOCS changed (add sync date)
   - [ ] Update `.github/copilot-instructions.md` if AI_DOCS changed (add sync date)
   - [ ] Update `.claude/skills/` or `.claude/agents/` if relevant
