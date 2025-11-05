@@ -33,15 +33,75 @@ def get_emoji_for_level(level: str) -> str:
     return emoji_map.get(level, "📝")
 
 
+def check_log_specificity(message: str) -> list[str]:
+    """Check if log message includes specific details.
+
+    Args:
+        message: Log message to check
+
+    Returns:
+        List of suggestions for improving specificity
+    """
+    suggestions = []
+
+    # Check for vague phrases
+    vague_phrases = [
+        (
+            "write test",
+            "Which test file? Example: 'Wrote tests in tests/test_feature.py'",
+        ),
+        (
+            "update file",
+            "Which file? Example: 'Updated src/module.py with new function'",
+        ),
+        (
+            "add feature",
+            "Which feature file? Example: 'Added validation to src/auth.py'",
+        ),
+        (
+            "fix bug",
+            "Which file/function? Example: 'Fixed validation bug in src/auth.py:validate_email()'",
+        ),
+        (
+            "implement",
+            "Which file/module? Be specific about location and what was implemented",
+        ),
+    ]
+
+    message_lower = message.lower()
+    for vague_phrase, suggestion in vague_phrases:
+        if vague_phrase in message_lower and not any(
+            ext in message_lower for ext in [".py", ".md", ".txt", ".yml", ".toml"]
+        ):
+            suggestions.append(suggestion)
+            break  # Only show one suggestion
+
+    return suggestions
+
+
 def log_execution(
     message: str,
     level: str = "info",
     session_id: str | None = None,
 ) -> None:
-    """Log execution progress to EXECUTION file.
+    """Log execution progress to EXECUTION file with specific details.
+
+    IMPORTANT: Include specific file names, test names, or function names in your log messages.
+    This helps with execution verification and provides clear audit trail.
+
+    Good examples:
+    - "Wrote tests in tests/ai_tools/test_feature.py (3 test cases)"
+    - "Implemented validate_email() in src/auth.py"
+    - "Updated User model in src/models/user.py to add email field"
+    - "Fixed bug in calculate_total() at src/billing.py:45"
+
+    Bad examples (too vague):
+    - "Wrote some tests"
+    - "Updated a file"
+    - "Fixed a bug"
 
     Args:
-        message: Log message
+        message: Log message with specific details (file names, function names, etc.)
         level: Log level (info, warning, error, success)
         session_id: Session ID (default: most recent)
     """
@@ -62,6 +122,9 @@ def log_execution(
         print_error(f"Execution file not found for session {session_id}")
         sys.exit(1)
 
+    # Check log specificity
+    suggestions = check_log_specificity(message)
+
     # Format log entry
     timestamp = format_timestamp()
     emoji = get_emoji_for_level(level)
@@ -73,6 +136,13 @@ def log_execution(
     # Display confirmation
     print_success(f"Logged to session {session_id}:")
     print(f"   {log_entry.strip()}")
+
+    # Show suggestions if log is vague
+    if suggestions:
+        print("\n💡 Tip: Consider being more specific in your log messages:")
+        for suggestion in suggestions:
+            print(f"   {suggestion}")
+        print()
 
 
 def main() -> None:

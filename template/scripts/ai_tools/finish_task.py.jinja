@@ -6,6 +6,7 @@ import argparse
 import re
 import shutil
 import sys
+from pathlib import Path
 
 from scripts.ai_tools.utils import (
     format_timestamp,
@@ -69,6 +70,28 @@ def extract_decisions(execution_content: str) -> list[str]:
     return decisions
 
 
+def extract_task_name_from_filename(plan_file_path: Path) -> str:
+    """Extract task name from PLAN filename as fallback.
+
+    Args:
+        plan_file_path: Path to PLAN file
+
+    Returns:
+        Task name extracted from filename slug
+    """
+    # Filename format: YYYYMMDDHHMMSS-PLAN-slug.md
+    filename = plan_file_path.name
+    parts = filename.replace(".md", "").split("-", 2)
+
+    if len(parts) >= 3:
+        # Extract slug (third part), convert hyphens to spaces, title case
+        slug = parts[2]
+        task_name = slug.replace("-", " ").title()
+        return task_name
+
+    return "Untitled Task"
+
+
 def check_plan_completion(plan_content: str) -> tuple[bool, int, int]:
     """Check if plan is complete.
 
@@ -104,6 +127,49 @@ def check_make_check_ran(execution_content: str) -> bool:
         True if make check was mentioned
     """
     return bool(re.search(r"make\s+check", execution_content, re.IGNORECASE))
+
+
+def verify_plan_execution(plan_content: str, execution_content: str) -> list[str]:
+    """Verify that checked plan items are mentioned in execution log.
+
+    Args:
+        plan_content: Content of PLAN file
+        execution_content: Content of EXECUTION file
+
+    Returns:
+        List of checked plan items that are not mentioned in execution
+    """
+    lines = plan_content.split("\n")
+    unverified_items = []
+
+    for line in lines:
+        # Check for checked checkboxes
+        match = re.match(r"^\s*-\s*\[x\]\s*(.+)$", line, re.IGNORECASE)
+        if match:
+            item_text = match.group(1).strip()
+
+            # Check if item text (or key parts of it) appear in execution log
+            # Extract key terms (words longer than 3 chars) from item
+            key_terms = [
+                word
+                for word in re.findall(r"\b\w+\b", item_text)
+                if len(word) > 3
+            ]
+
+            # If at least 2 key terms are mentioned, consider it verified
+            mentioned_count = sum(
+                1
+                for term in key_terms
+                if re.search(
+                    r"\b" + re.escape(term) + r"\b", execution_content, re.IGNORECASE
+                )
+            )
+
+            # If less than half of key terms mentioned, mark as unverified
+            if key_terms and mentioned_count < len(key_terms) / 2:
+                unverified_items.append(item_text)
+
+    return unverified_items
 
 
 def update_last_session_summary(
@@ -254,9 +320,14 @@ def finish_task(
     summary_file.read_text()
     execution_content = execution_file.read_text()
 
-    # Extract task name from file
+    # Extract task name from file header
     task_name_match = re.search(r"# Task (?:Plan|Summary): (.+)", plan_content)
-    task_name = task_name_match.group(1) if task_name_match else "Unknown Task"
+
+    if task_name_match:
+        task_name = task_name_match.group(1)
+    else:
+        # Fallback: extract from filename instead of using "Unknown Task"
+        task_name = extract_task_name_from_filename(plan_file)
 
     print_header(f"✅ Finishing Task: {task_name}")
 
@@ -278,6 +349,22 @@ def finish_task(
             if response != "y":
                 print("Task not finished. Run 'make check' first.")
                 sys.exit(0)
+
+    # Verify plan execution
+    unverified_items = verify_plan_execution(plan_content, execution_content)
+    if unverified_items:
+        print_warning(
+            f"Some checked plan items may not have been executed ({len(unverified_items)} items)"
+        )
+        print("\n⚠️  Plan items not clearly mentioned in execution log:")
+        for item in unverified_items[:5]:  # Show first 5
+            print(f"  • {item}")
+        if len(unverified_items) > 5:
+            print(f"  ... and {len(unverified_items) - 5} more")
+        print(
+            "\nTip: Use 'ai-log' with specific details (file names, test names) "
+            "for better verification.\n"
+        )
 
     # Get summary if not provided
     if summary is None:
