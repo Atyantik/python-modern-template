@@ -22,6 +22,34 @@ uv run ai-finish-task --summary="What you accomplished"
 
 **This is NOT optional!** Every AI agent must follow this workflow.
 
+## 🚨 MANDATORY: Documentation-First Approach
+
+**BEFORE implementing any task, MUST research existing solutions!**
+
+```bash
+# STEP 1: Check for MCP tools
+# Look for mcp__docs__, mcp__context7__, etc.
+
+# STEP 2: Fetch official documentation
+WebFetch: url="https://docs.framework.com/api" prompt="What tools exist for [task]?"
+
+# STEP 3: Search for recent tutorials
+WebSearch: query="framework [specific-feature] tutorial 2025"
+
+# STEP 4: Verify no built-in solution exists
+# Only write custom code after confirming no existing solution
+```
+
+**Critical Rules:**
+- ❌ NEVER start coding without researching documentation first
+- ❌ NEVER reinvent functionality that already exists in frameworks
+- ❌ NEVER reverse-engineer when official docs are available
+- ✅ ALWAYS use MCP tools to fetch latest documentation
+- ✅ ALWAYS check for built-in framework tools before custom code
+- ✅ ALWAYS leverage official integrations and SDKs
+
+See `@AI_DOCS/documentation-first-approach.md` for complete guidelines and examples.
+
 ## 📚 All Available Tools
 
 | Tool | Purpose | When to Use |
@@ -636,10 +664,13 @@ uv run ai-finish-task --summary="Added phone validation with 6 tests, 100% cover
 ## ⚠️ Critical Rules
 
 1. **ALWAYS** run `ai-start-task` before ANY work
-2. **ALWAYS** run `ai-finish-task` when complete
-3. **NEVER** skip `ai-log` for important milestones
-4. **ALWAYS** check `ai-context-summary` if unsure what to do
-5. **NEVER** start a task without checking for conflicts first
+2. **ALWAYS** research documentation before implementing (see `@AI_DOCS/documentation-first-approach.md`)
+3. **ALWAYS** check for MCP tools and use WebFetch/WebSearch before coding
+4. **ALWAYS** run `ai-finish-task` when complete
+5. **NEVER** skip `ai-log` for important milestones
+6. **ALWAYS** check `ai-context-summary` if unsure what to do
+7. **NEVER** start a task without checking for conflicts first
+8. **NEVER** reinvent functionality that already exists in frameworks
 
 ## 📂 Context Files Location
 
