@@ -32,17 +32,68 @@ See `@AI_DOCS/ai-tools.md` for complete workflow and all ai-update-plan features
 
 ---
 
+## CRITICAL! DOCUMENTATION-FIRST APPROACH
+
+**BEFORE implementing ANY task, you MUST research existing solutions and documentation!**
+
+This is NOT optional. You MUST:
+
+1. **Check for MCP Tools First**
+   - Look for `mcp__docs__`, `mcp__context7__`, or framework-specific MCP tools
+   - Use them to fetch latest documentation
+
+2. **Fetch Official Documentation**
+   - Use WebFetch from official docs (docs.framework.com)
+   - Search for built-in tools and features
+   - Read API references and getting started guides
+
+3. **Search for Recent Tutorials**
+   - Use WebSearch for 2024-2025 tutorials and examples
+   - Look for official framework tutorials
+   - Find existing integration patterns
+
+4. **Verify No Built-In Solution Exists**
+   - Check if framework provides the functionality
+   - Look for official integrations
+   - Confirm custom code is actually needed
+
+**Why This Matters:**
+
+❌ **DON'T** reinvent the wheel:
+- Don't reverse-engineer documentation sites
+- Don't manually implement APIs when SDK exists
+- Don't create custom code when built-in tools are available
+- Don't over-engineer simple tasks
+
+✅ **DO** discover and use existing solutions:
+- Use MCP tools to fetch documentation
+- Read official framework docs
+- Leverage built-in tools and integrations
+- Follow framework best practices
+
+**Example:** If asked to "create an Agno app to fetch HackerNews stories":
+1. ✅ Use MCP to fetch Agno documentation
+2. ✅ Discover Agno has built-in `hackernews_tools`
+3. ✅ Use the built-in tools instead of custom API calls
+4. ❌ Don't view page source or reverse-engineer APIs
+
+See `@AI_DOCS/documentation-first-approach.md` for complete guidelines and examples.
+
+---
+
 ## Overview
 
 You are Claude Code, working on a Python project with strict Test-Driven Development (TDD) and code quality standards.
 
 **Primary Directive:** ALWAYS write tests BEFORE implementation code.
+**Secondary Directive:** ALWAYS research documentation BEFORE writing any code.
 
 ## Shared Documentation
 
 Reference these for complete guidelines:
 
 - `@AI_DOCS/ai-tools.md` - Session management workflow (MANDATORY)
+- `@AI_DOCS/documentation-first-approach.md` - Research before implementation (MANDATORY)
 - `@AI_DOCS/ai-skills.md` - Specialized skills and agents (use via Skill/Task tools)
 - `@AI_DOCS/tdd-workflow.md` - TDD process and testing standards
 - `@AI_DOCS/code-conventions.md` - Code style and best practices
@@ -53,14 +104,24 @@ Reference these for complete guidelines:
 
 ### Before Writing Any Code
 
-1. Read relevant files to understand current implementation
-2. Check existing tests in `tests/` directory
-3. Plan test cases needed
-4. **Write failing tests FIRST**
-5. Run tests to confirm they fail
-6. Implement minimal code to make tests pass
-7. Refactor while keeping tests green
-8. Run `make check` to ensure all quality gates pass
+**Phase 0: Documentation Discovery (MANDATORY FIRST STEP)**
+1. Check for MCP tools (`mcp__docs__`, `mcp__context7__`, etc.)
+2. Use WebFetch to get official documentation from framework
+3. Use WebSearch for recent tutorials and examples (2024-2025)
+4. Verify no built-in tools/features exist for the task
+5. Document research findings before proceeding
+
+**Phase 1: TDD Preparation**
+6. Read relevant files to understand current implementation
+7. Check existing tests in `tests/` directory
+8. Plan test cases needed (based on discovered patterns)
+
+**Phase 2: TDD Implementation**
+9. **Write failing tests FIRST**
+10. Run tests to confirm they fail
+11. Implement minimal code to make tests pass (using discovered tools/patterns)
+12. Refactor while keeping tests green
+13. Run `make check` to ensure all quality gates pass
 
 ### Using Claude Code Tools
 
@@ -286,6 +347,12 @@ See `@AI_DOCS/code-conventions.md` for complete documentation standards.
 
 Before completing any task:
 
+- [ ] **Documentation research completed** (MANDATORY)
+  - [ ] Checked for MCP tools and used them
+  - [ ] Fetched official framework documentation
+  - [ ] Searched for recent tutorials and examples
+  - [ ] Verified no built-in solution exists
+  - [ ] Documented research findings
 - [ ] Tests written BEFORE implementation
 - [ ] Tests initially failed (confirmed TDD)
 - [ ] Implementation makes tests pass
@@ -355,6 +422,7 @@ See `@AI_DOCS/ai-skills.md` for complete documentation on:
 
 **Shared documentation:**
 - `@AI_DOCS/ai-tools.md` - Session management workflow
+- `@AI_DOCS/documentation-first-approach.md` - Research before implementation (MANDATORY)
 - `@AI_DOCS/ai-skills.md` - Specialized skills and agents
 - `@AI_DOCS/tdd-workflow.md` - TDD process, testing standards, coverage
 - `@AI_DOCS/code-conventions.md` - Code style, formatting, best practices
