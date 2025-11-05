@@ -31,7 +31,7 @@ Reviewed all template/docs files for relevance. All files are relevant. Converte
 
 ## Files Changed
 
-- No files tracked
+- `validate_ai_docs_sync.py`
 
 ---
 

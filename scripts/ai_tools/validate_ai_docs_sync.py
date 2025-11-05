@@ -271,7 +271,7 @@ Everything is synchronized! 🎉
 
 3. **Verify fixes:**
    ```bash
-   python -m {{ package_name }}.validate_ai_docs_sync
+   uv run ai-validate-docs
    ```
 """
 
