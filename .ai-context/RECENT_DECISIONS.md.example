@@ -1,0 +1,58 @@
+# Recent Decisions
+
+## Git Commits: No AI Co-Authoring (2025-11-02)
+
+**Decision**: Never add AI co-author attribution to git commits
+**Rationale**:
+- Commits should represent human intent and responsibility
+- Professional git history without AI attribution
+- Clear accountability for code changes
+- Industry standard practice
+**Implementation**:
+- Added CRITICAL rule to AI_DOCS/code-conventions.md
+- Duplicated in .gemini/styleguide.md
+- Duplicated in .github/copilot-instructions.md
+**Status**: Implemented
+
+## AI Instructions: No Decorative Emojis (2025-11-02)
+
+**Decision**: Add CRITICAL emoji prohibition rule to all AI agent configurations
+**Rationale**: Professional appearance, universal compatibility, accessibility
+**Implementation**:
+- Added to AI_DOCS/code-conventions.md (shared by Claude, Cursor, Aider, Agents)
+- Duplicated in .gemini/styleguide.md
+- Duplicated in .github/copilot-instructions.md
+**Status**: Implemented
+
+## Project Naming (2025-11-02)
+
+**Decision**: Rename to `python-modern-template`
+**From**: `leadership-blog-generator`
+**Rationale**: Accurately reflects purpose as a template
+**Author**: Atyantik Technologies Private Limited
+**Status**: Complete
+
+## Quality Standards (2025-11-02)
+
+**Decision**: Single source of truth in pyproject.toml
+**Coverage**: Minimum 80%, target 100%
+**Tools**: Black, Ruff, mypy, Pylint, pytest, Bandit
+**TDD**: Required - tests before implementation
+**Status**: Implemented and enforced
+
+---
+
+## Instructions
+
+This file tracks important architectural and technical decisions made during development.
+
+Add new decisions at the top (most recent first) following this format:
+
+```markdown
+## Decision Title (YYYY-MM-DD)
+
+**Decision**: What was decided
+**Rationale**: Why this decision was made
+**Implementation**: How it was implemented
+**Status**: Implemented/Pending/Deprecated
+```
