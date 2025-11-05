@@ -54,7 +54,7 @@ class TestSubstituteVariables:
 
     def test_substitute_session_id(self) -> None:
         """Test substituting session ID variable."""
-        template = "Session: {{session_id}}"
+        template = {% raw %}"Session: {{session_id}}"{% endraw %}
         result = substitute_variables(
             template, session_id="20251103120000", task_name="Test", task_type="feature"
         )
@@ -62,7 +62,7 @@ class TestSubstituteVariables:
 
     def test_substitute_task_name(self) -> None:
         """Test substituting task name variable."""
-        template = "Task: {{task_name}}"
+        template = {% raw %}"Task: {{task_name}}"{% endraw %}
         result = substitute_variables(
             template, session_id="123", task_name="Add validation", task_type="feature"
         )
@@ -70,7 +70,7 @@ class TestSubstituteVariables:
 
     def test_substitute_task_type(self) -> None:
         """Test substituting task type variable."""
-        template = "Type: {{task_type}}"
+        template = {% raw %}"Type: {{task_type}}"{% endraw %}
         result = substitute_variables(
             template, session_id="123", task_name="Test", task_type="bugfix"
         )
@@ -78,7 +78,7 @@ class TestSubstituteVariables:
 
     def test_substitute_timestamp(self) -> None:
         """Test substituting timestamp variable."""
-        template = "Created: {{timestamp}}"
+        template = {% raw %}"Created: {{timestamp}}"{% endraw %}
         result = substitute_variables(
             template, session_id="123", task_name="Test", task_type="feature"
         )
@@ -88,7 +88,7 @@ class TestSubstituteVariables:
 
     def test_substitute_multiple_variables(self) -> None:
         """Test substituting multiple variables at once."""
-        template = "{{session_id}}: {{task_name}} ({{task_type}})"
+        template = {% raw %}"{{session_id}}: {{task_name}} ({{task_type}})"{% endraw %}
         result = substitute_variables(
             template,
             session_id="20251103120000",
@@ -99,7 +99,7 @@ class TestSubstituteVariables:
 
     def test_substitute_same_variable_multiple_times(self) -> None:
         """Test substituting same variable appearing multiple times."""
-        template = "Start: {{task_name}}, End: {{task_name}}"
+        template = {% raw %}"Start: {{task_name}}, End: {{task_name}}"{% endraw %}
         result = substitute_variables(
             template, session_id="123", task_name="Build", task_type="feature"
         )

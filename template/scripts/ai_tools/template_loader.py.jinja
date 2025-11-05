@@ -51,7 +51,7 @@ def substitute_variables(
     """Substitute template variables with actual values.
 
     Args:
-        template: Template content with {{variable}} placeholders
+        template: Template content with {% raw %}{{variable}}{% endraw %} placeholders
         session_id: Session ID for this task
         task_name: Name of the task
         task_type: Type of task
@@ -63,10 +63,10 @@ def substitute_variables(
     timestamp = format_timestamp()
 
     # Perform substitutions
-    result = template.replace("{{session_id}}", session_id)
-    result = result.replace("{{task_name}}", task_name)
-    result = result.replace("{{task_type}}", task_type)
-    result = result.replace("{{timestamp}}", timestamp)
+    result = template.replace({% raw %}"{{session_id}}"{% endraw %}, session_id)
+    result = result.replace({% raw %}"{{task_name}}"{% endraw %}, task_name)
+    result = result.replace({% raw %}"{{task_type}}"{% endraw %}, task_type)
+    result = result.replace({% raw %}"{{timestamp}}"{% endraw %}, timestamp)
 
     return result
 
