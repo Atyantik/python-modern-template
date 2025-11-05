@@ -247,9 +247,6 @@ addopts = [
     "--cov-fail-under={{ min_coverage }}",
     "--strict-markers",
     "--tb=short",
-{%- if include_ai_tools %}
-    "--ignore=tests/ai_tools/test_context_summary.py",
-{%- endif %}
 ]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",

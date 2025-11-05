@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+{%- if include_cli %}
+from unittest.mock import patch
+{%- endif %}
+
 import pytest
 
 from {{ package_name }} import __author__, __email__, __version__, main
@@ -26,11 +30,150 @@ class TestPackage:
 class TestMain:
     """Test main function."""
 
+    def test_main_is_callable(self) -> None:
+        """Test that main is callable."""
+        assert callable(main)
+
+{%- if include_cli %}
+{%-   if cli_framework == "typer" %}
+
+    def test_main_with_typer_cli(self) -> None:
+        """Test that main works with Typer CLI framework."""
+        # Typer's app() doesn't return a value, so we test it's callable
+        # In real usage, it would be invoked via command line
+        from {{ package_name }}.main import app
+
+        assert app is not None
+        assert hasattr(app, "command")
+
     def test_main_returns_zero(self) -> None:
+        """Test that main returns 0 (success) when invoked."""
+        # Typer CLI doesn't naturally return exit codes, but our main() wrapper does
+        # We'll just verify it's structured correctly
+        result = main()
+        # Typer's app() returns None, but main() returns 0
+        assert result == 0
+
+    @patch("sys.argv", ["{{ package_name }}", "--name", "Test"])
+    def test_cli_accepts_name_argument(self, capsys: pytest.CaptureFixture[str]) -> None:
+        """Test that CLI accepts --name argument."""
+        from {{ package_name }}.main import app
+        from typer.testing import CliRunner
+
+        runner = CliRunner()
+        result = runner.invoke(app, ["--name", "Test"])
+
+        assert result.exit_code == 0
+        assert "Test" in result.stdout
+
+    @patch("sys.argv", ["{{ package_name }}", "--verbose"])
+    def test_cli_accepts_verbose_flag(self, capsys: pytest.CaptureFixture[str]) -> None:
+        """Test that CLI accepts --verbose flag."""
+        from {{ package_name }}.main import app
+        from typer.testing import CliRunner
+
+        runner = CliRunner()
+        result = runner.invoke(app, ["--verbose"])
+
+        assert result.exit_code == 0
+        assert "Running {{ project_name }}" in result.stdout or "{{ project_description }}" in result.stdout
+{%-   elif cli_framework == "click" %}
+
+    def test_main_with_click_cli(self) -> None:
+        """Test that main works with Click CLI framework."""
+        from {{ package_name }}.main import run
+
+        assert run is not None
+        assert callable(run)
+
+    def test_main_returns_zero(self) -> None:
+        """Test that main returns 0 (success) when invoked."""
+        # Click's run() is decorated, but main() should return 0
+        result = main()
+        assert result == 0
+
+    def test_cli_accepts_name_argument(self) -> None:
+        """Test that CLI accepts --name argument."""
+        from {{ package_name }}.main import run
+        from click.testing import CliRunner
+
+        runner = CliRunner()
+        result = runner.invoke(run, ["--name", "Test"])
+
+        assert result.exit_code == 0
+        assert "Test" in result.output
+
+    def test_cli_accepts_verbose_flag(self) -> None:
+        """Test that CLI accepts --verbose flag."""
+        from {{ package_name }}.main import run
+        from click.testing import CliRunner
+
+        runner = CliRunner()
+        result = runner.invoke(run, ["--verbose"])
+
+        assert result.exit_code == 0
+        assert "Running {{ project_name }}" in result.output or "{{ project_description }}" in result.output
+{%-   else %}
+
+    @patch("sys.argv", ["{{ package_name }}"])
+    def test_main_returns_zero(self, capsys: pytest.CaptureFixture[str]) -> None:
         """Test that main returns 0 (success)."""
         result = main()
         assert result == 0
 
-    def test_main_is_callable(self) -> None:
-        """Test that main is callable."""
-        assert callable(main)
+    @patch("sys.argv", ["{{ package_name }}", "--name", "Test"])
+    def test_cli_accepts_name_argument(self, capsys: pytest.CaptureFixture[str]) -> None:
+        """Test that CLI accepts --name argument."""
+        result = main()
+        captured = capsys.readouterr()
+
+        assert result == 0
+        assert "Test" in captured.out
+
+    @patch("sys.argv", ["{{ package_name }}", "--verbose"])
+    def test_cli_accepts_verbose_flag(self, capsys: pytest.CaptureFixture[str]) -> None:
+        """Test that CLI accepts --verbose flag."""
+        result = main()
+        captured = capsys.readouterr()
+
+        assert result == 0
+        assert "Running {{ project_name }}" in captured.out or "{{ project_description }}" in captured.out
+
+    @patch("sys.argv", ["{{ package_name }}", "--name", "Alice", "--verbose"])
+    def test_cli_combines_arguments(self, capsys: pytest.CaptureFixture[str]) -> None:
+        """Test that CLI handles multiple arguments together."""
+        result = main()
+        captured = capsys.readouterr()
+
+        assert result == 0
+        assert "Alice" in captured.out
+        assert "Running {{ project_name }}" in captured.out or "{{ project_description }}" in captured.out
+{%-   endif %}
+{%- else %}
+
+    def test_main_returns_zero(self, capsys: pytest.CaptureFixture[str]) -> None:
+        """Test that main returns 0 (success)."""
+        result = main()
+        assert result == 0
+
+    def test_main_prints_project_name(self, capsys: pytest.CaptureFixture[str]) -> None:
+        """Test that main prints the project name."""
+        main()
+        captured = capsys.readouterr()
+
+        assert "{{ project_name }}" in captured.out
+
+    def test_main_prints_project_description(self, capsys: pytest.CaptureFixture[str]) -> None:
+        """Test that main prints the project description."""
+        main()
+        captured = capsys.readouterr()
+
+        assert "{{ project_description }}" in captured.out
+
+    def test_main_provides_next_steps(self, capsys: pytest.CaptureFixture[str]) -> None:
+        """Test that main provides guidance for next steps."""
+        main()
+        captured = capsys.readouterr()
+
+        assert "Edit src/{{ package_name }}/main.py" in captured.out
+{%- endif %}

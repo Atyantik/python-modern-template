@@ -229,12 +229,13 @@ uv run python src/python_modern_template/validate_ai_docs_sync.py
 **Purpose:** Automated synchronization of source files to Copier template with Jinja variable replacement.
 
 **What it syncs:**
-- AI tools tests (15 files): `tests/ai_tools/*.py` → `template/tests/ai_tools/*.py.jinja`
 - Quality tests (5 files): `tests/quality/*.py` → `template/tests/quality/*.py.jinja`
 - Project tests (4 files): `tests/test_*.py` → `template/tests/test_*.py.jinja`
 - Quality scripts (6 files): `scripts/quality/*.py` → `template/scripts/quality/*.py.jinja`
 - AI tools scripts (11 files): `scripts/ai_tools/*.py` → `template/scripts/ai_tools/*.py.jinja`
 - Source modules (1 file): `src/{{ package_name }}/validate_ai_docs_sync.py.jinja`
+
+**Note:** AI tools tests are NOT synced to the template. They remain in the template repository only, as they test template infrastructure that users typically won't modify.
 
 **Jinja variable replacement:**
 - `python_modern_template` → `{{ package_name }}`
