@@ -66,7 +66,7 @@ All code properly formatted with Black and isort.
 ## Gate 2: Linting ❌ FAILED
 
 ### Issue 1: Unused Import (HIGH)
-**File:** src/python_modern_template/validators.py:5
+**File:** src/{{ package_name }}/validators.py:5
 **Rule:** Ruff F401
 **Problem:**
 ```python
@@ -81,11 +81,11 @@ from typing import Optional  # Only if you actually use Optional
 
 **Auto-fix available:** Yes
 ```bash
-uv run ruff check --fix src/python_modern_template/validators.py
+uv run ruff check --fix src/{{ package_name }}/validators.py
 ```
 
 ### Issue 2: Missing Type Hint (MEDIUM)
-**File:** src/python_modern_template/validators.py:15
+**File:** src/{{ package_name }}/validators.py:15
 **Rule:** Pylint missing-type-hint
 **Problem:**
 ```python
@@ -119,7 +119,7 @@ Expected True for email 'user+tag@example.com'
 **Cause:** Special characters in email not handled correctly
 
 **Fix:**
-Update email validation regex in src/python_modern_template/validators.py:20
+Update email validation regex in src/{{ package_name }}/validators.py:20
 ```python
 # Current (incorrect):
 pattern = r'^[a-zA-Z0-9@.]+'
@@ -134,8 +134,8 @@ pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 **Gap:** 5% (15 uncovered lines)
 
 **Uncovered Code:**
-1. src/python_modern_template/validators.py:45-52 (error handling)
-2. src/python_modern_template/validators.py:67-70 (edge case)
+1. src/{{ package_name }}/validators.py:45-52 (error handling)
+2. src/{{ package_name }}/validators.py:67-70 (edge case)
 
 **Fix:** Add tests:
 ```python
@@ -178,7 +178,7 @@ No security vulnerabilities detected by Bandit.
 
 ```bash
 # Step 1: Fix critical test failure
-# Edit src/python_modern_template/validators.py line 20
+# Edit src/{{ package_name }}/validators.py line 20
 # Update email regex
 
 # Step 2: Add missing tests
@@ -191,7 +191,7 @@ make format
 uv run ruff check --fix src/ tests/
 
 # Step 4: Add type hints
-# Edit src/python_modern_template/validators.py line 15
+# Edit src/{{ package_name }}/validators.py line 15
 
 # Step 5: Verify all gates pass
 make check

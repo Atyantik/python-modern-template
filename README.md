@@ -328,12 +328,16 @@ If terms like "TDD" or "make commands" are unfamiliar:
 
 ## Documentation
 
+### For Template Users
 - **[Getting Started Guide](GETTING_STARTED.md)**: Complete beginner's guide (START HERE!)
 - **[Examples Guide](examples/README.md)**: 7 example configurations with full commands
 - **[Project Summary](PROJECT_SUMMARY.md)**: Implementation details and statistics
 - **[AI Tools Guide](AI_DOCS/ai-tools.md)**: AI session management (if enabled)
 - **[TDD Workflow](AI_DOCS/tdd-workflow.md)**: Test-Driven Development guide (if enabled)
 - **[Code Conventions](AI_DOCS/code-conventions.md)**: Style and best practices (if enabled)
+
+### For Template Developers
+- **[Template Development Guide](TEMPLATE_DEVELOPMENT.md)**: Working on this template repository
 
 ## Why This Template?
 
