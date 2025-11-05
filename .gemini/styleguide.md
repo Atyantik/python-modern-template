@@ -1,10 +1,9 @@
 # Gemini Code Assist Style Guide
 
 <!-- ⚠️  SYNC WARNING: Minimal essential content for Gemini -->
-<!-- Last synced: 2025-11-05 -->
 <!-- Gemini styleguide.md does NOT support file references (@AI_DOCS syntax) -->
 <!-- This file contains only Gemini-specific TDD workflow guidance -->
-<!-- For complete documentation, manually read: AI_DOCS/documentation-first-approach.md, AI_DOCS/tdd-workflow.md, AI_DOCS/ai-tools.md, AI_DOCS/code-conventions.md, AI_DOCS/project-context.md -->
+<!-- For complete documentation, manually read: AI_DOCS/tdd-workflow.md, AI_DOCS/ai-tools.md, AI_DOCS/code-conventions.md, AI_DOCS/project-context.md -->
 <!-- Also see AGENTS.md for universal instructions that work with file references -->
 
 ## STOP! READ THIS FIRST - MANDATORY SESSION MANAGEMENT
@@ -39,21 +38,6 @@ See `AI_DOCS/ai-tools.md` for complete workflow and all ai-update-plan features.
 
 ---
 
-## CRITICAL! DOCUMENTATION-FIRST APPROACH
-
-**BEFORE implementing ANY task, research existing solutions!**
-
-1. Check for MCP tools (mcp__docs__, mcp__context7__)
-2. Fetch official documentation with WebFetch
-3. Search for recent tutorials with WebSearch
-4. Verify no built-in solution exists
-
-**Never reinvent the wheel. Always check documentation first.**
-
-See `AI_DOCS/documentation-first-approach.md` for complete guidelines.
-
----
-
 ## CRITICAL Code Conventions
 
 **See `AI_DOCS/code-conventions.md` for complete standards including:**
@@ -73,14 +57,12 @@ See `AI_DOCS/documentation-first-approach.md` for complete guidelines.
 > Teams can describe custom instructions here to tailor Gemini's code reviews to the repository's needs.
 
 **Primary Directive:** Write tests BEFORE code. Use TDD (Test-Driven Development) always.
-**Secondary Directive:** Research documentation BEFORE writing any code.
 
 ## Shared Documentation
 
 For complete guidelines, see these shared documents in the project:
 
 - `AI_DOCS/ai-tools.md` - Session management (MANDATORY workflow)
-- `AI_DOCS/documentation-first-approach.md` - Research before implementation (MANDATORY)
 - `AI_DOCS/ai-skills.md` - Specialized skills and agents (manual workflows)
 - `AI_DOCS/tdd-workflow.md` - TDD process and testing standards
 - `AI_DOCS/code-conventions.md` - Code style and best practices

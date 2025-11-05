@@ -32,62 +32,17 @@ See `@AI_DOCS/ai-tools.md` for complete workflow and all ai-update-plan features
 
 ---
 
-## CRITICAL! DOCUMENTATION-FIRST APPROACH
-
-**BEFORE implementing ANY task, you MUST research existing solutions and documentation!**
-
-This is NOT optional. You MUST:
-
-1. **Check for MCP Tools First**
-   - Look for `mcp__docs__`, `mcp__context7__`, or framework-specific MCP tools
-   - Use them to fetch latest documentation
-
-2. **Fetch Official Documentation**
-   - Use WebFetch from official docs (docs.framework.com)
-   - Search for built-in tools and features
-   - Read API references and getting started guides
-
-3. **Search for Recent Tutorials**
-   - Use WebSearch for 2024-2025 tutorials and examples
-   - Look for official framework tutorials
-   - Find existing integration patterns
-
-4. **Verify No Built-In Solution Exists**
-   - Check if framework provides the functionality
-   - Look for official integrations
-   - Confirm custom code is actually needed
-
-**Why This Matters:**
-
-❌ **DON'T** reinvent the wheel:
-- Don't reverse-engineer documentation sites
-- Don't manually implement APIs when SDK exists
-- Don't create custom code when built-in tools are available
-- Don't over-engineer simple tasks
-
-✅ **DO** discover and use existing solutions:
-- Use MCP tools to fetch documentation
-- Read official framework docs
-- Leverage built-in tools and integrations
-- Follow framework best practices
-
-See `@AI_DOCS/documentation-first-approach.md` for complete guidelines and examples.
-
----
-
 ## Overview
 
 **Universal instructions for all AI coding assistants working on this project**
 
 **Primary Directive:** ALWAYS write tests BEFORE implementation code (Test-Driven Development).
-**Secondary Directive:** ALWAYS research documentation BEFORE writing any code.
 
 ## Shared Documentation
 
 For comprehensive guidelines, reference these shared documents:
 
 - **@AI_DOCS/ai-tools.md** - AI session management tools (MANDATORY workflow)
-- **@AI_DOCS/documentation-first-approach.md** - Research before implementation (MANDATORY)
 - **@AI_DOCS/ai-skills.md** - Specialized skills and agents for quality and testing
 - **@AI_DOCS/tdd-workflow.md** - Test-Driven Development process and testing standards
 - **@AI_DOCS/code-conventions.md** - Code style, formatting, and best practices
@@ -100,7 +55,6 @@ For comprehensive guidelines, reference these shared documents:
 |--------|-------------|
 | **Session Management** | Use `ai-start-task` before starting, `ai-finish-task` when done |
 | **Progress Tracking** | Log all important steps with `ai-log` |
-| **Documentation Research** | MANDATORY - Check MCP tools, fetch docs, search tutorials BEFORE coding |
 | **Development Approach** | Test-Driven Development (TDD) - Tests First! |
 | **Minimum Coverage** | 80% (enforced by pytest) |
 | **Mocks/Fixtures** | Minimize - use real code when possible |

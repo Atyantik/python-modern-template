@@ -9,7 +9,6 @@ This directory contains shared documentation referenced by all AI tool configura
 | File | Purpose | Who Uses It |
 |------|---------|-------------|
 | **ai-tools.md** | AI session management workflow (MANDATORY for all agents) | All AI tools |
-| **documentation-first-approach.md** | Research and discover before implementation (MANDATORY for all agents) | All AI tools |
 | **ai-skills.md** | Specialized skills and agents (test-generator, coverage-analyzer, quality-fixer, tdd-reviewer, quality-enforcer) | All AI tools |
 | **tdd-workflow.md** | Test-Driven Development process, testing standards, coverage requirements | All AI tools |
 | **code-conventions.md** | Code style, formatting, best practices, documentation standards | All AI tools |
@@ -120,13 +119,12 @@ Content that is **unique to each tool**:
 
 **Always read these first**:
 ```
-@AI_DOCS/ai-tools.md                      # Session management (MANDATORY)
-@AI_DOCS/documentation-first-approach.md  # Research before implementation (MANDATORY)
-@AI_DOCS/documentation-sync-rules.md      # Doc sync golden rule (MANDATORY)
-@AI_DOCS/ai-skills.md                     # Specialized skills and agents
-@AI_DOCS/tdd-workflow.md                  # TDD process
-@AI_DOCS/code-conventions.md              # Code standards
-@AI_DOCS/project-context.md               # Architecture
+@AI_DOCS/ai-tools.md                  # Session management (MANDATORY)
+@AI_DOCS/documentation-sync-rules.md  # Doc sync golden rule (MANDATORY)
+@AI_DOCS/ai-skills.md                 # Specialized skills and agents
+@AI_DOCS/tdd-workflow.md              # TDD process
+@AI_DOCS/code-conventions.md          # Code standards
+@AI_DOCS/project-context.md           # Architecture
 ```
 
 Then read your tool-specific config:

@@ -179,19 +179,10 @@ config.local.yaml
 .uv/
 uv.lock
 
-# AI Context - Sessions are local only
-.ai-context/sessions/*
-!.ai-context/sessions/.gitkeep
-!.ai-context/sessions/archive/
-.ai-context/sessions/archive/*
-!.ai-context/sessions/archive/.gitkeep
-
-# AI Context - Keep these files (project knowledge)
-!.ai-context/REQUIRED_READING.md
-!.ai-context/LAST_SESSION_SUMMARY.md
-!.ai-context/ACTIVE_TASKS.md
-!.ai-context/RECENT_DECISIONS.md
-!.ai-context/CONVENTIONS.md
+# AI Context - Local session files (developer-specific, never commit)
+.ai-context/*
+!.ai-context/*.example
+!.ai-context/.gitkeep
 
 # AI-generated summaries (automated output - never commit)
 .ai-summary/
