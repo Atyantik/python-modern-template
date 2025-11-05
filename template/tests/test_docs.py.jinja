@@ -12,6 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 @pytest.mark.parametrize(
     ("relative_path", "required_phrases", "forbidden_phrases"),
     [
+{%- if include_ai_tools %}
         (
             "AI_DOCS/project-context.md",
             ["Modern Python Project Template"],
@@ -37,16 +38,15 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
             ["{{ package_name }}"],
             ["leadership_blog_generator"],
         ),
-        (
-            "template/AGENTS.md.jinja",
-            ["{{ package_name }}"],
+{%- else %}
+        # No AI docs to check when AI tools are disabled
+        pytest.param(
+            "README.md",
+            ["{{ project_name }}"],
             ["leadership_blog_generator"],
+            marks=pytest.mark.skip(reason="No AI docs when AI tools disabled"),
         ),
-        (
-            "template/AI_DOCS/project-context.md.jinja",
-            ["{{ package_name }}"],
-            ["leadership_blog_generator"],
-        ),
+{%- endif %}
     ],
 )
 def test_documentation_is_template_specific(
@@ -73,13 +73,16 @@ def test_no_legacy_identifier_left() -> None:
     banned = "leadership_blog_generator"
     allowed: set[Path] = {PROJECT_ROOT / "tests" / "test_docs.py"}
     search_roots = [
+{%- if include_ai_tools %}
         PROJECT_ROOT / "AI_DOCS",
-        PROJECT_ROOT / "template",
         PROJECT_ROOT / ".ai-context",
+{%- endif %}
         PROJECT_ROOT / ".github",
         PROJECT_ROOT / "src",
         PROJECT_ROOT / "tests",
+{%- if include_quality_scripts or include_ai_tools %}
         PROJECT_ROOT / "scripts",
+{%- endif %}
         PROJECT_ROOT,
     ]
 

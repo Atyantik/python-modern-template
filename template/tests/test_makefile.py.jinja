@@ -13,9 +13,9 @@ def test_run_target_invokes_template_entry_point() -> None:
     content = (PROJECT_ROOT / "Makefile").read_text(encoding="utf-8")
 
     missing_entry_point = (
-        "Makefile run target should call {{ project_name }} script"
+        "Makefile run target should call {{ package_name }} script"
     )
-    assert "uv run {{ project_name }}" in content, missing_entry_point
+    assert "uv run {{ package_name }}" in content, missing_entry_point
 
     legacy_entry_point = "Legacy run target still references leadership-blog-generator"
     assert "uv run leadership-blog-generator" not in content, legacy_entry_point
