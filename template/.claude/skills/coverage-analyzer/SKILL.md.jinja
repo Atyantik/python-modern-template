@@ -66,7 +66,7 @@ show critical coverage gaps
 
 ```bash
 # Get specific test recommendations
-suggest tests for uncovered code in src/python_modern_template/validators.py
+suggest tests for uncovered code in src/{{ package_name }}/validators.py
 ```
 
 **Output:** Concrete test cases to add
@@ -164,7 +164,7 @@ Create specific test suggestions:
 **Status:** ⚠️ Below target
 
 **Breakdown:**
-- src/python_modern_template/: 73.2% (18 uncovered lines)
+- src/{{ package_name }}/: 73.2% (18 uncovered lines)
 - tests/: 100% (fully covered)
 
 ---
@@ -173,7 +173,7 @@ Create specific test suggestions:
 
 ### 1. Error Handling in validators.py ⚠️ CRITICAL
 
-**File:** src/python_modern_template/validators.py
+**File:** src/{{ package_name }}/validators.py
 **Lines:** 45-52 (8 lines)
 **Function:** `validate_email()`
 
@@ -223,7 +223,7 @@ def test_validate_email_unexpected_error_handling() -> None:
 
 ### 2. Edge Case in parser.py ⚠️ CRITICAL
 
-**File:** src/python_modern_template/parser.py
+**File:** src/{{ package_name }}/parser.py
 **Lines:** 67-70 (4 lines)
 **Function:** `parse_config()`
 
@@ -268,7 +268,7 @@ def test_parse_config_none_data() -> None:
 
 ### 3. Integration Point in api_client.py
 
-**File:** src/python_modern_template/api_client.py
+**File:** src/{{ package_name }}/api_client.py
 **Lines:** 112-118 (7 lines)
 **Function:** `retry_with_backoff()`
 
@@ -372,7 +372,7 @@ Target: 80% ████████▓░
 
 ## Detailed File Analysis
 
-### src/python_modern_template/validators.py (65% coverage)
+### src/{{ package_name }}/validators.py (65% coverage)
 
 **Covered:**
 - Basic email validation (happy path)
@@ -389,7 +389,7 @@ Target: 80% ████████▓░
 - Exception handling tests
 - Edge case tests
 
-### src/python_modern_template/parser.py (80% coverage)
+### src/{{ package_name }}/parser.py (80% coverage)
 
 **Covered:**
 - Standard config parsing
@@ -402,7 +402,7 @@ Target: 80% ████████▓░
 **Missing Test Types:**
 - Edge case tests (empty, None)
 
-### src/python_modern_template/api_client.py (75% coverage)
+### src/{{ package_name }}/api_client.py (75% coverage)
 
 **Covered:**
 - Basic API calls
@@ -603,7 +603,7 @@ Analyze each module separately:
 
 ```bash
 # Get coverage for specific module
-coverage report --include="src/python_modern_template/validators.py"
+coverage report --include="src/{{ package_name }}/validators.py"
 ```
 
 ### Branch Coverage

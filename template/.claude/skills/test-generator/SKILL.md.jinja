@@ -31,7 +31,7 @@ Automatically generate comprehensive test boilerplate that follows this project'
 
 ```bash
 # User provides source file
-generate tests for src/python_modern_template/validators.py
+generate tests for src/{{ package_name }}/validators.py
 ```
 
 **Output:** Creates `tests/test_validators.py` with:
@@ -386,7 +386,7 @@ from __future__ import annotations  # Always first
 
 import pytest
 
-from python_modern_template.module import function
+from {{ package_name }}.module import function
 ```
 
 ✅ **No Excessive Mocking**
@@ -447,7 +447,7 @@ For programmatic generation, use:
 ```bash
 # Generate from source file
 python .claude/skills/test-generator/scripts/generate.py \
-  --source src/python_modern_template/module.py \
+  --source src/{{ package_name }}/module.py \
   --output tests/test_module.py
 
 # Generate from function name
@@ -473,11 +473,11 @@ python .claude/skills/test-generator/scripts/generate.py \
 
 **User Request:**
 ```
-generate tests for the validate_email function in src/python_modern_template/validators.py
+generate tests for the validate_email function in src/{{ package_name }}/validators.py
 ```
 
 **Skill Actions:**
-1. Read src/python_modern_template/validators.py
+1. Read src/{{ package_name }}/validators.py
 2. Identify validate_email function signature
 3. Choose parametrized template (multiple test cases)
 4. Generate tests/test_validators.py with:
