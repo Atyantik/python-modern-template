@@ -67,7 +67,7 @@ See `@AI_DOCS/documentation-first-approach.md` for complete guidelines and examp
 
 ### 1. ai-start-task (REQUIRED FIRST)
 
-**Start a new AI task session with full context loading.**
+**Start a new AI task session with full context loading and intelligent auto-population.**
 
 ```bash
 uv run ai-start-task "Add user authentication feature"
@@ -79,11 +79,42 @@ uv run ai-start-task "Add user authentication feature"
   - `PLAN-*.md` - Task plan with checkboxes
   - `SUMMARY-*.md` - Session summary template
   - `EXECUTION-*.md` - Execution log
+- **🆕 Auto-populates PLAN sections:**
+  - Extracts and expands Objective from task description
+  - Generates intelligent Context summary with dependencies
+  - Analyzes task type and adds relevant guidance
+  - Identifies potential risks and considerations
 - Displays last session summary
 - Shows active tasks (checks for conflicts)
 - Lists recent architectural decisions
 - Shows key conventions to follow
 - Adds task to `ACTIVE_TASKS.md`
+
+**✨ New: Intelligent Auto-Population**
+
+The `ai-start-task` command now uses NLP-based summarization to intelligently populate your PLAN file:
+
+- **Objective Section**: Automatically extracts intent from task description and creates a clear, detailed objective statement
+- **Context Section**: Generates context based on:
+  - Existing decisions in RECENT_DECISIONS.md
+  - Coding conventions from CONVENTIONS.md
+  - Task type (feature, bugfix, refactor, docs)
+  - Inferred dependencies from task description
+- **Risk Analysis**: Identifies potential risks like database changes, API breaking changes, security implications
+
+**Before (manual placeholder):**
+```markdown
+## Objective
+[Describe what needs to be accomplished]
+```
+
+**After (auto-populated):**
+```markdown
+## Objective
+Implement user authentication feature with JWT tokens.
+
+This will ensure security best practices are followed.
+```
 
 **Options:**
 ```bash
