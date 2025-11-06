@@ -5,6 +5,43 @@ description: Generate comprehensive test boilerplate following project TDD conve
 
 # Test Boilerplate Generator
 
+## ⚠️ MANDATORY: Read Project Documentation First
+
+**BEFORE generating tests, you MUST read and understand the following project documentation:**
+
+### Core Project Documentation
+
+1. **README.md** - Project overview, features, and getting started
+2. **AI_DOCS/project-context.md** - Tech stack, architecture, development workflow
+3. **AI_DOCS/code-conventions.md** - Code style, formatting, best practices (especially for tests)
+4. **AI_DOCS/tdd-workflow.md** - TDD process, testing standards, coverage requirements (CRITICAL)
+
+### Session Context (if available)
+
+5. **.ai-context/ACTIVE_TASKS.md** - Current tasks and priorities
+6. **.ai-context/CONVENTIONS.md** - Project-specific conventions
+7. **.ai-context/RECENT_DECISIONS.md** - Recent architectural decisions
+8. **.ai-context/LAST_SESSION_SUMMARY.md** - Previous session summary
+
+### Additional AI Documentation
+
+9. **AI_DOCS/ai-tools.md** - Session management workflow
+10. **AI_DOCS/ai-skills.md** - Other specialized skills/agents available
+
+### Why This Matters
+
+- **Testing Standards**: Follow project-specific test structure and conventions
+- **TDD Patterns**: Use AAA pattern, proper fixtures, and parametrization
+- **Code Quality**: Generate tests with type hints, docstrings, proper imports
+- **Mock Guidelines**: Understand when to mock vs. use real code
+- **Coverage Goals**: Generate tests that help reach 80%+ coverage
+
+**After reading these files, proceed with your test generation task below.**
+
+---
+
+## Overview
+
 Automatically generate comprehensive test boilerplate that follows this project's strict TDD and quality standards.
 
 ## When to Use

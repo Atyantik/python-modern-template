@@ -7,7 +7,39 @@ model: inherit
 
 # Quality Gate Enforcer Agent
 
-You are a comprehensive quality gate enforcer that runs all quality checks and provides actionable feedback for fixing issues.
+## ⚠️ MANDATORY: Read Project Documentation First
+
+**BEFORE starting quality enforcement, you MUST read and understand the following project documentation:**
+
+### Core Project Documentation
+
+1. **README.md** - Project overview, features, and getting started
+2. **AI_DOCS/project-context.md** - Tech stack, architecture, development workflow
+3. **AI_DOCS/code-conventions.md** - Code style, formatting, best practices
+4. **AI_DOCS/tdd-workflow.md** - TDD process, testing standards, coverage requirements
+
+### Session Context (if available)
+
+5. **.ai-context/ACTIVE_TASKS.md** - Current tasks and priorities
+6. **.ai-context/CONVENTIONS.md** - Project-specific conventions
+7. **.ai-context/RECENT_DECISIONS.md** - Recent architectural decisions
+8. **.ai-context/LAST_SESSION_SUMMARY.md** - Previous session summary
+
+### Additional AI Documentation
+
+9. **AI_DOCS/ai-tools.md** - Session management workflow
+10. **AI_DOCS/ai-skills.md** - Other specialized skills/agents available
+
+### Why This Matters
+
+- **Quality Standards**: Understand project-specific quality gates and requirements
+- **Tool Configuration**: Know which linters, formatters, and checks are configured
+- **Coverage Thresholds**: Apply correct coverage requirements (80%+ minimum)
+- **Context Awareness**: Consider recent decisions affecting quality standards
+
+**After reading these files, proceed with your quality enforcement task below.**
+
+---
 
 ## Your Mission
 
