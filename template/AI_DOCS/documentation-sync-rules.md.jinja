@@ -8,15 +8,16 @@ This document defines the mandatory synchronization requirements for maintaining
 
 ## Overview
 
-This project supports **6 AI agents** across **multiple documentation locations**:
+This project supports **7 AI agents** across **multiple documentation locations**:
 
 ### AI Agents
 1. **Claude Code** - CLAUDE.md + .claude/
 2. **Cursor IDE** - .cursorrules
 3. **Aider AI** - .aider.conf.yml
-4. **Gemini Code Assist** - .gemini/styleguide.md + AGENTS.md
-5. **GitHub Copilot** - .github/copilot-instructions.md
-6. **Universal** - AGENTS.md
+4. **Gemini CLI** - GEMINI.md (root file for terminal usage)
+5. **Gemini Code Assist** - .gemini/styleguide.md (IDE/GitHub integration)
+6. **GitHub Copilot** - .github/copilot-instructions.md
+7. **Universal** - AGENTS.md
 
 ### Documentation Locations
 - **Shared docs**: `AI_DOCS/*.md` (single source of truth)
@@ -33,8 +34,9 @@ This project supports **6 AI agents** across **multiple documentation locations*
 | Claude Code | `CLAUDE.md` | ✅ Yes (`@AI_DOCS/`) | Auto-reference |
 | Cursor IDE | `.cursorrules` | ✅ Yes (`@AI_DOCS/`) | Auto-reference |
 | Aider AI | `.aider.conf.yml` | ✅ Yes (YAML `read:`) | Auto-reference |
-| Gemini (universal) | `AGENTS.md` | ✅ Yes (`@AI_DOCS/`) | Auto-reference |
-| Gemini (style) | `.gemini/styleguide.md` | ❌ No | Manual duplicate + warning |
+| Universal | `AGENTS.md` | ✅ Yes (`@AI_DOCS/`) | Auto-reference |
+| Gemini CLI | `GEMINI.md` | ✅ Partial (file references) | Manual reference |
+| Gemini Code Assist | `.gemini/styleguide.md` | ❌ No | Manual duplicate + warning |
 | GitHub Copilot | `.github/copilot-instructions.md` | ❌ No | Manual duplicate + warning |
 
 ---
@@ -47,31 +49,34 @@ This project supports **6 AI agents** across **multiple documentation locations*
 
 Check if changes affect:
 - [ ] `AI_DOCS/*.md` (shared documentation)
-- [ ] `CLAUDE.md` (Claude-specific)
-- [ ] `.cursorrules` (Cursor-specific)
-- [ ] `.aider.conf.yml` (Aider-specific)
+- [ ] `CLAUDE.md` (Claude Code)
+- [ ] `.cursorrules` (Cursor IDE)
+- [ ] `.aider.conf.yml` (Aider AI)
 - [ ] `AGENTS.md` (universal)
-- [ ] `.gemini/styleguide.md` (Gemini-specific)
-- [ ] `.github/copilot-instructions.md` (Copilot-specific)
+- [ ] `GEMINI.md` (Gemini CLI)
+- [ ] `.gemini/styleguide.md` (Gemini Code Assist)
+- [ ] `.github/copilot-instructions.md` (GitHub Copilot)
 - [ ] `.claude/skills/*/SKILL.md` (Claude skills)
 - [ ] `.claude/agents/*.md` (Claude agents)
 
 ### Step 2: Validate Reference-Supporting Agents
 
-For agents that **support references** (Claude, Cursor, Aider, Gemini/AGENTS.md):
+For agents that **support references** (Claude, Cursor, Aider, AGENTS.md, Gemini CLI):
 
 - [ ] Verify all `@AI_DOCS/filename.md` references exist
 - [ ] Check YAML `read:` entries in `.aider.conf.yml`
+- [ ] Check file references in `GEMINI.md` point to existing files
 - [ ] Ensure references point to correct files
 - [ ] Validate no broken references
 
 **Script:** `uv run ai-validate-docs`
 
-### Step 3: Update Non-Supporting Agents
+### Step 3: Update Manual Reference Files
 
-For agents that **don't support references** (Gemini/styleguide, Copilot):
+For files that **need manual updates** (GEMINI.md, .gemini/styleguide.md, Copilot):
 
 **IF shared docs changed:**
+- [ ] Update `GEMINI.md` file references if structure changed
 - [ ] Update `.gemini/styleguide.md` with essential excerpts
 - [ ] Update `.github/copilot-instructions.md` with essential excerpts
 - [ ] Add/update sync warning comments at top of file
@@ -252,8 +257,7 @@ python sync_template.py
 **When to run:**
 1. After modifying any test files in `tests/`
 2. After modifying any scripts in `scripts/quality/` or `scripts/ai_tools/`
-3. After modifying `scripts/ai_tools/validate_ai_docs_sync.py`
-4. Before releasing a new template version
+3. Before releasing a new template version
 
 **What it doesn't sync (intentionally):**
 - AI_DOCS/*.md files (already synced via separate workflow)
@@ -330,18 +334,20 @@ project/
 │   ├── tdd-workflow.md                # TDD process
 │   ├── code-conventions.md            # Code standards
 │   ├── project-context.md             # Tech stack
+│   ├── documentation-first-approach.md # Documentation discovery workflow
 │   └── documentation-sync-rules.md    # This file
 │
 ├── AGENTS.md                          # Universal AI agent config (supports @AI_DOCS)
 ├── CLAUDE.md                          # Claude Code config (supports @AI_DOCS)
+├── GEMINI.md                          # Gemini CLI config (file references)
 ├── .cursorrules                       # Cursor IDE config (supports @AI_DOCS)
 ├── .aider.conf.yml                    # Aider AI config (YAML read:)
 │
 ├── .gemini/
-│   └── styleguide.md                  # Gemini-specific (manual sync + warning)
+│   └── styleguide.md                  # Gemini Code Assist (manual sync + warning)
 │
 ├── .github/
-│   └── copilot-instructions.md        # Copilot-specific (manual sync + warning)
+│   └── copilot-instructions.md        # GitHub Copilot (manual sync + warning)
 │
 ├── .claude/
 │   ├── skills/                        # Claude Code skills (automated)
@@ -354,13 +360,17 @@ project/
 │       └── quality-enforcer.md
 │
 ├── template/                          # Copier templates for new projects
-│   └── AI_DOCS/
-│       ├── ai-tools.md.jinja
-│       ├── ai-skills.md.jinja
-│       ├── tdd-workflow.md.jinja
-│       ├── code-conventions.md.jinja
-│       ├── project-context.md.jinja
-│       └── documentation-sync-rules.md.jinja
+│   ├── AI_DOCS/
+│   │   ├── ai-tools.md.jinja
+│   │   ├── ai-skills.md.jinja
+│   │   ├── tdd-workflow.md.jinja
+│   │   ├── code-conventions.md.jinja
+│   │   ├── project-context.md.jinja
+│   │   ├── documentation-first-approach.md.jinja
+│   │   └── documentation-sync-rules.md.jinja
+│   ├── GEMINI.md.jinja                # Gemini CLI template
+│   └── .gemini/
+│       └── styleguide.md.jinja        # Gemini Code Assist template
 │
 └── scripts/ai_tools/
     └── validate_ai_docs_sync.py       # Validation script (CLI: ai-validate-docs)

@@ -48,7 +48,7 @@ This is NOT optional. You MUST:
    - Read API references and getting started guides
 
 3. **Search for Recent Tutorials**
-   - Use WebSearch for 2024-2025 tutorials and examples
+   - Use WebSearch for latest tutorials and examples
    - Look for official framework tutorials
    - Find existing integration patterns
 

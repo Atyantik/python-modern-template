@@ -364,7 +364,17 @@ Before saying "task complete", verify:
 - [ ] Coverage ≥ 80%
 - [ ] `make check` passes
 - [ ] No duplicate code (DRY)
-- [ ] README updated (if needed)
+- [ ] **Post-implementation documentation updated** (MANDATORY)
+  - [ ] Identified documentation scope (user-facing, internal, config, etc.)
+  - [ ] Created/updated `./docs/` files (NOT README for details)
+  - [ ] Used cross-references instead of duplicating content
+  - [ ] README updated minimally (one-line + link to ./docs/ if user-facing)
+  - [ ] CHANGELOG.md updated (if user-facing change)
+  - [ ] All docstrings updated
+  - [ ] Documentation templates followed
+  - [ ] No duplicate content across files
+  - [ ] README remains concise (<150 lines)
+  - [ ] See `AI_DOCS/documentation-first-approach.md` Phase 5 for complete workflow
 - [ ] AI docs synced (if critical change)
 
 ## Security

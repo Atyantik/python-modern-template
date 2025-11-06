@@ -59,7 +59,7 @@ mcp__context7__search "agno hackernews integration"
 1. **Official MCP documentation tools** (if available)
 2. **WebFetch from official docs** (docs.framework.com)
 3. **WebSearch for official tutorials** (framework.com/tutorials)
-4. **WebSearch for recent examples** (2024-2025 only)
+4. **WebSearch for recent examples** (latest only)
 
 **What to fetch:**
 - Official API reference
@@ -167,7 +167,7 @@ Before writing ANY implementation code:
 - [ ] **MCP Tools Checked**: Looked for relevant MCP documentation tools
 - [ ] **Official Docs Fetched**: Retrieved latest documentation from official sources
 - [ ] **Built-In Features Verified**: Confirmed no existing functionality covers this use case
-- [ ] **Recent Tutorials Reviewed**: Checked for 2024-2025 examples and best practices
+- [ ] **Recent Tutorials Reviewed**: Checked for latest examples and best practices
 - [ ] **Framework Tools Discovered**: Identified all relevant framework-provided utilities
 - [ ] **API Documentation Read**: Reviewed official API reference (if applicable)
 - [ ] **Implementation Plan**: Documented approach based on discovered resources
@@ -221,7 +221,7 @@ WebSearch: query="framework-name best practices integration 2024"
 ```
 
 **Best practices:**
-- Include year (2024-2025) for recent results
+- Include year (latest) for recent results
 - Search for official tutorials first
 - Look for framework-specific examples
 - Prefer official sources over blog posts
@@ -362,6 +362,325 @@ Grep: pattern="import.*framework" output_mode="files_with_matches"
 - Copy-paste code from blogs without checking official docs
 - Assume something doesn't exist without researching
 
+## 📝 Phase 5: Post-Implementation Documentation (MANDATORY)
+
+**After completing implementation, you MUST update documentation in a precise, non-repetitive manner.**
+
+This is NOT optional. Every completed feature requires proper documentation.
+
+### Documentation Hierarchy
+
+Follow this strict hierarchy for documentation placement:
+
+**1. ./docs/ Folder (PRIMARY - Use for detailed documentation)**
+- **Purpose:** Detailed feature documentation, architecture decisions, API guides
+- **When to use:** New features, complex implementations, user-facing changes
+- **Format:** Markdown files organized by topic/feature
+- **Examples:**
+  - `docs/features/authentication.md` - Authentication system guide
+  - `docs/api/endpoints.md` - API endpoint documentation
+  - `docs/architecture/database-design.md` - Database architecture
+  - `docs/guides/deployment.md` - Deployment instructions
+
+**2. Code Docstrings (ALWAYS - Inline documentation)**
+- **Purpose:** Function/class/module level documentation
+- **When to use:** EVERY public function, class, and module
+- **Format:** Google-style docstrings (already enforced)
+- **Examples:** See `@AI_DOCS/code-conventions.md`
+
+**3. Root Documentation (MINIMAL - High-level only)**
+- **README.md:** Project overview, quick start, links to ./docs/
+- **CHANGELOG.md:** Version history and breaking changes
+- **CONTRIBUTING.md:** Contribution guidelines
+- **When to use:** ONLY for user-facing changes that affect quick start or setup
+
+### Documentation Decision Matrix
+
+| Change Type | ./docs/ | Docstrings | README.md | Example |
+|------------|---------|------------|-----------|---------|
+| New feature (user-facing) | ✅ Required | ✅ Required | ⚠️ Update quick start only | New API endpoint → `docs/api/users.md` + update README quick start link |
+| New feature (internal) | ✅ Recommended | ✅ Required | ❌ Skip | Internal utility → `docs/internals/utils.md` + docstrings |
+| Bug fix | ⚠️ If architectural | ✅ Update affected | ❌ Skip | Bug in auth → Update `docs/features/authentication.md` if flow changed |
+| Refactoring | ⚠️ If patterns changed | ✅ Update affected | ❌ Skip | Code reorganization → Update `docs/architecture/` if structure changed |
+| Configuration change | ✅ Required | ✅ Required | ⚠️ If setup affected | New env var → `docs/configuration.md` + update README setup if needed |
+| API change | ✅ Required | ✅ Required | ⚠️ If breaking | API endpoint change → `docs/api/` + CHANGELOG.md + README if breaking |
+
+### Post-Implementation Documentation Checklist
+
+**Step 1: Identify Documentation Scope**
+
+Ask yourself:
+- [ ] Does this change affect how users interact with the project?
+- [ ] Does this introduce new concepts or patterns?
+- [ ] Does this change configuration or setup?
+- [ ] Does this modify existing behavior?
+- [ ] Does this require explanation beyond code comments?
+
+**Step 2: Write Precise, Non-Repetitive Documentation**
+
+**DO:**
+- ✅ Create focused, single-purpose documentation files
+- ✅ Use cross-references instead of duplicating content
+- ✅ Write concise, actionable documentation
+- ✅ Include code examples and usage patterns
+- ✅ Document WHY decisions were made, not just WHAT was done
+- ✅ Link from README to ./docs/ for details
+
+**DON'T:**
+- ❌ Copy-paste documentation across multiple files
+- ❌ Write long README sections (use ./docs/ instead)
+- ❌ Duplicate information from docstrings
+- ❌ Document obvious implementation details
+- ❌ Create documentation without clear purpose
+- ❌ Write vague or generic documentation
+
+**Step 3: Choose Correct Documentation Location**
+
+```bash
+# ✅ Good: Detailed feature documentation in ./docs/
+# File: docs/features/user-authentication.md
+"""
+# User Authentication
+
+## Overview
+JWT-based authentication system with refresh tokens.
+
+## Usage
+[Detailed examples and usage patterns]
+
+## Architecture
+[Technical implementation details]
+
+## Configuration
+See configuration.md for environment variables.
+"""
+
+# ✅ Good: Minimal README update with link
+# File: README.md
+"""
+## Features
+- User authentication (see [docs/features/user-authentication.md](docs/features/user-authentication.md))
+"""
+
+# ❌ Bad: Dumping everything in README
+# File: README.md (DON'T DO THIS)
+"""
+## User Authentication
+[50 lines of detailed authentication documentation]
+[Code examples]
+[Configuration details]
+[etc...]
+"""
+```
+
+**Step 4: Update Documentation Files**
+
+```bash
+# Create ./docs/ structure if needed
+mkdir -p docs/{features,api,architecture,guides}
+
+# Add feature documentation
+# docs/features/feature-name.md
+
+# Update README with brief mention + link
+# README.md (add one line + link to docs/)
+
+# Update CHANGELOG if user-facing
+# CHANGELOG.md (add version entry)
+```
+
+### Documentation Templates
+
+**Template: Feature Documentation (docs/features/)**
+
+```markdown
+# Feature Name
+
+## Overview
+Brief (1-2 sentences) description of what this feature does.
+
+## Usage
+
+### Basic Example
+\`\`\`python
+# Minimal working example
+\`\`\`
+
+### Advanced Usage
+\`\`\`python
+# More complex scenarios
+\`\`\`
+
+## Configuration
+Required configuration (link to docs/configuration.md for details).
+
+## API Reference
+Link to relevant code modules (don't duplicate docstrings).
+
+## Architecture
+High-level architecture decisions and patterns used.
+
+## Related
+- [Related Feature](./related-feature.md)
+- [API Documentation](../api/endpoints.md)
+```
+
+**Template: API Documentation (docs/api/)**
+
+```markdown
+# API: Module Name
+
+## Endpoints / Functions
+
+### `function_name()`
+Brief description. See [module.py:123](../src/project/module.py) for full docstring.
+
+**Example:**
+\`\`\`python
+# Usage example
+\`\`\`
+
+## Error Handling
+Common errors and how to handle them.
+
+## Related
+- [Feature Documentation](../features/feature-name.md)
+```
+
+**Template: README Update (Root)**
+
+```markdown
+## Features
+- **Feature Name**: Brief one-line description. [Details →](docs/features/feature-name.md)
+```
+
+### Examples: Good vs Bad Documentation
+
+**Example 1: New Authentication Feature**
+
+```bash
+# ✅ Good: Organized documentation
+docs/features/authentication.md           # Full authentication guide
+docs/api/auth-endpoints.md                # API reference
+README.md                                  # One-line mention + link
+CHANGELOG.md                               # Version entry
+
+# ❌ Bad: Everything in README
+README.md                                  # 200 lines of auth documentation
+```
+
+**Example 2: Internal Utility Function**
+
+```bash
+# ✅ Good: Docstring + internal docs
+src/project/utils.py                       # Comprehensive docstring
+docs/internals/utilities.md               # Architecture patterns (if complex)
+
+# ❌ Bad: README pollution
+README.md                                  # Internal implementation details
+```
+
+**Example 3: Configuration Change**
+
+```bash
+# ✅ Good: Centralized configuration docs
+docs/configuration.md                      # All env vars documented
+README.md                                  # "See docs/configuration.md"
+
+# ❌ Bad: Scattered configuration
+README.md                                  # Some env vars
+docs/setup.md                             # More env vars (duplicate)
+docs/deployment.md                        # Even more env vars (duplicate)
+```
+
+### Preventing Documentation Bloat
+
+**Root Documentation Rules:**
+
+1. **README.md** - Maximum 100-150 lines
+   - Project overview (1 paragraph)
+   - Quick start (5-10 commands)
+   - Feature list (1 line each + link to ./docs/)
+   - Installation (brief, link to docs/guides/installation.md)
+   - Links to ./docs/ for everything else
+
+2. **CHANGELOG.md** - Version entries only
+   - No detailed explanations (link to docs/)
+   - Breaking changes highlighted
+   - Brief descriptions
+
+3. **CONTRIBUTING.md** - Contribution workflow only
+   - Link to docs/development/ for details
+
+**./docs/ Organization Rules:**
+
+```
+docs/
+├── features/           # User-facing features (one file per feature)
+├── api/                # API documentation (one file per module/domain)
+├── architecture/       # Architecture decisions and patterns
+├── guides/             # How-to guides (setup, deployment, etc.)
+├── internals/          # Internal implementation details
+└── configuration.md    # Centralized configuration reference
+```
+
+**Cross-Reference Instead of Duplicate:**
+
+```markdown
+# ✅ Good: Cross-reference
+See [Authentication Configuration](./configuration.md#authentication) for details.
+
+# ❌ Bad: Duplicate content
+Authentication requires the following environment variables:
+AUTH_SECRET=...
+AUTH_EXPIRY=...
+[etc... duplicating configuration.md]
+```
+
+### Post-Implementation Documentation Workflow
+
+**1. Implementation Complete → Identify Documentation Needs**
+```bash
+# Ask yourself:
+# - What changed?
+# - Who needs to know?
+# - Where should this be documented?
+```
+
+**2. Create/Update ./docs/ Files**
+```bash
+# Create feature documentation
+docs/features/new-feature.md
+
+# Or update existing
+docs/features/existing-feature.md  # Add new section
+```
+
+**3. Update Root Documentation Minimally**
+```bash
+# Add one-line mention + link in README
+README.md: "- New Feature: Brief description. [Details →](docs/features/new-feature.md)"
+
+# Add changelog entry if user-facing
+CHANGELOG.md: "### Added\n- New feature brief description"
+```
+
+**4. Verify No Duplication**
+```bash
+# Check for duplicate content
+grep -r "same content" docs/ README.md
+# If found, consolidate and cross-reference
+```
+
+**5. Verify Documentation Quality**
+- [ ] Each ./docs/ file has single, clear purpose
+- [ ] No content duplicated across files
+- [ ] Cross-references used instead of duplication
+- [ ] README remains concise (<150 lines)
+- [ ] All docstrings updated
+- [ ] Code examples are accurate and tested
+- [ ] Links between documents work
+
 ## 📚 Related Documentation
 
 For complete workflow integration:
@@ -371,4 +690,4 @@ For complete workflow integration:
 
 ---
 
-**Remember:** The goal is NOT to avoid writing code. The goal is to write the RIGHT code by discovering what already exists and building on it effectively.
+**Remember:** The goal is NOT to avoid writing code. The goal is to write the RIGHT code by discovering what already exists and building on it effectively. After implementation, document precisely in ./docs/ to help others discover and use your work.

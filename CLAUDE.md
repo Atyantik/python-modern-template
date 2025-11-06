@@ -48,7 +48,7 @@ This is NOT optional. You MUST:
    - Read API references and getting started guides
 
 3. **Search for Recent Tutorials**
-   - Use WebSearch for 2024-2025 tutorials and examples
+   - Use WebSearch for latest tutorials and examples
    - Look for official framework tutorials
    - Find existing integration patterns
 
@@ -107,7 +107,7 @@ Reference these for complete guidelines:
 **Phase 0: Documentation Discovery (MANDATORY FIRST STEP)**
 1. Check for MCP tools (`mcp__docs__`, `mcp__context7__`, etc.)
 2. Use WebFetch to get official documentation from framework
-3. Use WebSearch for recent tutorials and examples (2024-2025)
+3. Use WebSearch for recent tutorials and examples (latest)
 4. Verify no built-in tools/features exist for the task
 5. Document research findings before proceeding
 
@@ -365,7 +365,17 @@ Before completing any task:
 - [ ] `make lint` passes
 - [ ] `make check` passes
 - [ ] No duplicate code (DRY)
-- [ ] README updated (if user-facing changes)
+- [ ] **Post-implementation documentation updated** (MANDATORY)
+  - [ ] Identified documentation scope (user-facing, internal, config, etc.)
+  - [ ] Created/updated `./docs/` files (NOT README for details)
+  - [ ] Used cross-references instead of duplicating content
+  - [ ] README updated minimally (one-line + link to ./docs/ if user-facing)
+  - [ ] CHANGELOG.md updated (if user-facing change)
+  - [ ] All docstrings updated
+  - [ ] Documentation templates followed
+  - [ ] No duplicate content across files
+  - [ ] README remains concise (<150 lines)
+  - [ ] See `@AI_DOCS/documentation-first-approach.md` Phase 5 for complete workflow
 - [ ] Formatter harmony check (Black vs Ruff) — adjust code (e.g., use message variables)
       if tools disagree
 - [ ] **AI documentation synchronized** (MANDATORY)
@@ -430,8 +440,10 @@ See `@AI_DOCS/ai-skills.md` for complete documentation on:
 
 **Tool-specific:**
 - `AGENTS.md` - Universal instructions
+- `CLAUDE.md` - Claude Code (this file)
+- `GEMINI.md` - Gemini CLI
 - `.cursorrules` - Cursor IDE
-- `.gemini/styleguide.md` - Gemini
+- `.gemini/styleguide.md` - Gemini Code Assist (IDE/GitHub)
 - `.aider.conf.yml` - Aider
 - `.github/copilot-instructions.md` - GitHub Copilot
 

@@ -1,11 +1,11 @@
-# CLAUDE.md - Claude Code Configuration
+# GEMINI.md - Gemini CLI Configuration
 
 ## STOP! READ THIS FIRST - MANDATORY SESSION MANAGEMENT
 
 **BEFORE doing ANYTHING in this session, you MUST run:**
 
 ```bash
-Bash: uv run ai-start-task "Your task description"
+uv run ai-start-task "Your task description"
 ```
 
 **If you have NOT run this command yet, STOP NOW and run it!**
@@ -14,21 +14,21 @@ This is NOT optional. Every session MUST start with `ai-start-task`.
 
 **During work:**
 ```bash
-Bash: uv run ai-log "Progress message"
-Bash: uv run ai-update-plan "Completed item"
+uv run ai-log "Progress message"
+uv run ai-update-plan "Completed item"
 
 # Customize your plan (add task-specific steps, remove irrelevant items)
-Bash: uv run ai-update-plan --add "Specific task for this feature" --phase "Phase 2"
-Bash: uv run ai-update-plan --remove "Generic irrelevant item"
-Bash: uv run ai-update-plan --rename "Generic item" --to "Specific detailed item"
+uv run ai-update-plan --add "Specific task for this feature" --phase "Phase 2"
+uv run ai-update-plan --remove "Generic irrelevant item"
+uv run ai-update-plan --rename "Generic item" --to "Specific detailed item"
 ```
 
 **When finishing:**
 ```bash
-Bash: uv run ai-finish-task --summary="What you accomplished"
+uv run ai-finish-task --summary="What you accomplished"
 ```
 
-See `@AI_DOCS/ai-tools.md` for complete workflow and all ai-update-plan features.
+See `AI_DOCS/ai-tools.md` for complete workflow and all ai-update-plan features.
 
 ---
 
@@ -77,13 +77,13 @@ This is NOT optional. You MUST:
 3. ✅ Use the built-in tools instead of custom API calls
 4. ❌ Don't view page source or reverse-engineer APIs
 
-See `@AI_DOCS/documentation-first-approach.md` for complete guidelines and examples.
+See `AI_DOCS/documentation-first-approach.md` for complete guidelines and examples.
 
 ---
 
 ## Overview
 
-You are Claude Code, working on a Python project with strict Test-Driven Development (TDD) and code quality standards.
+You are Gemini CLI, working on a Python project with strict Test-Driven Development (TDD) and code quality standards.
 
 **Primary Directive:** ALWAYS write tests BEFORE implementation code.
 **Secondary Directive:** ALWAYS research documentation BEFORE writing any code.
@@ -92,15 +92,15 @@ You are Claude Code, working on a Python project with strict Test-Driven Develop
 
 Reference these for complete guidelines:
 
-- `@AI_DOCS/ai-tools.md` - Session management workflow (MANDATORY)
-- `@AI_DOCS/documentation-first-approach.md` - Research before implementation (MANDATORY)
-- `@AI_DOCS/ai-skills.md` - Specialized skills and agents (use via Skill/Task tools)
-- `@AI_DOCS/tdd-workflow.md` - TDD process and testing standards
-- `@AI_DOCS/code-conventions.md` - Code style and best practices
-- `@AI_DOCS/project-context.md` - Tech stack and architecture
-- `@AI_DOCS/documentation-sync-rules.md` - AI doc synchronization (MANDATORY)
+- `AI_DOCS/ai-tools.md` - Session management workflow (MANDATORY)
+- `AI_DOCS/documentation-first-approach.md` - Research before implementation (MANDATORY)
+- `AI_DOCS/ai-skills.md` - Specialized skills and agents (manual workflows)
+- `AI_DOCS/tdd-workflow.md` - TDD process and testing standards
+- `AI_DOCS/code-conventions.md` - Code style and best practices
+- `AI_DOCS/project-context.md` - Tech stack and architecture
+- `AI_DOCS/documentation-sync-rules.md` - AI doc synchronization (MANDATORY)
 
-## Claude-Specific Workflow
+## Gemini-Specific Workflow
 
 ### Before Writing Any Code
 
@@ -123,27 +123,27 @@ Reference these for complete guidelines:
 12. Refactor while keeping tests green
 13. Run `make check` to ensure all quality gates pass
 
-### Using Claude Code Tools
+### Using Gemini CLI Tools
 
 ```bash
 # Read files
-Read: src/{{ package_name }}/module.py
-Read: tests/test_module.py
+cat src/{{ package_name }}/module.py
+cat tests/test_module.py
 
 # Write tests FIRST
-Edit: tests/test_module.py
+# Edit tests/test_module.py
 
 # Run tests to see them fail
-Bash: make test
+make test
 
 # Write implementation
-Edit: src/{{ package_name }}/module.py
+# Edit src/{{ package_name }}/module.py
 
 # Run tests to see them pass
-Bash: make test
+make test
 
 # Run all quality checks
-Bash: make check
+make check
 ```
 
 ## TDD Example
@@ -175,7 +175,7 @@ def test_count_words_empty_string() -> None:
 
 2. Run tests (they will fail):
 ```bash
-Bash: make test
+make test
 # Output: ModuleNotFoundError or NameError for count_words
 ```
 
@@ -198,12 +198,12 @@ def count_words(text: str) -> int:
 
 4. Run tests again (should pass):
 ```bash
-Bash: make test
+make test
 ```
 
 5. Run quality checks:
 ```bash
-Bash: make check
+make check
 ```
 
 6. Communicate to user:
@@ -260,12 +260,12 @@ def test_fetch_data_from_api(mock_get: Mock) -> None:
 
 **Mock only:** HTTP requests, database calls, file I/O, time operations, random values
 
-See `@AI_DOCS/tdd-workflow.md` for complete mocking guidelines.
+See `AI_DOCS/tdd-workflow.md` for complete mocking guidelines.
 
 ## Coverage Requirements
 
 ```bash
-Bash: make coverage
+make coverage
 ```
 
 **Requirements:**
@@ -273,22 +273,22 @@ Bash: make coverage
 - Target: 90%+
 - Ideal: 100% for new code
 
-See `@AI_DOCS/tdd-workflow.md` for coverage guidelines.
+See `AI_DOCS/tdd-workflow.md` for coverage guidelines.
 
 ## Make Commands
 
 ```bash
-Bash: make help                    # See all commands
-Bash: make test                    # Run tests only
-Bash: make coverage                # Tests with coverage report
-Bash: make format                  # Auto-format code
-Bash: make lint                    # Run all linters
-Bash: make check                   # Complete quality check
+make help                    # See all commands
+make test                    # Run tests only
+make coverage                # Tests with coverage report
+make format                  # Auto-format code
+make lint                    # Run all linters
+make check                   # Complete quality check
 ```
 
 **Always run `make check` before telling user task is complete!**
 
-See `@AI_DOCS/project-context.md` for complete development workflow.
+See `AI_DOCS/project-context.md` for complete development workflow.
 
 ## Type Hints
 
@@ -318,7 +318,7 @@ from typing import Any, Callable
 from collections.abc import Iterable
 ```
 
-See `@AI_DOCS/code-conventions.md` for complete conventions.
+See `AI_DOCS/code-conventions.md` for complete conventions.
 
 ## Docstring Standards
 
@@ -341,7 +341,7 @@ def public_function(param: str, count: int = 10) -> bool:
     """
 ```
 
-See `@AI_DOCS/code-conventions.md` for complete documentation standards.
+See `AI_DOCS/code-conventions.md` for complete documentation standards.
 
 ## Quality Gates Checklist
 
@@ -375,7 +375,7 @@ Before completing any task:
   - [ ] Documentation templates followed
   - [ ] No duplicate content across files
   - [ ] README remains concise (<150 lines)
-  - [ ] See `@AI_DOCS/documentation-first-approach.md` Phase 5 for complete workflow
+  - [ ] See `AI_DOCS/documentation-first-approach.md` Phase 5 for complete workflow
 - [ ] Formatter harmony check (Black vs Ruff) — adjust code (e.g., use message variables)
       if tools disagree
 - [ ] **AI documentation synchronized** (MANDATORY)
@@ -384,7 +384,7 @@ Before completing any task:
   - [ ] Update `.github/copilot-instructions.md` if AI_DOCS changed (add sync date)
   - [ ] Update `.claude/skills/` or `.claude/agents/` if relevant
   - [ ] Update `template/AI_DOCS/` if changes should apply to new projects
-  - [ ] See `@AI_DOCS/documentation-sync-rules.md` for complete workflow
+  - [ ] See `AI_DOCS/documentation-sync-rules.md` for complete workflow
 
 ## Communication Style
 
@@ -414,36 +414,34 @@ Running make check..."
 Fixing issues...
 Re-running make check..."
 
-## Specialized Skills and Agents
+## Specialized Skills
 
-**You have access to specialized skills and agents via the Skill and Task tools:**
+**Manual workflows available (see `AI_DOCS/ai-skills.md` for detailed instructions):**
+- `test-generator` - Generate test boilerplate
+- `coverage-analyzer` - Analyze coverage gaps
+- `quality-fixer` - Apply automated fixes
+- `session-template` - Load task templates
+- `tdd-reviewer` - Review TDD compliance
+- `quality-enforcer` - Enforce quality gates
 
-See `@AI_DOCS/ai-skills.md` for complete documentation on:
-- `Skill: test-generator` - Generate test boilerplate
-- `Skill: coverage-analyzer` - Analyze coverage gaps
-- `Skill: quality-fixer` - Apply automated fixes
-- `Skill: session-template` - Load task templates
-- `Task: tdd-reviewer` - Review TDD compliance
-- `Task: quality-enforcer` - Enforce quality gates
-
-**Use these proactively!** Don't wait for user to request them.
+**Note**: Gemini CLI doesn't have direct Skill/Task tool access like Claude Code. Follow manual workflows documented in `AI_DOCS/ai-skills.md`.
 
 ## Reference
 
 **Shared documentation:**
-- `@AI_DOCS/ai-tools.md` - Session management workflow
-- `@AI_DOCS/documentation-first-approach.md` - Research before implementation (MANDATORY)
-- `@AI_DOCS/ai-skills.md` - Specialized skills and agents
-- `@AI_DOCS/tdd-workflow.md` - TDD process, testing standards, coverage
-- `@AI_DOCS/code-conventions.md` - Code style, formatting, best practices
-- `@AI_DOCS/project-context.md` - Tech stack, architecture, dependencies
+- `AI_DOCS/ai-tools.md` - Session management workflow
+- `AI_DOCS/documentation-first-approach.md` - Research before implementation (MANDATORY)
+- `AI_DOCS/ai-skills.md` - Specialized skills and agents
+- `AI_DOCS/tdd-workflow.md` - TDD process, testing standards, coverage
+- `AI_DOCS/code-conventions.md` - Code style, formatting, best practices
+- `AI_DOCS/project-context.md` - Tech stack, architecture, dependencies
 
 **Tool-specific:**
 - `AGENTS.md` - Universal instructions
-- `CLAUDE.md` - Claude Code (this file)
-- `GEMINI.md` - Gemini CLI
-- `.cursorrules` - Cursor IDE
+- `CLAUDE.md` - Claude Code
 - `.gemini/styleguide.md` - Gemini Code Assist (IDE/GitHub)
+- `GEMINI.md` - Gemini CLI (this file)
+- `.cursorrules` - Cursor IDE
 - `.aider.conf.yml` - Aider
 - `.github/copilot-instructions.md` - GitHub Copilot
 
