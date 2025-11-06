@@ -3,8 +3,13 @@
 from __future__ import annotations
 
 import argparse
+import re
 
 from scripts.ai_tools.check_conflicts import check_conflicts
+from scripts.ai_tools.summarizer import (
+    extract_objective_from_task_description,
+    generate_context_summary,
+)
 from scripts.ai_tools.template_loader import load_template
 from scripts.ai_tools.utils import (
     create_session_filename,
@@ -20,7 +25,10 @@ from scripts.ai_tools.utils import (
 
 
 def get_plan_template(session_id: str, task_name: str, task_type: str) -> str:
-    """Get PLAN file template using task-specific template loader.
+    """Get PLAN file template with auto-populated sections.
+
+    Uses AI summarizer to intelligently populate Objective and Context
+    sections based on task description and existing context.
 
     Args:
         session_id: Session ID
@@ -28,14 +36,39 @@ def get_plan_template(session_id: str, task_name: str, task_type: str) -> str:
         task_type: Task type (feature, bugfix, docs, refactor)
 
     Returns:
-        Template content customized for task type
+        Template content customized and auto-populated for task
     """
-    # Use new template loader for task-specific templates
-    return load_template(
+    # Load base template
+    template = load_template(
         task_type=task_type,
         session_id=session_id,
         task_name=task_name,
     )
+
+    # Auto-populate Objective section
+    objective = extract_objective_from_task_description(task_name)
+    template = template.replace(
+        "[Describe what needs to be accomplished]",
+        objective,
+    )
+
+    # Auto-populate Context section
+    context = generate_context_summary(task_name, task_type)
+
+    # Replace the Context section content
+    # Find the Context section and replace its content
+    context_pattern = r"(## Context\s*\n\s*\*\*Recent Decisions\*\*:.*?\*\*Dependencies\*\*:.*?)(\n\s*---)"
+    context_replacement = f"## Context\n\n{context}\n\n---"
+
+    if re.search(context_pattern, template, re.DOTALL):
+        template = re.sub(
+            context_pattern,
+            context_replacement,
+            template,
+            flags=re.DOTALL,
+        )
+
+    return template
 
 
 def get_summary_template(session_id: str, task_name: str) -> str:
@@ -188,8 +221,6 @@ def display_important_decisions() -> None:
     print("\n⚠️  IMPORTANT DECISIONS TO FOLLOW:")
 
     # Extract decision titles (just first 3)
-    import re
-
     pattern = r"##\s+\[[\d\-: ]+\]\s+([^\n]+)"
     re.findall(pattern, decisions)
 
