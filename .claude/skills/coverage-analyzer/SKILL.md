@@ -5,6 +5,42 @@ description: Advanced coverage analysis with actionable insights. Use to identif
 
 # Coverage Analyzer
 
+## ⚠️ MANDATORY: Read Project Documentation First
+
+**BEFORE starting coverage analysis, you MUST read and understand the following project documentation:**
+
+### Core Project Documentation
+
+1. **README.md** - Project overview, features, and getting started
+2. **AI_DOCS/project-context.md** - Tech stack, architecture, development workflow
+3. **AI_DOCS/code-conventions.md** - Code style, formatting, best practices
+4. **AI_DOCS/tdd-workflow.md** - TDD process, testing standards, coverage requirements
+
+### Session Context (if available)
+
+5. **.ai-context/ACTIVE_TASKS.md** - Current tasks and priorities
+6. **.ai-context/CONVENTIONS.md** - Project-specific conventions
+7. **.ai-context/RECENT_DECISIONS.md** - Recent architectural decisions
+8. **.ai-context/LAST_SESSION_SUMMARY.md** - Previous session summary
+
+### Additional AI Documentation
+
+9. **AI_DOCS/ai-tools.md** - Session management workflow
+10. **AI_DOCS/ai-skills.md** - Other specialized skills/agents available
+
+### Why This Matters
+
+- **Coverage Requirements**: Understand project-specific coverage thresholds (80%+ minimum)
+- **Testing Patterns**: Follow established testing conventions when suggesting tests
+- **Code Context**: Understand module structure and dependencies
+- **Recent Changes**: Be aware of recent test additions or coverage improvements
+
+**After reading these files, proceed with your coverage analysis task below.**
+
+---
+
+## Overview
+
 Provide advanced test coverage analysis with actionable insights for improving coverage to meet the 80%+ requirement.
 
 ## When to Use

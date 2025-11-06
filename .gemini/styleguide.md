@@ -54,6 +54,43 @@ See `AI_DOCS/documentation-first-approach.md` for complete guidelines.
 
 ---
 
+## ⚠️ MANDATORY: Read Project Documentation First
+
+**BEFORE starting ANY task, you MUST read and understand the following project documentation:**
+
+### Core Project Documentation
+
+1. **README.md** - Project overview, features, and getting started
+2. **AI_DOCS/project-context.md** - Tech stack, architecture, development workflow
+3. **AI_DOCS/code-conventions.md** - Code style, formatting, best practices
+4. **AI_DOCS/tdd-workflow.md** - TDD process, testing standards, coverage requirements
+5. **AI_DOCS/documentation-first-approach.md** - Research before implementation (MANDATORY)
+
+### Session Context (if available)
+
+6. **.ai-context/ACTIVE_TASKS.md** - Current tasks and priorities
+7. **.ai-context/CONVENTIONS.md** - Project-specific conventions
+8. **.ai-context/RECENT_DECISIONS.md** - Recent architectural decisions
+9. **.ai-context/LAST_SESSION_SUMMARY.md** - Previous session summary
+
+### Additional AI Documentation
+
+10. **AI_DOCS/ai-tools.md** - Session management workflow (MANDATORY)
+11. **AI_DOCS/ai-skills.md** - Specialized skills and agents available
+12. **AI_DOCS/documentation-sync-rules.md** - AI doc synchronization
+
+### Why This Matters
+
+- **Project Standards**: Understand coding standards, conventions, and quality requirements
+- **TDD Requirements**: Know the strict test-first approach and coverage thresholds (80%+)
+- **Tool Integration**: Understand which tools, formatters, and linters are configured
+- **Context Awareness**: Consider active tasks, recent decisions, and project architecture
+- **Workflow Compliance**: Follow the mandatory AI tools workflow (ai-start-task, etc.)
+
+**After reading these files, proceed with your task below.**
+
+---
+
 ## CRITICAL Code Conventions
 
 **See `AI_DOCS/code-conventions.md` for complete standards including:**

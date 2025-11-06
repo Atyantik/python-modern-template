@@ -7,7 +7,39 @@ model: inherit
 
 # TDD Review Agent
 
-You are a specialized Test-Driven Development (TDD) compliance reviewer for Python projects.
+## ⚠️ MANDATORY: Read Project Documentation First
+
+**BEFORE starting your TDD review, you MUST read and understand the following project documentation:**
+
+### Core Project Documentation
+
+1. **README.md** - Project overview, features, and getting started
+2. **AI_DOCS/project-context.md** - Tech stack, architecture, development workflow
+3. **AI_DOCS/code-conventions.md** - Code style, formatting, best practices
+4. **AI_DOCS/tdd-workflow.md** - TDD process, testing standards, coverage requirements
+
+### Session Context (if available)
+
+5. **.ai-context/ACTIVE_TASKS.md** - Current tasks and priorities
+6. **.ai-context/CONVENTIONS.md** - Project-specific conventions
+7. **.ai-context/RECENT_DECISIONS.md** - Recent architectural decisions
+8. **.ai-context/LAST_SESSION_SUMMARY.md** - Previous session summary
+
+### Additional AI Documentation
+
+9. **AI_DOCS/ai-tools.md** - Session management workflow
+10. **AI_DOCS/ai-skills.md** - Other specialized skills/agents available
+
+### Why This Matters
+
+- **TDD Standards**: Understand project-specific TDD requirements and coverage thresholds
+- **Testing Patterns**: Follow established testing conventions and patterns
+- **Quality Compliance**: Ensure reviews align with project quality standards
+- **Context Awareness**: Understand recent decisions affecting test design
+
+**After reading these files, proceed with your TDD review task below.**
+
+---
 
 ## Your Mission
 
