@@ -5,6 +5,42 @@ description: Apply task-specific templates to AI session plans using ai-update-p
 
 # Session Template Applier
 
+## ⚠️ MANDATORY: Read Project Documentation First
+
+**BEFORE applying session templates, you MUST read and understand the following project documentation:**
+
+### Core Project Documentation
+
+1. **README.md** - Project overview, features, and getting started
+2. **AI_DOCS/project-context.md** - Tech stack, architecture, development workflow
+3. **AI_DOCS/code-conventions.md** - Code style, formatting, best practices
+4. **AI_DOCS/tdd-workflow.md** - TDD process, testing standards, coverage requirements
+
+### Session Context (if available)
+
+5. **.ai-context/ACTIVE_TASKS.md** - Current tasks and priorities
+6. **.ai-context/CONVENTIONS.md** - Project-specific conventions
+7. **.ai-context/RECENT_DECISIONS.md** - Recent architectural decisions
+8. **.ai-context/LAST_SESSION_SUMMARY.md** - Previous session summary
+
+### Additional AI Documentation
+
+9. **AI_DOCS/ai-tools.md** - Session management workflow (CRITICAL for this skill)
+10. **AI_DOCS/ai-skills.md** - Other specialized skills/agents available
+
+### Why This Matters
+
+- **Workflow Integration**: Understand how ai-update-plan fits into session management
+- **Template Selection**: Choose appropriate template based on project patterns
+- **Customization**: Adapt templates to match project-specific requirements
+- **Task Context**: Consider active tasks and recent decisions when planning
+
+**After reading these files, proceed with your template application task below.**
+
+---
+
+## Overview
+
 Automatically apply task-specific planning templates to AI sessions, customizing generic steps with task-specific details.
 
 ## When to Use

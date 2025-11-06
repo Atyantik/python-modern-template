@@ -5,6 +5,42 @@ description: Automatically apply safe quality fixes including formatting (Black,
 
 # Quality Fix Applier
 
+## ⚠️ MANDATORY: Read Project Documentation First
+
+**BEFORE applying quality fixes, you MUST read and understand the following project documentation:**
+
+### Core Project Documentation
+
+1. **README.md** - Project overview, features, and getting started
+2. **AI_DOCS/project-context.md** - Tech stack, architecture, development workflow
+3. **AI_DOCS/code-conventions.md** - Code style, formatting, best practices
+4. **AI_DOCS/tdd-workflow.md** - TDD process, testing standards, coverage requirements
+
+### Session Context (if available)
+
+5. **.ai-context/ACTIVE_TASKS.md** - Current tasks and priorities
+6. **.ai-context/CONVENTIONS.md** - Project-specific conventions
+7. **.ai-context/RECENT_DECISIONS.md** - Recent architectural decisions
+8. **.ai-context/LAST_SESSION_SUMMARY.md** - Previous session summary
+
+### Additional AI Documentation
+
+9. **AI_DOCS/ai-tools.md** - Session management workflow
+10. **AI_DOCS/ai-skills.md** - Other specialized skills/agents available
+
+### Why This Matters
+
+- **Tool Configuration**: Understand which formatters and linters are configured
+- **Code Standards**: Apply fixes that align with project conventions
+- **Safety Rules**: Know which auto-fixes are safe vs. require manual review
+- **Integration**: Coordinate with other quality tools (Black, Ruff, isort)
+
+**After reading these files, proceed with your quality fixing task below.**
+
+---
+
+## Overview
+
 Automatically apply safe quality fixes to Python code, resolving formatting issues, linting problems, and formatter conflicts.
 
 ## When to Use
