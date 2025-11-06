@@ -79,7 +79,7 @@ uv run ai-start-task "Add user authentication feature"
   - `PLAN-*.md` - Task plan with checkboxes
   - `SUMMARY-*.md` - Session summary template
   - `EXECUTION-*.md` - Execution log
-- **🆕 Auto-populates PLAN sections:**
+- **Auto-populates PLAN sections:**
   - Extracts and expands Objective from task description
   - Generates intelligent Context summary with dependencies
   - Analyzes task type and adds relevant guidance
@@ -90,7 +90,7 @@ uv run ai-start-task "Add user authentication feature"
 - Shows key conventions to follow
 - Adds task to `ACTIVE_TASKS.md`
 
-**✨ New: Intelligent Auto-Population**
+**New: Intelligent Auto-Population**
 
 The `ai-start-task` command now uses NLP-based summarization to intelligently populate your PLAN file:
 
